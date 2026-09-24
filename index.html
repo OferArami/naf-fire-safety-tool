@@ -69,6 +69,7 @@ body{
 
 /* ---------- Header ---------- */
 .masthead{
+  position:relative;
   display:flex;align-items:center;gap:16px;
   padding:18px 22px;
   background:var(--masthead-bg);
@@ -77,6 +78,14 @@ body{
   margin-bottom:22px;
   box-shadow:var(--shadow);
   border:1px solid var(--line);
+}
+.masthead-updated{
+  position:absolute;
+  top:10px;
+  left:14px;
+  font-size:11.5px;
+  color:var(--masthead-sub);
+  white-space:nowrap;
 }
 .masthead .flame{
   width:40px;height:40px;flex:0 0 auto;
@@ -897,10 +906,11 @@ function masthead(){
   const gd = currentGroupDesc();
   const updated = formatUpdatedAt();
   return `<div class="masthead">
+    ${updated ? `<div class="masthead-updated">עדכון אחרון: ${updated}</div>` : ''}
     ${flameSvg()}
     <div>
       <h1>בונה תוכנית בטיחות אש</h1>
-      <p>מבוסס על תקנות תכנון ובנייה, הוראות נציבות כבאות והצלה ותקנים ישראליים${updated ? ` &middot; עדכון אחרון: ${updated}` : ''}</p>
+      <p>מבוסס על תקנות תכנון ובנייה, הוראות נציבות כבאות והצלה ותקנים ישראליים</p>
     </div>
     ${gd ? `<div class="badge-group">${gd}</div>` : ''}
   </div>`;
