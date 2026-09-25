@@ -840,8 +840,9 @@ function renderResumePrompt(saved){
   const restartBtn = el(`<button class="btn-secondary">↺ התחל מחדש</button>`);
   continueBtn.addEventListener('click', async ()=>{
     state = Object.assign(state, saved);
+    const targetScreen = state.screen; // save before we temporarily switch to 'loading'
     const groupEntry = Array.isArray(state.path) ? state.path.find(p=>p.type==='group') : null;
-    if(groupEntry && (state.screen==='question' || state.screen==='results')){
+    if(groupEntry && (targetScreen==='question' || targetScreen==='results')){
       state.screen = 'loading';
       render();
       try {
@@ -852,6 +853,7 @@ function renderResumePrompt(saved){
         toast('שגיאה בטעינת הנתונים — בדקו חיבור לאינטרנט ונסו שוב');
         return;
       }
+      state.screen = targetScreen; // restore the screen we were actually resuming to
     }
     render();
   });
