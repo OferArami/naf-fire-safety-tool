@@ -1123,10 +1123,15 @@ function renderQuestion(){
 // consolidated text on Hebrew Wikisource. When the requirement number is a chapter-3
 // clause (e.g. 3.2.11.2, or a range like 3.2.11.1-3.2.11.9 -> first number), the link
 // carries a browser "text fragment" (#:~:text=) so Chrome/Edge jump to and highlight the
-// clause. Firefox/Safari open the top of the page instead. Other numbering schemes
+// clause. Firefox/Safari open the top of the page instead. '?useformat=desktop' keeps
+// phones on the desktop layout: the Wikisource mobile layout re-renders after load and
+// scrolls back to the top, undoing the jump to the clause. Other numbering schemes
 // (e.g. 10.01) get the plain page link. Commissioner directives link to their gov.il page,
 // NFPA to its free-access portal. Israeli standards (ת"י) link to the SII search/purchase page (paid).
 const REG_WIKI_URL = 'https://he.wikisource.org/wiki/' + encodeURIComponent('תקנות_התכנון_והבניה_(בקשה_להיתר,_תנאיו_ואגרות)').replace(/%28/g,'(').replace(/%29/g,')').replace(/%2C/g,',');
+// On phones Wikisource's mobile skin scrolls back to the top after the jump; '?action=render' serves the bare page (no skin scripts), and the jump stays. Verified by user on phone.
+const REG_IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'');
+const REG_PAGE = REG_WIKI_URL + (REG_IS_MOBILE ? '?action=render' : '');
 function regLinkFor(src, num){
   if(!src) return null;
   // Fire Commissioner directives: official gov.il policy page per directive number
@@ -1139,8 +1144,8 @@ function regLinkFor(src, num){
   if(/^ת['׳]י|^תקן ישראלי/.test(src)) return {url: 'https://www.sii.org.il/he/standards-search/', label: src + ' — חיפוש ורכישה במכון התקנים (בתשלום)', deep:false};
   if(src.indexOf('תקנות תכנון ובניה') !== 0) return null;
   const m = /^\s*(3\.\d+\.\d+\.\d+)/.exec(num || '');
-  if(m) return {url: REG_WIKI_URL + '#:~:text=' + encodeURIComponent(m[1]), label: 'תקנות תכנון ובניה — סעיף ' + m[1], deep:true};
-  return {url: REG_WIKI_URL, label: 'תקנות תכנון ובניה', deep:false};
+  if(m) return {url: REG_PAGE + '#:~:text=' + encodeURIComponent(m[1]), label: 'תקנות תכנון ובניה — סעיף ' + m[1], deep:true};
+  return {url: REG_PAGE, label: 'תקנות תכנון ובניה', deep:false};
 }
 function regLinkHtml(src, num){
   const l = regLinkFor(src, num);
