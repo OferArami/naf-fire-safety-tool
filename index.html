@@ -294,6 +294,16 @@ select.calc-select{
 }
 .req-item .req-rem b{color:var(--ink);}
 
+.req-tag-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.req-tag-badge{
+  font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);
+}
+.req-tags{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;}
+.req-tag-check{
+  display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;
+}
+
 .notebox{margin-top:8px;}
 .notebox textarea{
   width:100%;border:1px dashed var(--line);border-radius:8px;padding:8px 10px;
@@ -721,7 +731,8 @@ let state = {
   path:[],
   project:{ name:'', address:'', author:'' },
   notes:{},
-  calcTables:{ fire:[], occ:[], walk:[], barn:[], systems:[] },
+  reqTags:{}, // per-requirement checkbox state: {[reqKey]: {drawing:bool, note:bool}} — "שייך על גבי השרטוט" / "הערה כללית"
+  calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[] },
   checklist532:{},
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
@@ -862,7 +873,7 @@ function renderResumePrompt(saved){
     // load would ask the same question again about data the person just discarded.
     try{ await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
-      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],barn:[],systems:[]}, checklist532:{}
+      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[]}, checklist532:{}
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -875,6 +886,7 @@ async function persist(){
   try{
     await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:state.screen, path:state.path, project:state.project, notes:state.notes,
+      reqTags:state.reqTags,
       mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532
     }));
     showStorageWarning();
@@ -1143,6 +1155,19 @@ function renderResults(){
   summary.appendChild(el(`<span class="chip">${grouped.size} מקורות רגולציה</span>`));
   card.appendChild(summary);
 
+  // Item 2: quick shortcuts from the results screen straight to the relevant
+  // data tables — since no reliable, literal phrase for "prepare a table of
+  // X" was found across the real requirement text (checked directly against
+  // the full dataset), this is a direct-access shortcut rather than a
+  // per-requirement auto-detected link.
+  const shortcuts = el(`<div class="toolbar no-print" style="margin-top:4px;"></div>`);
+  [['areas','🗺️ טבלת שטחים'],['openings','🚪 טבלת פתחים ודלתות'],['windows','🪟 מחשבון חלונות']].forEach(([tab,label])=>{
+    const b = el(`<button class="btn-secondary">${label}</button>`);
+    b.addEventListener('click', ()=>{ state.mainTab='calc'; state.calcTab=tab; render(); persist(); });
+    shortcuts.appendChild(b);
+  });
+  card.appendChild(shortcuts);
+
   const toolbar = el(`<div class="toolbar no-print"></div>`);
   const printBtn = el(`<button class="btn-primary">🖨️ הדפס / שמור כ-PDF</button>`);
   printBtn.addEventListener('click', ()=>window.print());
@@ -1192,7 +1217,39 @@ function renderResults(){
       if(rem){
         item.appendChild(el(`<div class="req-rem"><b>דגשים: </b>${rem}</div>`));
       }
-      const noteKey = (num||'')+'|'+(req||'').slice(0,40);
+      const reqKey = (num||'')+'|'+(req||'').slice(0,40);
+
+      // Two independent tags per requirement — "belongs on the drawing itself"
+      // and/or "goes in the general written notes" — so the final document
+      // knows which section to place each requirement's content into.
+      const tagBadges = el(`<div class="req-tag-badges"></div>`);
+      function renderTagBadges(){
+        const t = state.reqTags[reqKey] || {};
+        tagBadges.innerHTML = '';
+        if(t.drawing) tagBadges.appendChild(el(`<span class="req-tag-badge">🖼 שרטוט</span>`));
+        if(t.note) tagBadges.appendChild(el(`<span class="req-tag-badge">📝 הערה כללית</span>`));
+      }
+      renderTagBadges();
+      item.appendChild(tagBadges);
+
+      const tagRow = el(`<div class="req-tags no-print"></div>`);
+      const saved = state.reqTags[reqKey] || {};
+      const drawingCb = el(`<label class="req-tag-check"><input type="checkbox" ${saved.drawing?'checked':''}/> שייך על גבי השרטוט</label>`);
+      const noteCb = el(`<label class="req-tag-check"><input type="checkbox" ${saved.note?'checked':''}/> הערה כללית</label>`);
+      drawingCb.querySelector('input').addEventListener('change', (e)=>{
+        if(!state.reqTags[reqKey]) state.reqTags[reqKey] = {};
+        state.reqTags[reqKey].drawing = e.target.checked;
+        renderTagBadges(); persist();
+      });
+      noteCb.querySelector('input').addEventListener('change', (e)=>{
+        if(!state.reqTags[reqKey]) state.reqTags[reqKey] = {};
+        state.reqTags[reqKey].note = e.target.checked;
+        renderTagBadges(); persist();
+      });
+      tagRow.appendChild(drawingCb); tagRow.appendChild(noteCb);
+      item.appendChild(tagRow);
+
+      const noteKey = reqKey;
       const noteBox = el(`<div class="notebox no-print"><textarea placeholder="הערה / סטטוס ביצוע (אופציונלי)">${state.notes[noteKey]||''}</textarea></div>`);
       noteBox.querySelector('textarea').addEventListener('input',(e)=>{
         state.notes[noteKey] = e.target.value; persist();
@@ -1282,9 +1339,13 @@ function renderCalcRoot(){
     ['fire','עמידות אש שלד הבניין'],
     ['occ','תפוסה ורוחב יציאות'],
     ['walk','מרחקי הליכה'],
+    ['areas','טבלת שטחים לפי חלל'],
+    ['openings','טבלת פתחים ודלתות'],
+    ['windows','מחשבון חלונות'],
     ['barn','גודל מתבן'],
     ['systems','מערכות בטיחות אש נדרשות'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
+    ['draft','טיוטה להגשה (שבלונה)'],
     ['submission','בדיקת הגשה (הוראת 532)']
   ];
   defs.forEach(([id,label])=>{
@@ -1298,9 +1359,13 @@ function renderCalcRoot(){
   if(state.calcTab==='fire') renderCalcFire();
   if(state.calcTab==='occ') renderCalcOcc();
   if(state.calcTab==='walk') renderCalcWalk();
+  if(state.calcTab==='areas') renderCalcAreas();
+  if(state.calcTab==='openings') renderCalcOpenings();
+  if(state.calcTab==='windows') renderCalcWindows();
   if(state.calcTab==='barn') renderCalcBarn();
   if(state.calcTab==='systems') renderCalcSystems();
   if(state.calcTab==='business') renderCalcBusiness();
+  if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
 }
 
@@ -1581,6 +1646,7 @@ function renderCalcWalk(){
   card.appendChild(row1);
 
   const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:2;"></div>`);
+  let lastWalkLimit = null;
   function updateResult(){
     state.calcSelections.walk.use = +useSel.value;
     state.calcSelections.walk.spr = sprSel.value;
@@ -1592,14 +1658,41 @@ function renderCalcWalk(){
     resultBox.innerHTML = `מרחק הליכה מותר: <b>${walk ?? '—'}</b> מ׳<br/>
       פרוזדור ללא מוצא מותר: <b>${corr ?? '—'}</b> מ׳<br/>
       מהלך משותף מותר: <b>${comm ?? '—'}</b> מ׳`;
+    lastWalkLimit = (typeof walk === 'number') ? walk : null;
     return {use:w.use, sprinklered:spr?'עם מתזים':'ללא מתזים', walk, corr, comm};
   }
+
+  // Item 8: let the user enter the ACTUAL measured walking distance from the
+  // plan, and compare it against the allowed limit above. If it's exceeded,
+  // suggest the most direct fix — an additional exit door nearer the
+  // over-length area, which shortens the walking distance for that area
+  // without requiring a different use classification or sprinkler retrofit.
+  // (Declared here, before the first refresh() call below, so refresh() can
+  // safely call checkActualDistance() without a temporal-dead-zone error.)
+  const actualWrap = el(`<div style="margin-top:14px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">מרחק הליכה בפועל בתוכנית (מ׳) — אופציונלי, להשוואה מול המותר</label></div>`);
+  const actualInput = el(`<input type="number" min="0" step="0.1" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+  actualWrap.appendChild(actualInput);
+  const exceedBox = el(`<div class="disclaimer no-print" style="display:none;margin-top:10px;background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);"></div>`);
+  function checkActualDistance(){
+    const actual = parseFloat(actualInput.value);
+    if(!actual || lastWalkLimit === null || actual <= lastWalkLimit){
+      exceedBox.style.display = 'none';
+      return;
+    }
+    exceedBox.style.display = 'block';
+    exceedBox.innerHTML = `⚠ מרחק ההליכה בתוכנית (${actual} מ׳) חורג מהמותר (${lastWalkLimit} מ׳).<br/>
+      פתרון אפשרי: הוספת דרך-מוצא/דלת יציאה נוספת בקרבת האזור החורג — כך שמרחק ההליכה בפועל לנקודה הרחוקה ביותר יתקצר, בלי לשנות את סיווג השימוש או להוסיף מתזים. יש לוודא את המיקום המדויק מול יועץ בטיחות אש.`;
+  }
+  actualInput.addEventListener('input', checkActualDistance);
+
   let lastCalc = null;
-  function refresh(){ lastCalc = updateResult(); }
+  function refresh(){ lastCalc = updateResult(); checkActualDistance(); }
   useSel.addEventListener('change', refresh);
   sprSel.addEventListener('change', refresh);
   refresh();
   card.appendChild(resultBox);
+  card.appendChild(actualWrap);
+  card.appendChild(exceedBox);
 
   const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
   addBtn.addEventListener('click', ()=>{
@@ -1612,6 +1705,159 @@ function renderCalcWalk(){
   tableCard('טבלת מרחקי הליכה שנבנתה',
     ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')'],
     state.calcTables.walk, 'walk');
+}
+
+/* ---- 3b. Area table per space (טבלת שטחים לפי חלל) ----
+   Simple room-by-room area builder from the floor plan (גרמושקה): name the
+   space, enter its length/width, get the area, add it to a running table. */
+function renderCalcAreas(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טבלת שטחים לפי חלל</h3>`));
+  card.appendChild(el(`<p class="qsub">לכל חלל בגרמושקה (חדר, מחסן, מבואה, יציאה וכו׳) — הזינו שם ומידות, ותקבלו טבלת שטחים מצטברת.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: חדר שינה 1"/>`);
+  nameWrap.appendChild(nameInput);
+  const lenWrap = el(`<div><label>אורך (מ׳)</label></div>`);
+  const lenInput = el(`<input type="number" min="0" step="0.01"/>`);
+  lenWrap.appendChild(lenInput);
+  const widWrap = el(`<div><label>רוחב (מ׳)</label></div>`);
+  const widInput = el(`<input type="number" min="0" step="0.01"/>`);
+  widWrap.appendChild(widInput);
+  row1.appendChild(nameWrap); row1.appendChild(lenWrap); row1.appendChild(widWrap);
+  card.appendChild(row1);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;"></div>`);
+  let lastArea = null;
+  function updateResult(){
+    const len = parseFloat(lenInput.value)||0, wid = parseFloat(widInput.value)||0;
+    lastArea = len*wid;
+    resultBox.innerHTML = `שטח החלל: <b>${lastArea.toFixed(2)}</b> מ״ר`;
+  }
+  lenInput.addEventListener('input', updateResult);
+  widInput.addEventListener('input', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    state.calcTables.areas.push([nameInput.value.trim(), (parseFloat(lenInput.value)||0).toFixed(2), (parseFloat(widInput.value)||0).toFixed(2), lastArea.toFixed(2)]);
+    nameInput.value = ''; lenInput.value = ''; widInput.value = '';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  const totalRow = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0), 0);
+  tableCard(`טבלת שטחים שנבנתה — סה״כ ${totalRow.toFixed(2)} מ״ר`,
+    ['שם החלל','אורך (מ\')','רוחב (מ\')','שטח (מ"ר)'],
+    state.calcTables.areas, 'areas');
+}
+
+/* ---- 3c. Openings / doors table (טבלת פתחים ודלתות) ----
+   Per space: the size of its opening/door, for quick reference alongside the
+   area table above. */
+function renderCalcOpenings(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טבלת פתחים ודלתות</h3>`));
+  card.appendChild(el(`<p class="qsub">לכל חלל — גודל הפתח/דלת שלו, לצורך התאמה מול דרישות רוחב יציאה.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: מבואת כניסה"/>`);
+  nameWrap.appendChild(nameInput);
+  const widWrap = el(`<div><label>רוחב פתח (ס״מ)</label></div>`);
+  const widInput = el(`<input type="number" min="0" step="1"/>`);
+  widWrap.appendChild(widInput);
+  const heightWrap = el(`<div><label>גובה פתח (ס״מ) — אופציונלי</label></div>`);
+  const heightInput = el(`<input type="number" min="0" step="1"/>`);
+  heightWrap.appendChild(heightInput);
+  row1.appendChild(nameWrap); row1.appendChild(widWrap); row1.appendChild(heightWrap);
+  card.appendChild(row1);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    if(!widInput.value){ toast('יש להזין רוחב פתח'); return; }
+    state.calcTables.openings.push([nameInput.value.trim(), widInput.value, heightInput.value||'—']);
+    nameInput.value=''; widInput.value=''; heightInput.value='';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת פתחים ודלתות שנבנתה',
+    ['שם החלל','רוחב פתח (ס"מ)','גובה פתח (ס"מ)'],
+    state.calcTables.openings, 'openings');
+}
+
+/* ---- 3d. Windows calculator (מחשבון חלונות) ----
+   Two independent thresholds, as specified: room height above 4.5m requires
+   an automatic (smoke/fire) system; window sill height above 1.8m requires a
+   manually-operable window plus a note for the firefighter panel. */
+function renderCalcWindows(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">מחשבון חלונות</h3>`));
+  card.appendChild(el(`<p class="qsub">גובה חלל 4.5 מ׳ ומעלה — נדרשת מערכת אוטומטית. גובה חלון (מהרצפה) 1.8 מ׳ ומעלה — נדרש חלון פתיחה ידני, עם הערה לפאנל כבאים.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: חדר מדרגות"/>`);
+  nameWrap.appendChild(nameInput);
+  const roomHWrap = el(`<div><label>גובה החלל (מ׳)</label></div>`);
+  const roomHInput = el(`<input type="number" min="0" step="0.1"/>`);
+  roomHWrap.appendChild(roomHInput);
+  const winHWrap = el(`<div><label>גובה החלון מהרצפה (מ׳)</label></div>`);
+  const winHInput = el(`<input type="number" min="0" step="0.1"/>`);
+  winHWrap.appendChild(winHInput);
+  row1.appendChild(nameWrap); row1.appendChild(roomHWrap); row1.appendChild(winHWrap);
+  card.appendChild(row1);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:1.9;"></div>`);
+  let lastFlags = null;
+  function updateResult(){
+    const roomH = parseFloat(roomHInput.value)||0, winH = parseFloat(winHInput.value)||0;
+    const needsAutoSystem = roomH >= 4.5;
+    const needsManualWindow = winH >= 1.8;
+    const lines = [];
+    lines.push(needsAutoSystem
+      ? '⚠ גובה החלל 4.5 מ׳ ומעלה — נדרשת מערכת אוטומטית.'
+      : '✓ גובה החלל מתחת ל-4.5 מ׳ — אין דרישה למערכת אוטומטית מטעם זה.');
+    lines.push(needsManualWindow
+      ? '⚠ גובה החלון 1.8 מ׳ ומעלה — נדרש חלון פתיחה ידני, ויש לציין הערה בפאנל כבאים.'
+      : '✓ גובה החלון מתחת ל-1.8 מ׳ — אין דרישה לפתיחה ידנית מטעם זה.');
+    resultBox.innerHTML = lines.join('<br/>');
+    lastFlags = {needsAutoSystem, needsManualWindow};
+  }
+  roomHInput.addEventListener('input', updateResult);
+  winHInput.addEventListener('input', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    state.calcTables.windows.push([
+      nameInput.value.trim(),
+      (parseFloat(roomHInput.value)||0).toFixed(1),
+      (parseFloat(winHInput.value)||0).toFixed(1),
+      lastFlags.needsAutoSystem ? 'כן' : 'לא',
+      lastFlags.needsManualWindow ? 'כן' : 'לא',
+    ]);
+    nameInput.value=''; roomHInput.value=''; winHInput.value='';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת חלונות שנבנתה',
+    ['שם החלל','גובה חלל (מ\')','גובה חלון (מ\')','נדרשת מערכת אוטומטית','נדרש חלון פתיחה ידני'],
+    state.calcTables.windows, 'windows');
 }
 
 /* ---- 4. Barn / hay storage size (גודל מתבן) ---- */
@@ -1901,6 +2147,130 @@ function renderCalcBusiness(){
 }
 
 /* ---- 7. Submission checklist (הוראת נציב 532) ---- */
+/* ---- Draft / submission template (טיוטה להגשה / שבלונת הגשה) ----
+   Items 11+12 from the partner's request list, confirmed to be the same
+   feature ("אותו דבר"): one consolidated, printable document built from
+   data already entered elsewhere in the tool — it adds no new inputs of
+   its own. It pulls together:
+     - the project details (name/address/author) from the results screen,
+     - the requirements tagged "שייך על גבי השרטוט" / "הערה כללית" on the
+       results screen (Item 1), reconstructed from the CURRENT wizard path
+       (state.path) the same way the results screen itself computes them,
+     - every calculator table (areas/openings/windows and the rest) that
+       has at least one row.
+   It relies on the same group/path the wizard is currently on, so it is
+   used the same way the Item 2 shortcut buttons are: finish the
+   questionnaire for a scenario first, then switch here to see the
+   compiled draft. */
+function renderCalcDraft(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טיוטה / שבלונת הגשה</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טיוטה מרוכזת להגשה</h3>`));
+  card.appendChild(el(`<p class="qsub">מסמך אחד המרכז את פרטי הפרויקט, הדרישות שסומנו לשרטוט או להערה כללית במסך התוצאות, וטבלאות המחשבונים שמולאו — מוכן להדפסה או להעתקה לפני הגשה.</p>`));
+
+  const hasGroup = state.path.some(p=>p.type==='group');
+  if(!hasGroup){
+    card.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">יש להשלים קודם את השאלון (״שאלון דרישות״) עבור סוג המבנה הרלוונטי — הטיוטה תתמלא אוטומטית מהתוצאות ומהמחשבונים שמולאו.</div>`));
+    return;
+  }
+
+  let reqs = [];
+  try{
+    const result = nextStep(state.path);
+    reqs = result.active || [];
+  }catch(e){ reqs = []; }
+
+  const p = state.project;
+  const levelChoices = state.path.filter(pp=>pp.type==='level');
+  const scenarioLabel = levelChoices.length ? levelChoices.map(l=>l.desc).join(' · ') : 'ללא תת-סיווג נוסף';
+
+  const projCard = el(`<div class="card"></div>`);
+  projCard.appendChild(el(`<div class="eyebrow">פרטי הפרויקט</div>`));
+  projCard.appendChild(el(`<div style="font-size:13.5px;line-height:2;">
+    ${p.name? '<b>שם הפרויקט:</b> '+p.name+'<br/>':''}
+    ${p.address? '<b>כתובת:</b> '+p.address+'<br/>':''}
+    ${p.author? '<b>הוכן ע״י:</b> '+p.author+'<br/>':''}
+    <b>סוג מבנה:</b> ${currentGroupDesc()}<br/>
+    <b>תרחיש:</b> ${scenarioLabel}<br/>
+    <b>תאריך:</b> ${new Date().toLocaleDateString('he-IL')}
+  </div>`));
+  app.appendChild(projCard);
+
+  function reqKeyOf(r){ return (s(r.num)||'')+'|'+(s(r.req)||'').slice(0,40); }
+
+  const drawingItems = reqs.filter(r=>{ const t = state.reqTags[reqKeyOf(r)]; return t && t.drawing; });
+  const drawCard = el(`<div class="card"></div>`);
+  drawCard.appendChild(el(`<div class="source-title"><span>🖼 פריטים לסימון על גבי השרטוט</span><span class="count">${drawingItems.length}</span></div>`));
+  if(drawingItems.length===0){
+    drawCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא סומנו דרישות לשרטוט. אפשר לסמן במסך התוצאות ("שייך על גבי השרטוט").</div>`));
+  } else {
+    drawingItems.forEach(r=>{
+      const num = s(r.num), req = s(r.req);
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
+      top.appendChild(el(`<div class="req-text">${req||''}</div>`));
+      item.appendChild(top);
+      drawCard.appendChild(item);
+    });
+  }
+  app.appendChild(drawCard);
+
+  const noteItems = reqs.filter(r=>{ const t = state.reqTags[reqKeyOf(r)]; return t && t.note; });
+  const noteCard = el(`<div class="card"></div>`);
+  noteCard.appendChild(el(`<div class="source-title"><span>📝 הערות כלליות</span><span class="count">${noteItems.length}</span></div>`));
+  if(noteItems.length===0){
+    noteCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא סומנו דרישות כהערה כללית. אפשר לסמן במסך התוצאות ("הערה כללית").</div>`));
+  } else {
+    noteItems.forEach(r=>{
+      const num = s(r.num), req = s(r.req);
+      const key = reqKeyOf(r);
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
+      top.appendChild(el(`<div class="req-text">${req||''}</div>`));
+      item.appendChild(top);
+      const noteText = state.notes[key];
+      if(noteText) item.appendChild(el(`<div class="req-rem"><b>הערה: </b>${noteText}</div>`));
+      noteCard.appendChild(item);
+    });
+  }
+  app.appendChild(noteCard);
+
+  const areasTotal = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0),0);
+  const tableDefs = [
+    ['areas', `טבלת שטחים — סה״כ ${areasTotal.toFixed(2)} מ״ר`, ['שם החלל','אורך (מ\')','רוחב (מ\')','שטח (מ"ר)']],
+    ['openings', 'טבלת פתחים ודלתות', ['שם החלל','רוחב פתח (ס"מ)','גובה פתח (ס"מ)']],
+    ['windows', 'טבלת חלונות', ['שם החלל','גובה חלל (מ\')','גובה חלון (מ\')','נדרשת מערכת אוטומטית','נדרש חלון פתיחה ידני']],
+    ['fire', 'טבלת עמידות אש', ['אלמנט מבנה','סוג שלד','עמידות בשעות']],
+    ['occ', 'טבלת תפוסה ורוחב יציאות', ['שימוש','שטח מ"ר','מקדם תפוסה','תפוסה (נפש)','רוחב אופקי נדרש (ס"מ)','רוחב מדרגות נדרש (ס"מ)']],
+    ['walk', 'טבלת מרחקי הליכה', ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')']],
+    ['barn', 'טבלת חישובי מתבן', ['שטח מתבן (מ"ר)','גובה מבנה (מ\')','יחידות בלות/קומה','מס\' קומות בלות','סה"כ יחידות','משקל (טון)','סיווג']],
+    ['systems', 'טבלת מערכות בטיחות אש', ['סוג מבנה','תרחיש','התרעת אש','גילוי אש','מתזים','כריזה']]
+  ];
+  const filledTables = tableDefs.filter(([key])=>(state.calcTables[key]||[]).length > 0);
+  if(filledTables.length){
+    const tblHeader = el(`<div class="card"></div>`);
+    tblHeader.appendChild(el(`<div class="eyebrow">טבלאות מחשבונים שמולאו</div>`));
+    app.appendChild(tblHeader);
+    filledTables.forEach(([key,title,headers])=>{
+      tableCard(title, headers, state.calcTables[key], key);
+    });
+  } else {
+    const emptyTablesCard = el(`<div class="card"></div>`);
+    emptyTablesCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא מולאו עדיין טבלאות במחשבונים. טבלה שתמולאו בכל אחד מהמחשבונים (שטחים, פתחים, חלונות ועוד) תופיע כאן אוטומטית.</div>`));
+    app.appendChild(emptyTablesCard);
+  }
+
+  const toolbar = el(`<div class="toolbar no-print" style="margin-top:16px;"></div>`);
+  const printBtn = el(`<button class="btn-primary">🖨️ הדפס / שמור כ-PDF</button>`);
+  printBtn.addEventListener('click', ()=>window.print());
+  toolbar.appendChild(printBtn);
+  app.appendChild(toolbar);
+
+  app.appendChild(el(`<footer class="note">מסמך זה מרכז את הנתונים שהוזנו במערכת ואינו מהווה אישור רשמי. יש לאמת מול יועץ בטיחות אש מוסמך ורשות הכבאות לפני הגשה.</footer>`));
+}
+
 function renderCalcSubmission(){
   const card = calcCard();
   card.appendChild(el(`<div class="eyebrow">הוראת נציב 532</div>`));
