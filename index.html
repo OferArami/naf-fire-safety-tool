@@ -294,6 +294,9 @@ select.calc-select{
 }
 .req-item .req-rem b{color:var(--ink);}
 
+.req-links{margin:6px 0 2px;}
+.reg-link{font-size:12px;color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
+.reg-link:hover{opacity:.8;}
 .req-tag-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .req-tag-badge{
   font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
@@ -1115,6 +1118,36 @@ function renderQuestion(){
   app.appendChild(card);
 }
 
+/* ============ Regulation links (Item 10) ============ */
+// Requirements sourced from the Planning & Building Regulations link to the free
+// consolidated text on Hebrew Wikisource. When the requirement number is a chapter-3
+// clause (e.g. 3.2.11.2, or a range like 3.2.11.1-3.2.11.9 -> first number), the link
+// carries a browser "text fragment" (#:~:text=) so Chrome/Edge jump to and highlight the
+// clause. Firefox/Safari open the top of the page instead. Other numbering schemes
+// (e.g. 10.01) get the plain page link. Commissioner directives link to their gov.il page,
+// NFPA to its free-access portal. Israeli standards (ת"י) link to the SII search/purchase page (paid).
+const REG_WIKI_URL = 'https://he.wikisource.org/wiki/' + encodeURIComponent('תקנות_התכנון_והבניה_(בקשה_להיתר,_תנאיו_ואגרות)').replace(/%28/g,'(').replace(/%29/g,')').replace(/%2C/g,',');
+function regLinkFor(src, num){
+  if(!src) return null;
+  // Fire Commissioner directives: official gov.il policy page per directive number
+  const dm = /הוראת נציב\s+(\d+)/.exec(src);
+  if(dm) return {url: 'https://www.gov.il/he/departments/policies/directive_' + dm[1], label: 'הוראת נציב ' + dm[1] + ' (gov.il)', deep:false};
+  // NFPA: free read-only access portal (free NFPA account required); no per-standard deep link
+  if(src.indexOf('NFPA') === 0) return {url: 'https://www.nfpa.org/freeaccess', label: src + ' — קריאה חינמית באתר NFPA (נדרשת הרשמה)', deep:false};
+  // Israeli Standards (ת"י): paid only. The per-standard page id on sii.org.il cannot be derived
+  // from the standard number, so link to the SII standards search/purchase page.
+  if(/^ת['׳]י|^תקן ישראלי/.test(src)) return {url: 'https://www.sii.org.il/he/standards-search/', label: src + ' — חיפוש ורכישה במכון התקנים (בתשלום)', deep:false};
+  if(src.indexOf('תקנות תכנון ובניה') !== 0) return null;
+  const m = /^\s*(3\.\d+\.\d+\.\d+)/.exec(num || '');
+  if(m) return {url: REG_WIKI_URL + '#:~:text=' + encodeURIComponent(m[1]), label: 'תקנות תכנון ובניה — סעיף ' + m[1], deep:true};
+  return {url: REG_WIKI_URL, label: 'תקנות תכנון ובניה', deep:false};
+}
+function regLinkHtml(src, num){
+  const l = regLinkFor(src, num);
+  if(!l) return '';
+  return `<a class="reg-link no-print" href="${l.url}" target="_blank" rel="noopener">🔗 ${l.label}</a>`;
+}
+
 /* ============ Results ============ */
 function groupBySource(reqs){
   const map = new Map();
@@ -1214,6 +1247,8 @@ function renderResults(){
       if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
       top.appendChild(el(`<div class="req-text">${req||''}</div>`));
       item.appendChild(top);
+      const rl = regLinkHtml(s(r.src), num);
+      if(rl) item.appendChild(el(`<div class="req-links">${rl}</div>`));
       if(rem){
         item.appendChild(el(`<div class="req-rem"><b>דגשים: </b>${rem}</div>`));
       }
@@ -2211,6 +2246,8 @@ function renderCalcDraft(){
       if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
       top.appendChild(el(`<div class="req-text">${req||''}</div>`));
       item.appendChild(top);
+      const rl2 = regLinkHtml(s(r.src), num);
+      if(rl2) item.appendChild(el(`<div class="req-links">${rl2}</div>`));
       drawCard.appendChild(item);
     });
   }
