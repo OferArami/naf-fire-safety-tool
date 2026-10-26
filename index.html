@@ -739,7 +739,7 @@ let state = {
   notes:{},
   excluded:{}, // per-requirement "not relevant" marks: {[reqKey]: true} — hidden from print and from the draft
   reqTags:{}, // per-requirement checkbox state: {[reqKey]: {drawing:bool, note:bool}} — "שייך על גבי השרטוט" / "הערה כללית"
-  calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[] },
+  calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[], water:[] },
   checklist532:{},
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
@@ -881,7 +881,7 @@ function renderResumePrompt(saved){
     // load would ask the same question again about data the person just discarded.
     try{ await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
-      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[]}, checklist532:{}
+      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{}
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -1393,6 +1393,9 @@ style2.textContent = `
     .masthead-updated{position:static;order:-1;flex-basis:100%;white-space:normal;line-height:1.5;}
     .masthead > div:not(.masthead-updated):not(.badge-group){flex:1;min-width:0;}
   }
+  .calc-table th{padding:7px 8px;border-bottom:2px solid var(--steel-soft);color:var(--steel);white-space:nowrap;}
+  .calc-table td{padding:7px 8px;border-bottom:1px solid var(--line);}
+  .calc-table td:not(:first-child), .calc-table th:not(:first-child){text-align:center;font-variant-numeric:tabular-nums;}
   .opt-count{margin-inline-start:auto;font-size:11.5px;color:var(--ink-soft);white-space:nowrap;padding-inline-start:10px;}
   .btn-ex{margin-inline-start:auto;flex:none;font:inherit;font-size:11.5px;border:1px solid var(--line, #d9dfe1);background:transparent;color:var(--ink-soft);border-radius:999px;padding:3px 10px;cursor:pointer;}
   .btn-ex:hover{color:var(--ink);}
@@ -1448,6 +1451,7 @@ function renderCalcRoot(){
     ['windows','מחשבון חלונות'],
     ['barn','גודל מתבן'],
     ['systems','מערכות בטיחות אש נדרשות'],
+    ['water','ספיקות ונפחי מים (הוראה 529)'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
     ['draft','טיוטה להגשה (שבלונה)'],
     ['submission','בדיקת הגשה (הוראת 532)']
@@ -1468,6 +1472,7 @@ function renderCalcRoot(){
   if(state.calcTab==='windows') renderCalcWindows();
   if(state.calcTab==='barn') renderCalcBarn();
   if(state.calcTab==='systems') renderCalcSystems();
+  if(state.calcTab==='water') renderCalcWater();
   if(state.calcTab==='business') renderCalcBusiness();
   if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
@@ -1810,6 +1815,161 @@ function renderCalcWalk(){
     ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')'],
     state.calcTables.walk, 'walk');
 }
+
+/* ---- Fire-fighting water flows & volumes (הוראת נציב 529, נספחים 3-4) ----
+   Hazard classes and the use list are copied from Directive 529 (June 2019), appendix 3 (translated
+   from NFPA 13); flows/areas/durations from appendix 4. Hydrant spacing from section 6, hydrant
+   arrangement by building height from section 7, water-source rules from sections 3.1.9 / 3.1.12 / 8. */
+const WATER529 = {
+  hazards: {
+    light: {name:'סיכון קל', en:'Light Hazard', density:4.1, densityGpm:0.10, area:139, areaFt:1500, spk:570, spkGpm:150, spkM3h:35, hyd:500, hydM3h:30, total:1100, totalM3h:65, time:30, spacing:100},
+    ord1:  {name:'סיכון רגיל – קבוצה 1', en:'Ordinary Hazard Gr.1', density:6.1, densityGpm:0.15, area:139, areaFt:1500, spk:850, spkGpm:225, spkM3h:50, hyd:1000, hydM3h:60, total:1850, totalM3h:110, time:60, spacing:80},
+    ord2:  {name:'סיכון רגיל – קבוצה 2', en:'Ordinary Hazard Gr.2', density:8.1, densityGpm:0.20, area:139, areaFt:1500, spk:1125, spkGpm:300, spkM3h:67, hyd:1000, hydM3h:60, total:2200, totalM3h:130, time:60, spacing:80},
+    ext1:  {name:'סיכון מיוחד – קבוצה 1', en:'Extra Hazard Gr.1', density:12.2, densityGpm:0.30, area:232, areaFt:2500, spk:2830, spkGpm:750, spkM3h:170, hyd:2000, hydM3h:120, total:4800, totalM3h:300, time:120, spacing:60},
+    ext2:  {name:'סיכון מיוחד – קבוצה 2', en:'Extra Hazard Gr.2', density:16.3, densityGpm:0.40, area:232, areaFt:2500, spk:3780, spkGpm:1000, spkM3h:225, hyd:2000, hydM3h:120, total:6000, totalM3h:360, time:120, spacing:60}
+  },
+  uses: {
+    light: ['בתי תפילה','מועדונים','בתי החלמה','מבני חינוך','בתי חולים','מוסדות','ספריות, למעט חדרי אחסנה גדולים','מוזיאונים','מגורים','משרדים, כולל עיבוד נתונים','אזורי ישיבה במסעדות','תיאטרונים, אודיטוריום, למעט אזורי הבמה','כרכובים וזיזים, במידה ועשויים חומרים דליקים ותחתם אין חומרים דליקים','עליות גג לא בשימוש'],
+    ord1:  ['חניונים מקורים ואולמות תצוגה','מאפיות','מפעלי משקאות','מפעלי שימורים','מפעלים לייצור מוצרי חלב (מחלבות)','מפעלי אלקטרוניקה','מפעלי זכוכית','מכבסות','אזורי שירות – מסעדות'],
+    ord2:  ['טחנות דגן (קמח, אורז וכו\')','מפעלים כימיים – רגילים','מפעלים לייצור דברי מתיקה','מזקקות','ניקוי יבש','מפעלי מזון','אורוות סוסים','מפעלי עור','ספריות – חדרי אחסנה גדולים','חנויות למכונות','עבודות מתכת','בתי מסחר','מפעלי נייר','מזחים ורציפים','בתי דואר','בתי דפוס והוצאה לאור','מוסכים','מפעלי טכסטיל','בימות – בתיאטרונים וכו\'','מפעלי צמיגים','מפעלי טבק','מפעלים לעבוד עץ וגומי, לרבות נגריות','מפעלים להרכבת מוצרי עץ'],
+    ext1:  ['הנגרי מטוסים','אזורים בהם יש שימוש בנוזלים הידראוליים דליקים','בתי יציקה','שיחול מתכות','מפעלים לייצור דיקטים ולוחות עץ','דפוס (שימוש בדיו בעל נקודת הבזק קטנה מ-37.9°C)','ייצור גומי','בתי מלאכה לנסירת עצים','עיבוד מוצרי טכסטיל','ריפוד בקצפים פלסטיים'],
+    ext2:  ['ריווי אספלט','התזה של נוזלים דליקים','ציפוי בנוזלים דליקים','ייצור או הרכבה מודולאריים של בתים מחומרים דליקים','כיבוי וצינון פתוח בשמן','עיבוד חומרים פלסטיים','ניקוי בממיסים למיניהם','טבילת צבע ולכה']
+  }
+};
+function renderCalcWater(){
+  if(!state.calcTables.water) state.calcTables.water = [];
+  if(!state.calcSelections.water) state.calcSelections.water = {use:'', hazard:'light', area:'', height:'', spkSrc:'reservoir', hydSrc:'reservoir'};
+  const sel = state.calcSelections.water;
+  const H = WATER529.hazards;
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">הוראת נציב 529 · נספחים 3 ו-4</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">ספיקות ונפחי מים לכיבוי (מתזים + ברזי כיבוי)</h3>`));
+  const inputStyle = 'width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);';
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const useWrap = el(`<div><label>ייעוד המבנה (נספח 3)</label></div>`);
+  const useSel = el(`<select class="calc-select" style="${inputStyle}"></select>`);
+  useSel.appendChild(el(`<option value="">— בחירה ישירה של דרגת סיכון —</option>`));
+  Object.keys(WATER529.uses).forEach(hk=>{
+    const og = document.createElement('optgroup'); og.label = H[hk].name;
+    WATER529.uses[hk].forEach(u=>{ const o = document.createElement('option'); o.value = hk+'|'+u; o.textContent = u; og.appendChild(o); });
+    useSel.appendChild(og);
+  });
+  useSel.value = sel.use || '';
+  useWrap.appendChild(useSel);
+  const hazWrap = el(`<div><label>דרגת סיכון</label></div>`);
+  const hazSel = el(`<select class="calc-select" style="${inputStyle}"></select>`);
+  Object.keys(H).forEach(hk=>hazSel.appendChild(el(`<option value="${hk}">${H[hk].name} (${H[hk].en})</option>`)));
+  hazSel.value = sel.hazard || 'light';
+  hazWrap.appendChild(hazSel);
+  row1.appendChild(useWrap); row1.appendChild(hazWrap);
+  card.appendChild(row1);
+
+  const row2 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const areaWrap = el(`<div><label>שטח המבנה / האזור המוגן (מ"ר) — אופציונלי</label></div>`);
+  const areaIn = el(`<input type="number" min="0" step="1" style="${inputStyle}" value="${sel.area||''}"/>`);
+  areaWrap.appendChild(areaIn);
+  const hWrap = el(`<div><label>גובה הבניין (מ') — אופציונלי</label></div>`);
+  const hIn = el(`<input type="number" min="0" step="0.1" style="${inputStyle}" value="${sel.height||''}"/>`);
+  hWrap.appendChild(hIn);
+  row2.appendChild(areaWrap); row2.appendChild(hWrap);
+  card.appendChild(row2);
+
+  const row3 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const srcOpts = `<option value="reservoir">מאגר מים ומשאבות</option><option value="city">רשת המים העירונית</option>`;
+  const spkWrap = el(`<div><label>מקור מים למתזים</label></div>`);
+  const spkSel = el(`<select class="calc-select" style="${inputStyle}">${srcOpts}</select>`); spkSel.value = sel.spkSrc;
+  spkWrap.appendChild(spkSel);
+  const hydWrap = el(`<div><label>מקור מים לברזי הכיבוי</label></div>`);
+  const hydSel = el(`<select class="calc-select" style="${inputStyle}">${srcOpts}</select>`); hydSel.value = sel.hydSrc;
+  hydWrap.appendChild(hydSel);
+  row3.appendChild(spkWrap); row3.appendChild(hydWrap);
+  card.appendChild(row3);
+
+  const resultBox = el(`<div style="margin-top:14px;"></div>`);
+  const warnBox = el(`<div class="disclaimer" style="display:none;margin-top:10px;background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);line-height:1.9;"></div>`);
+  const notesBox = el(`<div class="disclaimer" style="margin-top:10px;line-height:1.9;font-size:12.5px;"></div>`);
+  card.appendChild(resultBox); card.appendChild(warnBox); card.appendChild(notesBox);
+
+  const n0 = v => Math.round(v).toLocaleString('he-IL');
+  const n1 = v => (Math.round(v*10)/10).toLocaleString('he-IL');
+  const gpm = lpm => lpm / 3.785;
+  const m3h = lpm => lpm * 60 / 1000;
+  const heightClass = h => h <= 0 ? null : h <= 13 ? 'regular' : h <= 29 ? 'high' : h <= 42 ? 'multi' : 'sky';
+  const HEIGHT_LABEL = {regular:'בניין רגיל (עד 13 מ\')', high:'בניין גבוה (13–29 מ\')', multi:'בניין רב קומות (29–42 מ\')', sky:'גורד שחקים (מעל 42 מ\')'};
+
+  let last = null;
+  function update(){
+    // choosing a use sets the hazard; the hazard can still be changed by hand afterwards
+    sel.use = useSel.value; sel.hazard = hazSel.value; sel.area = areaIn.value; sel.height = hIn.value;
+    sel.spkSrc = spkSel.value; sel.hydSrc = hydSel.value;
+    const hk = hazSel.value, h = H[hk];
+    const useName = sel.use ? sel.use.split('|')[1] : '';
+    const useHk = sel.use ? sel.use.split('|')[0] : null;
+    const area = parseFloat(areaIn.value), height = parseFloat(hIn.value);
+    const hasArea = area > 0, smaller = hasArea && area < h.area;
+    const spkAct = smaller ? area * h.density : h.spk;
+    const totAct = smaller ? spkAct + h.hyd : h.total;
+    const volTable = h.total * h.time / 1000, volSpk = h.spk * h.time / 1000;
+
+    let html = `<div class="table-wrap" style="overflow-x:auto;"><table class="calc-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr><th></th><th>ל/ד</th><th>GPM</th><th>מק"ש</th></tr></thead><tbody>
+      <tr><td><b>מתזים</b> — ${h.density} ל/ד/מ"ר × ${h.area} מ"ר</td><td>${n0(h.spk)}</td><td>${n0(h.spkGpm)}</td><td>${n0(h.spkM3h)}</td></tr>
+      <tr><td><b>ברזי כיבוי</b> (בלחצים 2.5–7 בר)</td><td>${n0(h.hyd)}</td><td>${n0(gpm(h.hyd))}</td><td>${n0(h.hydM3h)}</td></tr>
+      <tr><td><b>צריכה כוללת</b> — מתזים + ברזי כיבוי</td><td><b>${n0(h.total)}</b></td><td>${n0(gpm(h.total))}</td><td><b>${n0(h.totalM3h)}</b></td></tr>
+      </tbody></table></div>
+      <div style="margin-top:10px;line-height:2;font-size:13.5px;">
+        דרגת סיכון: <b>${h.name}</b> (${h.en})${useName ? ` · ייעוד: ${useName}` : ''}<br/>
+        צפיפות: <b>${h.density}</b> ל/ד/מ"ר (${h.densityGpm} GPM/ft²) · שטח יישום: <b>${h.area}</b> מ"ר (${h.areaFt} ft²)<br/>
+        משך זמן עבודה של מערכות המים: <b>${h.time}</b> דקות<br/>
+        נפח מים כולל (צריכה כוללת × משך): <b>${n0(volTable)}</b> מ"ק · מתוכו למתזים: ${n0(volSpk)} מ"ק<br/>
+        מרחק מרבי בין ברזי כיבוי 3" מחוץ למבנה (סעיף 6): <b>${h.spacing}</b> מ' (סטייה מותרת של 10 מ')
+      </div>`;
+    if(smaller){
+      html += `<div style="margin-top:8px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;">אינדיקציה בלבד: שטח המבנה (${n0(area)} מ"ר) קטן משטח היישום בטבלה. לפי השטח בפועל:
+        מתזים ${n0(spkAct)} ל/ד (${n1(m3h(spkAct))} מק"ש), צריכה כוללת ${n0(totAct)} ל/ד (${n1(m3h(totAct))} מק"ש), נפח ${n1(totAct*h.time/1000)} מ"ק. הנתון הקובע הוא החישוב ההידראולי של מתכנן המתזים לפי ת"י 1596.</div>`;
+    }
+    const hc = height > 0 ? heightClass(height) : null;
+    if(hc){
+      const arr = hc === 'multi' || hc === 'sky' ? 'ברז כיבוי כפול 2×3" על גבי זקף 4" סמוך לרחבת ההיערכות לרכב כיבוי אש (סעיף 7.1)'
+                : hc === 'high' ? 'ניתן להסתפק בברז כיבוי אחד 3" על זקף 4", וברז הסנקה לאחר ה"גמל" בתחום הנכס (סעיף 7.2)'
+                : 'סעיף 7 לא קובע הסדר מיוחד לבניין רגיל — לפי הוראת נציב 550 ותקנות התכנון והבנייה';
+      html += `<div style="margin-top:8px;line-height:1.9;font-size:13.5px;">סיווג לפי גובה: <b>${HEIGHT_LABEL[hc]}</b><br/>ברזי כיבוי בבניין: ${arr}</div>`;
+    }
+    resultBox.innerHTML = html;
+
+    const warns = [];
+    if(useHk && useHk !== hk) warns.push(`דרגת הסיכון שונתה ידנית: לפי נספח 3 הייעוד "${useName}" הוא ${H[useHk].name}.`);
+    const extra = hk === 'ext1' || hk === 'ext2';
+    if(extra && (spkSel.value === 'city' || hydSel.value === 'city'))
+      warns.push('בסיכון מיוחד (קבוצות 1 ו-2) יש לדרוש מאגר מים ומשאבות, שיחושב לפי רמת הסיכון של המבנה, ולא להתבסס רק על רשת המים העירונית (סעיף 3.1.12).');
+    if(!extra && (spkSel.value === 'city' || hydSel.value === 'city'))
+      warns.push('רשת עירונית אפשרית בסיכון קל ורגיל רק אם בדיקת מעבדה מוכרת של זמינות הרשת (לאחר הגמל) מאשרת שהספיקה והלחץ עומדים בדרישות. אם לא — יש להשלים מאגר ומשאבות (סעיפים 3.1.9–3.1.11, ופרק 8).');
+    if(hc && hc !== 'regular' && hydSel.value === 'city')
+      warns.push('ברזי הכיבוי של הבניין (סעיף 7) אינם נספרים במניין ברזי הכיבוי של רשת המים העירונית (סעיף 7.3).');
+    warnBox.style.display = warns.length ? 'block' : 'none';
+    warnBox.innerHTML = warns.map(w=>'⚠ '+w).join('<br/>');
+
+    notesBox.innerHTML = `<b>הערות מנספח 4:</b> הטבלה מתייחסת לגובה אחסנה מרבי של 3.7 מ' (מטעני פלסטיק A — 3 מ'). שטח היישום, ולכן כמות המים למתזים, עשויים להשתנות לפי גובה התקרה וסוג המתזים — על המתכנן לציין זאת לפי התקן ואישורי UL/FM.
+      מחסנים ואופי האחסון — בנפרד. כשיש הוראה אחרת (למשל לבתי חולים או למפעלים ביטחוניים) או דרישה בת"י 1596 — קובעת הכמות הגדולה מביניהן.`;
+
+    last = [useName || '—', h.name, hasArea ? n0(area) : '—', height > 0 ? n1(height) : '—', String(h.density), String(h.area),
+            n0(h.spk), n0(h.hyd), n0(h.total), String(h.time), n0(volTable)];
+    persist();
+  }
+  useSel.addEventListener('change', ()=>{ if(useSel.value) hazSel.value = useSel.value.split('|')[0]; update(); });
+  [hazSel, spkSel, hydSel].forEach(x=>x.addEventListener('change', update));
+  [areaIn, hIn].forEach(x=>x.addEventListener('input', update));
+  update();
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{ state.calcTables.water.push(last); render(); persist(); });
+  card.appendChild(addBtn);
+  card.appendChild(el(`<div class="req-links no-print" style="margin-top:10px;"><a class="reg-link" href="https://www.gov.il/he/departments/policies/directive_529" target="_blank" rel="noopener">🔗 הוראת נציב 529 (gov.il)</a></div>`));
+
+  tableCard('טבלת ספיקות ונפחי מים שנבנתה', WATER_TABLE_HEADERS, state.calcTables.water, 'water');
+}
+const WATER_TABLE_HEADERS = ['ייעוד','דרגת סיכון','שטח (מ"ר)','גובה (מ\')','צפיפות (ל/ד/מ"ר)','שטח יישום (מ"ר)','מתזים (ל/ד)','ברזי כיבוי (ל/ד)','צריכה כוללת (ל/ד)','משך (דק\')','נפח כולל (מ"ק)'];
 
 /* ---- 3b. Area table per space (טבלת שטחים לפי חלל) ----
    Simple room-by-room area builder from the floor plan (גרמושקה): name the
@@ -2352,7 +2512,8 @@ function renderCalcDraft(){
     ['occ', 'טבלת תפוסה ורוחב יציאות', ['שימוש','שטח מ"ר','מקדם תפוסה','תפוסה (נפש)','רוחב אופקי נדרש (ס"מ)','רוחב מדרגות נדרש (ס"מ)']],
     ['walk', 'טבלת מרחקי הליכה', ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')']],
     ['barn', 'טבלת חישובי מתבן', ['שטח מתבן (מ"ר)','גובה מבנה (מ\')','יחידות בלות/קומה','מס\' קומות בלות','סה"כ יחידות','משקל (טון)','סיווג']],
-    ['systems', 'טבלת מערכות בטיחות אש', ['סוג מבנה','תרחיש','התרעת אש','גילוי אש','מתזים','כריזה']]
+    ['systems', 'טבלת מערכות בטיחות אש', ['סוג מבנה','תרחיש','התרעת אש','גילוי אש','מתזים','כריזה']],
+    ['water', 'טבלת ספיקות ונפחי מים לכיבוי (הוראת נציב 529)', WATER_TABLE_HEADERS]
   ];
   const filledTables = tableDefs.filter(([key])=>(state.calcTables[key]||[]).length > 0);
   if(filledTables.length){
