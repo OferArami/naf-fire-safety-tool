@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<!-- saved from url=(0150)file:///C:/Users/user/Downloads/%D7%91%D7%95%D7%A0%D7%94_%D7%AA%D7%95%D7%9B%D7%A0%D7%99%D7%AA_%D7%91%D7%98%D7%99%D7%97%D7%95%D7%AA_%D7%90%D7%A9_2.html -->
+<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>בונה תוכנית בטיחות אש – משרדים</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root{
+  /* Technical / schematic theme (direction 1) - dark on-screen appearance */
+  --bg:#1C2128;
+  --paper:#12161B;
+  --surface-2:#171D24;
+  --ink:#E8EAED;
+  --ink-soft:#8B98A3;
+  --accent:#E8873C;
+  --accent-soft:#2E2015;
+  --steel:#6FA3C4;
+  --steel-soft:#16232C;
+  --line:#2D3339;
+  --ok:#3DDC84;
+  --ok-soft:#14231A;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 20px -10px rgba(0,0,0,.6);
+  --masthead-bg:#0D1013;
+  --masthead-ink:var(--ink);
+  --masthead-sub:#6B7480;
+  --hover-surface:#1E2530;
+  --steel-line:#274252;
+  --accent-line:#5A3A22;
+}
+@media print{
+  :root{
+    /* Printed output stays on the original light "paper" palette, already
+       tested and approved - only the on-screen theme changed, not print. */
+    --bg:#F3EEE3;
+    --paper:#FFFFFF;
+    --surface-2:var(--surface-2);
+    --ink:#1D2A2E;
+    --ink-soft:#4B5B60;
+    --accent:#AE3A16;
+    --accent-soft:#F0D9CC;
+    --steel:#2E4A56;
+    --steel-soft:#DCE6E8;
+    --line:#DED4C1;
+    --ok:#4C6B4F;
+    --ok-soft:#DEE8DD;
+    --radius:14px;
+    --shadow:none;
+    --masthead-bg:var(--ink);
+    --masthead-ink:#F3EEE3;
+    --masthead-sub:#C9BFA9;
+    --hover-surface:#FFFFFF;
+    --steel-line:#C6D5D8;
+    --accent-line:#E3B8A0;
+  }
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Heebo',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  padding:28px 16px 80px;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+.wrap{max-width:880px;margin:0 auto;}
+
+/* ---------- Header ---------- */
+.masthead{
+  position:relative;
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  background:var(--masthead-bg);
+  color:var(--masthead-ink);
+  border-radius:var(--radius);
+  margin-bottom:22px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--line);
+}
+.masthead-updated{
+  position:absolute;
+  top:10px;
+  left:14px;
+  font-size:11.5px;
+  color:var(--masthead-sub);
+  white-space:nowrap;
+}
+.masthead .flame{
+  width:40px;height:40px;flex:0 0 auto;
+}
+.masthead h1{
+  font-size:19px;margin:0;font-weight:700;letter-spacing:.2px;
+}
+.masthead p{margin:2px 0 0;font-size:12.5px;color:var(--masthead-sub);}
+.badge-group{
+  margin-inline-start:auto;
+  font-size:11px;
+  background:var(--accent);
+  color:#fff;
+  padding:5px 12px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:26px;
+  margin-bottom:18px;
+}
+.disclaimer{
+  background:var(--steel-soft);
+  border:1px solid var(--steel-line);
+  border-radius:10px;
+  padding:14px 16px;
+  font-size:13px;
+  color:var(--steel);
+  line-height:1.7;
+  margin-top:14px;
+}
+.disclaimer b{color:var(--ink);}
+
+/* ---------- Progress ---------- */
+.progress-track{
+  display:flex;gap:5px;margin-bottom:22px;
+}
+.progress-seg{
+  height:5px;flex:1;background:var(--line);border-radius:3px;overflow:hidden;
+}
+.progress-seg i{display:block;height:100%;background:var(--accent);width:0%;transition:width .3s;}
+
+/* ---------- Question ---------- */
+.eyebrow{
+  font-size:12px;font-weight:700;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;
+}
+.qtitle{font-size:22px;font-weight:700;margin:0 0 6px;line-height:1.4;}
+.qsub{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px;}
+
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;
+  text-align:right;
+  border:1.5px solid var(--line);
+  background:var(--surface-2);
+  border-radius:11px;
+  padding:14px 16px;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:15px;
+  color:var(--ink);
+  transition:border-color .15s, background .15s, transform .1s;
+  width:100%;
+}
+.opt:hover{border-color:var(--accent);background:var(--hover-surface);}
+
+/* Calculator <select> elements: custom background/color need appearance:none to
+   actually override native OS widget chrome in most browsers - this was the
+   root cause of "gray background, unreadable black text" - but that also
+   removes the native dropdown arrow, so we draw our own chevron instead. */
+select.calc-select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  color:var(--ink);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5 8l5 5 5-5' fill='none' stroke='%238B98A3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat;
+  background-position:left 12px center;
+  background-size:14px;
+  padding-inline-start:34px;
+}
+@media print{
+  select.calc-select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5 8l5 5 5-5' fill='none' stroke='%234B5B60' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+}
+.opt:active{transform:scale(.995);}
+.opt .num{
+  flex:0 0 auto;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--steel-soft);color:var(--steel);
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+}
+.opt .label{flex:1;line-height:1.5;}
+.opt .desc{display:block;font-size:12px;color:var(--ink-soft);margin-top:3px;}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:22px;}
+.btn-ghost{
+  background:none;border:none;color:var(--ink-soft);font-size:14px;cursor:pointer;
+  font-family:inherit;padding:8px 4px;
+}
+.btn-ghost:hover{color:var(--ink);}
+.btn-ghost:disabled{opacity:0;pointer-events:none;}
+
+/* ---------- Intro ---------- */
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
+@media(max-width:600px){.intro-grid{grid-template-columns:1fr;}}
+.intro-item{
+  border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface-2);
+}
+.intro-item .k{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;}
+.intro-item .v{font-size:13.5px;margin-top:4px;line-height:1.5;}
+.btn-primary{
+  background:var(--accent);color:#fff;border:none;border-radius:10px;
+  padding:14px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 6px 16px -6px rgba(174,58,22,.5);
+  transition:transform .1s, box-shadow .15s;
+}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-secondary{
+  background:none;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;
+  padding:13px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.btn-secondary:hover{border-color:var(--ink-soft);}
+
+.group-picker{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.group-pill{
+  font-size:12.5px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--surface-2);color:var(--ink-soft);
+}
+.group-pill.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:700;}
+
+/* ---------- Track selector — two full-width cards, not easy to miss (was a pair of small pills) ---------- */
+.track-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
+@media(max-width:520px){.track-picker{grid-template-columns:1fr;}}
+.track-card{
+  text-align:right;padding:16px;border-radius:12px;border:2px solid var(--line);
+  background:var(--surface-2);cursor:pointer;transition:border-color .15s, background .15s;
+}
+.track-card .tc-title{font-size:15px;font-weight:700;color:var(--ink);}
+.track-card .tc-sub{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+.track-card.active{border-color:var(--accent);background:var(--accent-soft);}
+.track-card.active .tc-title{color:var(--accent);}
+
+/* ---------- Results ---------- */
+.stamp{
+  position:absolute; inset-inline-end:22px; top:22px;
+  border:2px solid var(--ok);color:var(--ok);
+  border-radius:8px; padding:6px 10px; font-size:11px; font-weight:800;
+  transform:rotate(-6deg); letter-spacing:.5px;
+}
+.result-header{position:relative;}
+.result-header h2{font-size:21px;margin:0 0 4px;}
+.result-header .meta{font-size:12.5px;color:var(--ink-soft);}
+
+.project-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px;}
+@media(max-width:600px){.project-form{grid-template-columns:1fr;}}
+.project-form label{font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;}
+.project-form input{
+  width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;
+  font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);
+}
+.project-form input:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+
+.summary-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;
+}
+.chip{
+  font-size:12px;background:var(--steel-soft);color:var(--steel);
+  padding:6px 12px;border-radius:999px;font-weight:600;
+}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px;}
+
+.source-block{margin-top:26px;}
+.source-title{
+  font-size:13px;font-weight:800;color:var(--steel);
+  border-bottom:2px solid var(--steel-soft);padding-bottom:6px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.source-title .count{
+  background:var(--steel);color:#fff;font-size:11px;border-radius:999px;
+  padding:2px 8px;font-family:'JetBrains Mono',monospace;
+}
+.req-item{
+  border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin-bottom:9px;background:var(--surface-2);
+}
+.req-item .req-top{display:flex;gap:10px;align-items:flex-start;}
+.req-item .req-num{
+  flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  background:var(--accent-soft);color:var(--accent);padding:3px 8px;border-radius:6px;font-weight:700;
+  white-space:nowrap;
+}
+.req-item .req-text{font-size:14px;line-height:1.65;flex:1;min-width:0;overflow-wrap:anywhere;}
+.req-item .req-rem{
+  margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);
+  font-size:12.5px;color:var(--ink-soft);line-height:1.6;
+}
+.req-item .req-rem b{color:var(--ink);}
+
+.req-links{margin:6px 0 2px;}
+.reg-link{font-size:12px;color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
+.reg-link:hover{opacity:.8;}
+.req-tag-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.req-tag-badge{
+  font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);
+}
+.req-tags{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;}
+.req-tag-check{
+  display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;
+}
+
+.notebox{margin-top:8px;}
+.notebox textarea{
+  width:100%;border:1px dashed var(--line);border-radius:8px;padding:8px 10px;
+  font-family:inherit;font-size:12.5px;resize:vertical;min-height:34px;background:var(--surface-2);color:var(--ink);
+}
+
+footer.note{
+  text-align:center;font-size:12px;color:var(--ink-soft);margin-top:30px;line-height:1.8;
+}
+
+@media print{
+  body{background:#fff;padding:0;}
+  .no-print{display:none !important;}
+  .card{box-shadow:none;border:none;padding:0;}
+  .masthead{border-radius:0;}
+  .req-item{break-inside:avoid;}
+  .source-block{break-inside:avoid-page;}
+}
+.toplevel-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.toplevel-tab{
+  flex:1;text-align:center;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);
+  background:var(--paper);color:var(--ink-soft);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;
+}
+.toplevel-tab.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--masthead-bg);color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;
+  opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:999;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+table th, table td{text-align:right;}
+@media print{ .toast{display:none;} }
+</style>
+<style>
+  #print-header{display:none;}
+  @media print{ #print-header.print-only-card{display:block !important;} }
+</style></head>
+<body>
+<div class="wrap" id="app"><div class="masthead">
+    <svg class="flame" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 3C20 3 12 12 12 20C12 25 15 27 15 27C13 22 15 18 17 16C17 20 19 22 21 23C24 24.5 26 27 26 30C26 34 22.5 37 20 37C14 37 8 32 8 24C8 14 20 3 20 3Z" fill="#AE3A16"></path>
+    <path d="M20 15C20 15 17 20 17 24C17 28 19 30 21 30C23 30 25 28 25 25C25 23 24 21 22 20C22.5 22 22 23 21 23.5C20 22 20 18 20 15Z" fill="#F2B183"></path>
+  </svg>
+    <div>
+      <h1>בונה תוכנית בטיחות אש</h1>
+      <p>מבוסס על תקנות תכנון ובנייה, הוראות נציבות כבאות והצלה ותקנים ישראליים</p>
+    </div>
+    
+  </div><div class="toplevel-tabs no-print"><button type="button" class="toplevel-tab active">שאלון דרישות</button><button type="button" class="toplevel-tab ">מחשבונים ותוספות</button></div><div class="card">
+    <div class="eyebrow">כלי חדש · כיסוי מלא</div>
+    <h2 class="qtitle">בואו נבנה יחד את דרישות הכבאות לפרויקט שלכם</h2>
+    <p class="qsub">שאלון מודרך שמסתעף אוטומטית לפי סוג המבנה והשימוש שלכם, ובסופו רשימת דרישות הכבאות הרלוונטיות בדיוק למקרה שלכם — מוכנה להדפסה כ-PDF ולצירוף לבקשת ההיתר / הרישוי.</p>
+    <div class="intro-grid">
+      <div class="intro-item"><div class="k">מבוסס על</div><div class="v">מאגר דרישות רשמי: תקנות תכנון ובנייה, הוראת נציב 550, חוק הרשות הארצית לכבאות, תקנים ישראליים</div></div>
+      <div class="intro-item"><div class="k">כיסוי</div><div class="v">89 סוגי מבנים ושימושים — מגורים, מסחר, תעשייה, מוסדות חינוך ובריאות, התקהלות, חניונים ועוד, בשני מסלולים: היתר בנייה ורישוי עסקים</div></div>
+      <div class="intro-item"><div class="k">משך</div><div class="v">כ-3–6 שאלות, לפי סוג המבנה</div></div>
+      <div class="intro-item"><div class="k">פלט</div><div class="v">רשימת דרישות ממוינת לפי מקור, עם דגשים והערות, מוכנה להדפסה</div></div>
+    </div>
+    <button class="btn-primary no-print" id="start-btn">בואו נתחיל ←</button>
+    <div class="disclaimer">
+      <b>חשוב לדעת:</b> כלי זה נועד לסייע באיתור ראשוני של דרישות כבאות רלוונטיות, על בסיס מאגר הדרישות שסופק. הוא <b>אינו תחליף</b> לאישור עקרוני ובחינה של יועץ בטיחות אש מוסמך ו/או מהנדס רישוי כבאות, ואינו מהווה אישור רשמי של רשות הכבאות וההצלה. יש לוודא את הדרישות מול הרשות המקומית ורשות הכבאות בטרם הגשה.
+    </div>
+  </div></div>
+
+<script>
+/*GROUPS_CONFIG_PLACEHOLDER*/
+</script>
+<script>
+
+const CALC = {"fireResistance":{"cols":[{"code":"332 I","label":"מבנה- מגורים עשוי מתכת"},{"code":"442 I","label":"מבנה- מגורים עשוי בטון"},{"code":"III 211","label":"פלדה עם מיגון ממוגנת אש"},{"code":"III 200","label":"פלדה דקה / מבנה קל(תקרות קלות, פנלים, מכולות)"},{"code":"IV-2HH","label":"פלדה דקה / מבנה קל(תקרות קלות, פנלים, מכולות)"},{"code":"V -111","label":"עץ כבד"},{"code":"V -000","label":"עץ קל / מבנים יבילים / פלסטיק מורכבים"}],"rows":[{"element":"1.1. קירות חוץ הנושאים יותר מקומה אחת, עמודים או קירות נושאים אחרים.","values":[3,4,2,2,2,"(א) 1","0(א)(ג)"]},{"element":"1.2. קירות חוץ הנושאים קומה אחת בלבד.","values":[3,4,2,2,2,"(א) 1","0(א)(ג)"]},{"element":"1.3. קירות חוץ הנושאים גג בלבד.","values":[3,4,2,2,2,"(א) 1","0(א)(ג)"]},{"element":"2.1.קירות פנים הנושאים יותר מקומה אחת, עמודים או קירות נושאים אחרים.","values":[3,4,"(א) 1","0(א)",2,"(א) 1","0(א)"]},{"element":"2.2. קירות פנים הנושאים קומה אחת בלבד.","values":[2,3,"(א) 1","0(א)",1,"(א) 1","0(א)"]},{"element":"2.3. קירות פנים הנושאים גג בלבד.","values":[2,3,"(א) 1","0(א)",1,"(א) 1","0(א)"]},{"element":"3.1. עמודים הנושאים יותר מקומה אחת, עמודים או קירות נושאים אחרים.","values":[3,4,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"3.2. עמודים הנושאים קומה אחת בלבד.","values":[2,3,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"3.3. עמודים הנושאים גג בלבד.","values":[2,3,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"4.1. קורות ואגדים הנושאים יותר מקומה אחת עמודים או קירות נושאים אחרים.","values":[3,4,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"4.2. קורות ואגדים הנושאים קומה אחת בלבד.","values":[2,2,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"4.3. קורות ואגדים הנושאים גג בלבד.","values":[2,2,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"5. רצפה.","values":[2,2,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"6. גג.","values":[1.5,2,"(א) 1","0(א)","H א,ב","(א) 1","0(א)"]},{"element":"7. קירות חוץ שאינם נושאים.","values":[0,0,"0(א)(ג)","0(א)(ג)","0(א)(ג)","0(א)(ג)","0(א)(ג)"]}]},"occupancy":[{"num":1,"use":"אולם אסיפות עם מקומות ישיבה מקובעים","category":"התקהלות","factor":"לפי כמות המושבים המקובעים ופרט 3.2.12.3(ב)","area_type":null,"notes":"(א), (ב), תפוסה מקסימלית"},{"num":2,"use":"אולם אסיפות עם מקומות ישיבה לא מקובלים המיועד לצפייה באירוע, ובכלל זה הרצאה, הצגה, קונצרט או פעילות ספורט","category":"התקהלות","factor":1,"area_type":"נטו אולם","notes":"(א), (ב1), תפוסה מקסימלית, לדוגמה כמתואר בתרשים 3.2.12.3 א'"},{"num":3,"use":"אולם אסיפות בלא מקומות ישיבה הפנוי מריהוט קבוע או נייד","category":"התקהלות","factor":"0.75 עד 1","area_type":"נטו אולם","notes":"(א), (ב2), תפוסה מקסימלית, לדוגמה כמתואר בתרשים 3.2.12.3 ב'"},{"num":"3א","use":"אולם אסיפות עם מקומות ישיבה לא מקובעים ליד שולחנות או אולם שמחות","category":"התקהלות","factor":"1.4 עד 1","area_type":"נטו אולם","notes":"(א), (ב1), (ב2) תפוסה מקסימלית, לדוגמה כמתואר בתרשים 3.2.12.3 ג'"},{"num":"3ב","use":"אולם אסיפות המיועד לדיסקוטק או שעיקר פעילותו הגשת משקאות משכרים הכולל מספר שימושים המפורטים בפרט 3.2.12.3 (ח)","category":"התקהלות","factor":"לפי פרט 3.2.12.3 (ח)","area_type":"לפי פרט 3.2.12.3 (ח)","notes":"(ח), לדוגמה כמתואר בתרשים 3.2.12.3 ד'"},{"num":4,"use":"אזור מגודר או אזור שיגודר לצורך אירוע, שאיננו מקורה, מחוץ לבניין בגבולות הנכס, עם מושבים מקובעים","category":"התקהלות","factor":"לפי כמות המושבעים המקובעים ופרט 3.2.12.3(ב)","area_type":null,"notes":"(ב), תפוסה מקסימלית"},{"num":5,"use":"אזור מגודר או אזור שיגודר לצורך אירוע, שאיננו מקורה, מחוץ לבניין בגבולות הנכס ללא מושבים מקובעים, המשמש לפסטיבל","category":"התקהלות","factor":1,"area_type":"האזור המגודר","notes":"תפוסה מקסימלית"},{"num":6,"use":"באצטדיון או אולם ספורט, באזור ישיבה על ספסלים","category":"התקהלות","factor":"לכל משתמש 0.50 מטר אורך ספסל ופרט 3.2.12.3(ב)","area_type":null,"notes":"(ב), תפוסה מקסימלית"},{"num":7,"use":"באצטדיון או אולם ספורט, באזור ישיבה על מושבים מקובעים","category":"התקהלות","factor":"לפי כמות המושבים המקובעים ופרט 3.2.12.3(ב)","area_type":null,"notes":"(ב), תפוסה מקסימלית"},{"num":8,"use":"אולם לכדורת, לביליארד ולמשחקים כיוצא באלה","category":"התקהלות","factor":"1.10 ופרט 3.2.12.3(ב)","area_type":"נטו אולם – למעט שטח המשחקים","notes":"(א), תפוסה מקסימלית"},{"num":9,"use":"אולם המתנה – חלק מבניין המשמש מקום המתנה לכניסה לאולם אסיפות למעט אולם שמחות","category":"התקהלות","factor":1,"area_type":"נטו אולם","notes":"(א)"},{"num":10,"use":"אולם המתנה לאולם שמחות","category":"התקהלות","factor":0,"area_type":"נטו אולם","notes":"(א), (ז)"},{"num":11,"use":"מסעדה או שטח הסעדה","category":"התקהלות","factor":"1.4 עד 1","area_type":"נטו שטח הסעדה","notes":"(א), (ב2)"},{"num":12,"use":"מטבח","category":"התקהלות","factor":10,"area_type":"נטו","notes":"(א)"},{"num":13,"use":"ספרייה, אולם קריאה","category":"התקהלות","factor":4.6,"area_type":"נטו","notes":"(א)"},{"num":14,"use":"ספרייה, אזור מדפי ספרים","category":"התקהלות","factor":10,"area_type":"נטו","notes":"(א)"},{"num":15,"use":"בריכה","category":"התקהלות","factor":3,"area_type":"שטח המים","notes":"תפוסה מקסימלית"},{"num":16,"use":"בריכה","category":"התקהלות","factor":3,"area_type":"שטחים מרוצפים מסביב לבריכה","notes":null},{"num":17,"use":"בריכה","category":"התקהלות","factor":1,"area_type":"בשטח פתוח לא מקורה המשמש לאירועים","notes":"תפוסה מקסימלית"},{"num":18,"use":"בריכה","category":"התקהלות","factor":4,"area_type":"בשטח פתוח לא מקורה שאינו משמש לאירועים","notes":null},{"num":19,"use":"מקווה","category":"התקהלות","factor":3,"area_type":"שטח המים","notes":null},{"num":20,"use":"מקווה","category":"התקהלות","factor":3,"area_type":"שטחים מרוצפים מסביב למקווה","notes":null},{"num":21,"use":"חדר כושר הכולל ציוד","category":"התקהלות","factor":4.6,"area_type":"נטו","notes":"(א)"},{"num":22,"use":"חדר כושר ללא ציוד","category":"התקהלות","factor":1.4,"area_type":"נטו","notes":"(א)"},{"num":23,"use":"במה","category":"התקהלות","factor":1.4,"area_type":"נטו","notes":"(א)"},{"num":24,"use":"גלריה טכנית ומעברים לתאורה, תחזוקה וכדומה","category":"התקהלות","factor":10,"area_type":"נטו","notes":null},{"num":25,"use":"כיתה","category":"מוסדות חינוך","factor":1.25,"area_type":"נטו","notes":"(א)"},{"num":26,"use":"חדרי מלאכה","category":"מוסדות חינוך","factor":4,"area_type":"נטו","notes":"(א)"},{"num":27,"use":"מעבדות במוסדות חינוך","category":"מוסדות חינוך","factor":2.5,"area_type":"נטו","notes":"(א)"},{"num":28,"use":"כיתה בגן ילדים או מעון יום","category":"גן ילדים","factor":3.3,"area_type":"נטו","notes":"(א)"},{"num":29,"use":"מרפאות","category":"מוסדות בריאות","factor":9,"area_type":"ברוטו","notes":"(א)"},{"num":30,"use":"מחלקות טיפול","category":"מוסדות בריאות","factor":22,"area_type":"ברוטו","notes":"(א)"},{"num":31,"use":"חדרי חולים (שינה)","category":"מוסדות בריאות","factor":11,"area_type":"ברוטו","notes":"(א)"},{"num":32,"use":"תא מעצר, תא מאסר","category":"בית סוהר, בית מעצר","factor":4.5,"area_type":"נטו תא מעצר או תא מאסר","notes":null},{"num":33,"use":"בניין דירות","category":"מגורים","factor":18,"area_type":"שטח המיועד למטרות עיקריות","notes":"(א)"},{"num":34,"use":"בתי מלון ומעונות סטודנטים","category":"מגורים","factor":18,"area_type":"שטח המיועד למטרות עיקריות","notes":"(א)"},{"num":35,"use":"דיור מוגן","category":"מגורים","factor":18,"area_type":"שטח הדירות ברוטו","notes":"(א)"},{"num":36,"use":"אולם מיטות באכסניה","category":"מגורים","factor":5,"area_type":"נטו אולם","notes":"(א)"},{"num":37,"use":"תעשיה רגילה (כמו משרדים)","category":"תעשיה","factor":10,"area_type":"נטו אולם ייצור","notes":"(א)"},{"num":38,"use":"תעשיה מיוחדת","category":"תעשיה","factor":"בהתאם לתפוסה המתוכננת אך לא יותר מ-100","area_type":"נטו אולם ייצור","notes":"(א)"},{"num":39,"use":"תעשיה מסוכנת","category":"תעשיה","factor":"בהתאם לתפוסה המתוכננת אך לא יותר מ-100","area_type":"נטו אולם ייצור","notes":"(א)"},{"num":40,"use":"בית מלאכה","category":"תעשיה","factor":5,"area_type":"נטו אולם ייצור","notes":"(א)"},{"num":41,"use":"משרדים","category":"עסקים","factor":10,"area_type":"שטח המיועד למטרות עיקריות","notes":"(א)"},{"num":42,"use":"אולם אחסון","category":"אחסון","factor":30,"area_type":"נטו אולם האחסון","notes":"(א)"},{"num":43,"use":"מסחר בקומת מרתף","category":"מסחר","factor":3,"area_type":"שטח למטרות עיקריות לרבות חלל ציבורי מקורה בחזית החנויות","notes":"(ג)"},{"num":44,"use":"מסחר בקומת רחוב","category":"מסחר","factor":3,"area_type":"שטח למטרות עיקריות וחלל ציבורי מקורה בחזית החנויות","notes":"(ג)"},{"num":45,"use":"מסחר בקומה מעל מפלס קומת הרחוב","category":"מסחר","factor":6,"area_type":"שטח למטרות עיקריות וחלל ציבורי מקורה בחזית החנויות","notes":"(ג)"},{"num":46,"use":"קומה או חלק מקומה המשמש רק בעבור אחסון, אזור למשלוח או קבלת סחורה ואשר איננו פתוח לקהל","category":"מסחר","factor":30,"area_type":"נטו","notes":null},{"num":47,"use":"קניון מקורה","category":"מסחר","factor":3,"area_type":"כל שטחי המסחר, למעט מעברים המשמשים דרך מוצא בטוח ולמעט מעבר ציבורי משותף","notes":"(ג), (ד), (ה), (ו)"},{"num":48,"use":"חניון מקורה וחניון לא מקורה","category":"בניינים אחרים","factor":30,"area_type":"קומת החניה נטו","notes":null},{"num":49,"use":"מקלט או מרחב מוגן","category":"בניינים אחרים","factor":"שטחו לא ייחשב במניין התפוסה","area_type":null,"notes":null},{"num":50,"use":"לכל שימוש אחר","category":"בניינים אחרים","factor":"בהתאם לשימוש הדומה לו ביותר מבין השימושים המפורטים בטור א'","area_type":"בהתאם לשימוש הדומה לו","notes":null}],"width":[{"num":1,"use":"מחלקה סיעודית בבית חולים","stairs":1,"horizontal":0.5},{"num":2,"use":"בית חולים – מחלקה אמבולטורית עם כיסוי במתזים","stairs":0.8,"horizontal":0.5},{"num":3,"use":"בית חולים – מחלקה אמבולטורית בלא כיסוי במתזים","stairs":1.5,"horizontal":1.3},{"num":4,"use":"אזורים בעלי סיכון גבוה (High Hazard)","stairs":1.8,"horizontal":1},{"num":5,"use":"כל האחרים","stairs":0.8,"horizontal":0.5}],"walking":[{"num":1,"use":"התקהלות","walk_sprinkler":60,"walk_none":30,"corridor_sprinkler":6,"corridor_none":6,"common_sprinkler":"6 מטרים ליותר מ-50 איש.","common_none":"6 מטרים ליותר מ-50 איש."},{"num":2,"use":"גני ילדים ומעונות יום","walk_sprinkler":"60 ופרט 3.2.15.6","walk_none":"35 ופרט 3.2.15.6","corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":30,"common_none":23},{"num":3,"use":"חינוך","walk_sprinkler":60,"walk_none":35,"corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":30,"common_none":23},{"num":4,"use":"בריאות בתי חולים","walk_sprinkler":"60 ופרט 3.2.15.7","walk_none":"אסור","corridor_sprinkler":9,"corridor_none":"אסור","common_sprinkler":"ראה פרט 3.2.15.7","common_none":"אסור"},{"num":5,"use":"בריאות אמבולטורי מרפאות","walk_sprinkler":"60 ופרט 3.2.15.8","walk_none":"45 ופרט 3.2.15.8","corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":30,"common_none":23},{"num":6,"use":"מגורים חד-משפחתי ודו-משפחתי","walk_sprinkler":"אין דרישה","walk_none":"אין דרישה","corridor_sprinkler":"אין דרישה","corridor_none":"אין דרישה","common_sprinkler":"אין דרישה","common_none":"אין דרישה"},{"num":7,"use":"מגורים בניין דירות","walk_sprinkler":"98 פרט 3.2.15.9","walk_none":"50 פרט 3.2.15.9","corridor_sprinkler":15,"corridor_none":10,"common_sprinkler":15,"common_none":1},{"num":8,"use":"דיור מוגן, ובתי אבות","walk_sprinkler":"98 ופרט 3.2.15.10","walk_none":"אסור","corridor_sprinkler":15,"corridor_none":"אסור","common_sprinkler":38,"common_none":"אסור"},{"num":9,"use":"דיור מוגן – צמוד קרקע","walk_sprinkler":"אין דרישה","walk_none":"אין דרישה","corridor_sprinkler":"אין דרישה","corridor_none":"אין דרישה","common_sprinkler":"אין דרישה","common_none":"אין דרישה"},{"num":10,"use":"מעונות סטודנטים","walk_sprinkler":"98 ופרט 3.2.15.11","walk_none":"30 ופרט 3.2.15.11","corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":15,"common_none":11},{"num":11,"use":"בתי הארחה (5)","walk_sprinkler":"אין דרישה","walk_none":"אין דרישה","corridor_sprinkler":"אין דרישה","corridor_none":"אין דרישה","common_sprinkler":"אין דרישה","common_none":"אין דרישה"},{"num":12,"use":"בתי מלון","walk_sprinkler":"98 ופרט 3.2.15.11","walk_none":30,"corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":15,"common_none":11},{"num":13,"use":"מסחר","walk_sprinkler":60,"walk_none":30,"corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":30,"common_none":23},{"num":14,"use":"מסחר - קניון","walk_sprinkler":120,"walk_none":"אסור","corridor_sprinkler":15,"corridor_none":"אסור","common_sprinkler":30,"common_none":"אסור"},{"num":15,"use":"תעסוקה ומשרדים","walk_sprinkler":90,"walk_none":30,"corridor_sprinkler":15,"corridor_none":6,"common_sprinkler":30,"common_none":23},{"num":16,"use":"תעשיה רגילה","walk_sprinkler":75,"walk_none":30,"corridor_sprinkler":15,"corridor_none":15,"common_sprinkler":30,"common_none":15},{"num":17,"use":"תעשיה מיוחדת","walk_sprinkler":120,"walk_none":60,"corridor_sprinkler":15,"corridor_none":15,"common_sprinkler":30,"common_none":15},{"num":18,"use":"תעשיה מסוכנת","walk_sprinkler":23,"walk_none":"אסור","corridor_sprinkler":"אסור","corridor_none":"אסור","common_sprinkler":"אסור","common_none":"אסור"},{"num":19,"use":"אחסון טובין – רמת סיכון נמוכה ורגילה","walk_sprinkler":120,"walk_none":30,"corridor_sprinkler":30,"corridor_none":15,"common_sprinkler":30,"common_none":15},{"num":20,"use":"אחסון חומרים מסוכנים רמת סיכון גבוהה","walk_sprinkler":30,"walk_none":"אסור","corridor_sprinkler":"אסור","corridor_none":"אסור","common_sprinkler":"אסור","common_none":"אסור"},{"num":21,"use":"חניון מקורה פתוח","walk_sprinkler":120,"walk_none":60,"corridor_sprinkler":15,"corridor_none":15,"common_sprinkler":15,"common_none":15},{"num":22,"use":"חניון סגור","walk_sprinkler":60,"walk_none":30,"corridor_sprinkler":15,"corridor_none":15,"common_sprinkler":15,"common_none":15},{"num":23,"use":"כל שימוש","walk_sprinkler":"יהיה בהתאם לשימוש הדומה לו ביותר מבין השימושים המפורטים בטבלה","walk_none":null,"corridor_sprinkler":null,"corridor_none":null,"common_sprinkler":null,"common_none":null}]};
+
+</script>
+<script>
+
+/* ============================================================
+   SYSTEMS_TABLE — digested from תקנות התכנון והבנייה, פרק ד' (חלק ג'),
+   טבלאות 3.4.11.1 עד 3.4.11.22.
+   Each category has rows describing a scenario, and the requirement
+   for each of the 4 core systems: alarm (התרעת אש), detect (גילוי אש),
+   sprinkler (מתזים), pa (כריזה). Values are short status strings.
+   ============================================================ */
+const SYSTEMS_TABLE = {
+  categories: [
+    { id:'assembly', name:'התקהלות (אולם ריקודים / דיסקוטק / אולם שמחות / הופעות)', ref:'3.4.11.2', rows:[
+      { desc:'תפוסה 50–300 איש (אולם ריקודים, דיסקוטק/פאב עם אזור ריקודים, אולם שמחות, אולם הופעות ללא ישיבה)', alarm:'אין חובה להתקין', detect:'יש להתקין', sprinkler:'יש להתקין (ר׳ הערה 3 — ייתכן פטור לאולם עד 1,115 מ״ר)', pa:'יש להתקין' },
+      { desc:'תפוסה מעל 300 איש', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:[
+      'על החניון בבניין יחולו הדרישות לפי חניון (3.4.11.19).',
+      'בתפוסה מעל 300 איש, המתזים יותקנו בקומת ההתקהלות, בכל קומה מקשרת ובקומת הכניסה הקובעת.',
+      'פטור ממתזים אפשרי לאולם ששטחו עד 1,115 מ״ר, אינו משמש לתצוגה/תערוכה, ללא שימוש נוסף, עם יציאה ישירה החוצה ומופרד ממחיצת בניין אחרים במחיצת אש.'
+    ]},
+    { id:'education', name:'מוסד חינוך', ref:'3.4.11.3', rows:[
+      { desc:'עד 6 כיתות לימוד, כולן בקומת הקרקע', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'כיתת לימוד שרצפתה בגובה מעל 13 מ׳ ממפלס הכניסה הקובעת', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+      { desc:'בניין אחר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין אם שטח אגף האש מעל 2,250 מ״ר, או בחלקי בניין תת-קרקעיים מעל 140 מ״ר', pa:'יש להתקין' },
+    ], notes:[
+      'על החניון יחולו הדרישות לפי חניון (3.4.11.19).',
+      'אספקת מים למתזים במוסד חינוך יכולה להיות ממערכת עירונית גם אם אינה קו מים אמין — ללא חובת מאגר/הגברת לחץ.'
+    ]},
+    { id:'kindergarten', name:'גן ילדים', ref:'3.4.11.4', rows:[
+      { desc:'עד 8 כיתות, בקומת קרקע או מעליה', alarm:'אין חובה', detect:'יש להתקין (גלאי עשן עצמאי)', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'בניין אחר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין, אלא אם כל הכיתות בקומת קרקע עם יציאה ישירה לשטח פתוח', pa:'יש להתקין' },
+    ], notes:['על החניון יחולו הדרישות לפי חניון (3.4.11.19).']},
+    { id:'daycare', name:'מעון יום לפעוטות', ref:'3.4.11.5', rows:[
+      { desc:'עד 8 כיתות, ומכל קומה יציאה ישירה לשטח פתוח', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'כיתה אחת בלבד, עם יציאה ישירה לשטח פתוח', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'בניין אחר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:['על החניון יחולו הדרישות לפי חניון (3.4.11.19).']},
+    { id:'medical', name:'מוסד רפואי (בית חולים / מרפאה לאשפוז יום)', ref:'3.4.11.6', rows:[
+      { desc:'בית חולים', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין, למעט בחדרי ניתוח (אגף אש נפרד מופרד במחיצת אש)', pa:'יש להתקין' },
+      { desc:'מרפאה לאשפוז יום', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין אם: שטח המרפאה מעל 2,000 מ״ר, או מצוי מעל קומת הכניסה, או מתחת למפלס הכניסה', pa:'יש להתקין' },
+    ], notes:[
+      'ההתרעה בבניין תהיה חזותית בלבד.',
+      'בבית חולים, אם לא ניתן/רצוי לפנות בו-זמנית — ניתן להפעיל את ההתרעה אוטומטית רק באזור האירוע, ולשאר הבניין באופן מבוקר; המערכת תשלח התרעה לשירותי הכבאות.',
+      'על החניון יחולו הדרישות לפי חניון (3.4.11.19); מטפים יותקנו לפי פרט 3.4.5.5.'
+    ]},
+    { id:'prison', name:'בית סוהר או בית מעצר', ref:'3.4.11.7', rows:[
+      { desc:'עד 16 מיטות', alarm:'יש להתקין', detect:'יש להתקין (בפרוזדורים בלבד)', sprinkler:'יש להתקין', pa:'אין חובה' },
+      { desc:'17 מיטות או יותר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+      { desc:'בניין שבו קומה אחת או יותר מתחת למפלס הכניסה הקובעת', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:['אם לא ניתן/רצוי לפנות בו-זמנית — הפעלה אזורית מותרת. מטפים במקומות ספציפיים (תאי אחסון עובדים, כביסה, אחסון טקסטיל, לכל אגף). חניון לפי 3.4.11.19.']},
+    { id:'disability', name:'מוסד לאנשים עם מוגבלות', ref:'3.4.11.8', rows:[
+      { desc:'בניין עד 18 מיטות שאינו גבוה/רב-קומות, או בניין שמכל חדר יש יציאה ישירה החוצה/למוצא בטוח (גם אם מעל 18 מיטות)', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'מעון יום שיקומי', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+      { desc:'בניין אחר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:['הפעלה אזורית אפשרית אם לא ניתן/רצוי לפנות בו-זמנית. חניון לפי 3.4.11.19.']},
+    { id:'residential', name:'מגורים', ref:'3.4.11.9', rows:[
+      { desc:'בניין עד 2 דירות', alarm:'אין חובה', detect:'גלאי עשן עצמאי — בכל חדר שינה, במבואה לחדרי שינה, ובכל קומה ללא חדרי שינה (לרבות מרתף)', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'בניין כנ״ל (עד 2 דירות) הנתון לסיכון אש', alarm:'אין חובה', detect:'גלאי עשן עצמאי (כנ״ל)', sprinkler:'יש להתקין (לחלופין: מערכת גילוי אש שאינה גלאי עצמאי)', pa:'אין חובה' },
+      { desc:'בניין אחר, שאינו גבוה ואינו רב-קומות', alarm:'אין חובה', detect:'גלאי עשן עצמאי (כנ״ל)', sprinkler:'יש להתקין במקומות ספציפיים בלבד: מחסן צמוד לדירה, שטח אחסון משותף, חלק בניין תת-קרקעי', pa:'אין חובה' },
+      { desc:'בניין גבוה', alarm:'יש להתקין בשטחים המשותפים בלבד', detect:'גלאי עשן עצמאי בדירות', sprinkler:'יש להתקין במקומות ספציפיים: מחסן צמוד לדירה, שטח אחסון משותף, חלק תת-קרקעי', pa:'אין חובה' },
+      { desc:'בניין רב-קומות, הפרש גובה עד 42 מ׳', alarm:'יש להתקין, למעט בתוך הדירה', detect:'גלאי עשן עצמאי בדירה + מערכת גילוי אש בשאר חלקי הבניין', sprinkler:'יש להתקין: בדירה — מבואת כניסה ומטבח בלבד; ובשאר חלקי הבניין', pa:'אין חובה' },
+      { desc:'בניין רב-קומות, הפרש גובה מעל 42 מ׳', alarm:'יש להתקין, למעט בתוך הדירה', detect:'גלאי עשן עצמאי בדירה + מערכת גילוי אש בשאר חלקי הבניין', sprinkler:'יש להתקין, כולל בתוך הדירה (מבואת כניסה) ובשאר חלקי הבניין', pa:'אין חובה' },
+    ], notes:[
+      'אספקת מים למתזים בבניין שאינו רב-קומות יכולה להיות ממערכת עירונית גם אם אינה קו מים אמין.',
+      'על מחלקה סיעודית ומחלקה לתשושי נפש בבניין מגורים יחולו דרישות בית חולים (3.4.11.6).',
+      'על החניון יחולו הדרישות לפי חניון (3.4.11.19).'
+    ]},
+    { id:'students', name:'מעונות סטודנטים', ref:'3.4.11.10', rows:[
+      { desc:'מעונות סוג 1 — בכל יחידת דיור חדרי שינה נפתחים לחלל משותף שממנו דלת לפרוזדור', alarm:'לפי טבלת מגורים (3.4.11.9)', detect:'לפי טבלת מגורים (3.4.11.9)', sprinkler:'לפי טבלת מגורים (3.4.11.9)', pa:'לפי טבלת מגורים (3.4.11.9)' },
+      { desc:'מעונות סוג 2 — בכל חדר שינה דלת הנפתחת ישירות לפרוזדור המשותף', alarm:'לפי טבלת בית מלון (3.4.11.14)', detect:'לפי טבלת בית מלון (3.4.11.14)', sprinkler:'לפי טבלת בית מלון (3.4.11.14)', pa:'לפי טבלת בית מלון (3.4.11.14)' },
+    ], notes:['על החניון יחולו הדרישות לפי חניון (3.4.11.19).']},
+    { id:'assisted', name:'דיור מוגן', ref:'3.4.11.11', rows:[
+      { desc:'בניין שכל הקומות המשמשות דיור מוגן מצויות בקומת הקרקע ובקומה שמעליה', alarm:'יש להתקין', detect:'יש להתקין (בדירה אפשר לחלופין גלאי עשן עצמאי בחדרי שינה+מבואה)', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'בניין שהחלק המשמש דיור מוגן מצוי בגובה מעל 13 מ׳ ממפלס הכניסה', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין בשטחים הציבוריים בלבד + מבואת כניסה בתוך הדירה', pa:'יש להתקין' },
+      { desc:'בניין אחר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין בשטחים הציבוריים בלבד', pa:'יש להתקין' },
+    ], notes:['הפעלה אזורית אפשרית. מטפים במקומות ספציפיים. מחלקה סיעודית=בית חולים. חניון לפי 3.4.11.19.']},
+    { id:'nursing', name:'בית אבות', ref:'3.4.11.12', rows:[
+      { desc:'עד 16 מיטות', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'17 מיטות או יותר', alarm:'יש להתקין (וגם צופר אזעקה בתוך חדר השינה)', detect:'יש להתקין', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:['ההתרעה תשלח הודעה לכבאות. מטפים במקומות ספציפיים. מחלקה סיעודית=בית חולים. אם תפוסה מעל 300 איש — יש להתקין טלפון כבאים. חניון לפי 3.4.11.19.']},
+    { id:'cabins', name:'צימרים', ref:'3.4.11.13', rows:[
+      { desc:'צימר בודד או מקבץ צימרים — בבניין שאינו נתון לסיכון אש', alarm:'אין חובה', detect:'גלאי עשן עצמאי בכל צימר (כל חדר שינה וכל קומה)', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'צימר בודד או זוג צימרים צמודים — בבניין הנתון לסיכון אש', alarm:'אין חובה', detect:'גלאי עשן עצמאי (כנ״ל)', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'מקבץ צימרים (עד 10) — בבניין הנתון לסיכון אש', alarm:'יש להתקין', detect:'גלאי עשן עצמאי (כנ״ל)', sprinkler:'יש להתקין', pa:'אין חובה' },
+    ], notes:[
+      'אספקת מים למתזים יכולה להיות ממערכת עירונית גם אם אינה קו מים אמין.',
+      'ברז כיבוי 3" יותקן במרחק שלא יעלה על 100 מ׳ מהצימר.',
+      'הדרישות חלות גם על בניין בעל אופי דומה — אכסניית נוער, בית ספר שדה.',
+      'מקבץ של יותר מ-10 צימרים צמודים — לפי שורה 3 בטבלת בית מלון (3.4.11.14). חניון לפי 3.4.11.19.'
+    ]},
+    { id:'hotel', name:'בית מלון', ref:'3.4.11.14', rows:[
+      { desc:'כל יחידות האירוח במפלס הכניסה/מעליו, ולכל יחידה יציאה ישירה לשטח פתוח או למוצא בטוח', alarm:'יש להתקין, למעט בתוך יחידות האירוח (לחצן אזעקה בעמדת הקבלה)', detect:'יש להתקין, למעט בתוך יחידות האירוח (גלאי עשן עצמאי בכל חדר שינה)', sprinkler:'אין חובה', pa:'יש להתקין בבניין שבו היציאה מיחידות האירוח (כולן/חלקן) היא אל מוצא בטוח' },
+      { desc:'בניין שאינו עונה לשורה הקודמת, עד 24 יחידות אירוח בגובה עד 13 מ׳', alarm:'יש להתקין, למעט בתוך יחידות האירוח', detect:'יש להתקין + גלאי עשן עצמאי בכל חדר שינה ביחידות', sprinkler:'אין חובה', pa:'יש להתקין' },
+      { desc:'בניין אחר', alarm:'יש להתקין, למעט בתוך יחידות האירוח', detect:'יש להתקין + גלאי עשן עצמאי בכל חדר שינה ביחידות', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:[
+      'חל גם על בניין בעל אופי דומה — פנימייה, אכסניית נוער, בית ספר שדה.',
+      'מטפים במקומות ספציפיים. רכזת התרעת האש בעמדת הקבלה או מוקד מאויש מרכזי.',
+      'בבניין עד 24 יחידות — פקיד קבלה נוכח בכל עת או מוקד מאויש מרחוק.',
+      'בבניין עם מעל 100 יחידות אירוח — יש להתקין טלפון כבאים. חניון לפי 3.4.11.19.'
+    ]},
+    { id:'commerce', name:'מסחר', ref:'3.4.11.15', rows:[
+      { desc:'בניין ששטח המסחר הכולל בו אינו עולה על 3,000 מ״ר', alarm:'אין חובה', detect:'אין חובה', sprinkler:'לפי תנאים נוספים (קומות, שטח, קומות תחתונות דליקות) — ראו שורות הבאות', pa:'אין חובה' },
+      { desc:'בניין ששטח המסחר הכולל בו עולה על 3,000 מ״ר', alarm:'יש להתקין', detect:'אין חובה', sprinkler:'לפי תנאים נוספים — ראו שורות הבאות', pa:'אין חובה' },
+      { desc:'בניין הכולל עד 3 קומות מסחר', alarm:'—', detect:'—', sprinkler:'יש להתקין', pa:'אין חובה' },
+      { desc:'שטח המסחר הכולל עולה על 1,115 מ״ר', alarm:'—', detect:'—', sprinkler:'יש להתקין', pa:'אין חובה' },
+      { desc:'קומות תחתיות שמשמשות למכירה/אחסון/טיפול בסחורה דליקה, בשטח מעל 230 מ״ר', alarm:'—', detect:'—', sprinkler:'יש להתקין בקומות התחתיות בלבד', pa:'אין חובה' },
+      { desc:'בניין מסחרי אחר, שאינו קניון', alarm:'—', detect:'—', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'קניון (מעבר ציבורי מקורה, שטח כולל מעל 2,000 מ״ר)', alarm:'יש להתקין + מנגנון לאימות אזעקת אש', detect:'יש להתקין: במעברים הציבוריים, ובתוך החנויות אם המסחר פרוס בשתי קומות ומעלה', sprinkler:'יש להתקין', pa:'יש להתקין' },
+    ], notes:[
+      'על החניון יחולו הדרישות לפי חניון (3.4.11.19).',
+      'מטפים יותקנו במיקום מרכזי לשימוש העובדים.',
+      'אם נדרשים מתזים — בכל חנות יותקנו רגש זרימה וברז ניתוק עם חיווי מצב פתוח/סגור.',
+      'שטח שירות לאחסון הנלווה לשטח מסחרי נספר כשטח מסחר, אלא אם מופרד ממנו במחיצת אש.'
+    ]},
+    { id:'offices', name:'תעסוקה ומשרדים', ref:'3.4.11.16', rows:[
+      { desc:'מתקיים אחד מאלה: שטח מעל/מתחת לקומת כניסה עולה על 500 מ״ר; שטח כולל עולה על 3,000 מ״ר; יש 3 קומות או יותר', alarm:'יש להתקין (אין חובה בלחצני אזעקה אם הותקנו מתזים/גילוי אש)', detect:'יש להתקין (אין חובה אם הותקנו מתזים+לחצני אזעקה)', sprinkler:'יש להתקין, למעט בבניין עד 2 קומות עם יציאה ישירה מכל קומה', pa:'יש להתקין, למעט בבניין עד 2 קומות עם יציאה ישירה מכל קומה' },
+      { desc:'בניין אחר', alarm:'אין חובה', detect:'אין חובה', sprinkler:'יש להתקין, למעט בבניין עד 2 קומות עם יציאה ישירה מכל קומה', pa:'אין חובה' },
+    ], notes:['קומה תחתית (מרתף) באה במניין הקומות. חניון לפי 3.4.11.19.']},
+    { id:'industry', name:'תעשייה (לפי רמת סיכון בדוח הערכת סיכוני אש)', ref:'3.4.11.17', rows:[
+      { desc:'רמת סיכון נמוכה (Low Hazard) — כל בניין', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה (Ordinary Hazard) — שטח קטן מ-500 מ״ר', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה — שטח 500 מ״ר ומעלה, עד 2 קומות, תפוסה כוללת עד 100 איש ותפוסה מצטברת בקומות תחתיות/עליונות עד 25 איש בכל אחת', alarm:'אין חובה', detect:'אין חובה', sprinkler:'לרוב אין חובה (תלוי בתנאי שטח האגף — ראו הוראה 3.4.11.17)', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה — בניין שאינו עונה לתנאים לעיל', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין, אלא אם עורך סקר סיכוני אש אישר שאינו נדרש', pa:'אין חובה' },
+      { desc:'רמת סיכון גבוהה (High Hazard)', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין (במקרים מסוימים ניתן פטור באישור עורך הסקר)', pa:'אין חובה' },
+    ], notes:[
+      'קטגוריה זו דורשת עריכת "דוח הערכת סיכוני אש" ולעיתים גם "סקר סיכוני אש" ע״י עורך הבקשה, לפי פרט 3.4.11.17 — מומלץ להיוועץ ביועץ בטיחות אש.',
+      'ההתרעה תשלח הודעה לשירותי הכבאות. חניון לפי 3.4.11.19.'
+    ]},
+    { id:'storage', name:'אחסון (לפי רמת סיכון בדוח הערכת סיכוני אש)', ref:'3.4.11.18', rows:[
+      { desc:'רמת סיכון נמוכה (Low Hazard) — כל בניין', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה (Ordinary Hazard) — שטח כולל עד 9,300 מ״ר', alarm:'אין חובה', detect:'אין חובה', sprinkler:'תלוי תנאי שטח נוספים (ראו פרט 3.4.11.18)', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה — שטח כולל מעל 9,300 מ״ר', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'תלוי תנאי שטח נוספים', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה — עד 2 קומות, אגף אש עד 1,115 מ״ר, שטח כולל (כולל גלריות) עד 2,230 מ״ר', alarm:'—', detect:'—', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'רמת סיכון רגילה — בניין אחר שלא עונה לתנאי השטח המצומצם', alarm:'—', detect:'—', sprinkler:'יש להתקין, אלא אם עורך סקר סיכוני אש אישר שאינו נדרש', pa:'אין חובה' },
+      { desc:'רמת סיכון גבוהה (High Hazard)', alarm:'יש להתקין', detect:'יש להתקין', sprinkler:'יש להתקין (באישור עורך סקר ניתן לעיתים פטור)', pa:'אין חובה' },
+    ], notes:[
+      'קטגוריה זו דורשת עריכת דוח (ולעיתים סקר) סיכוני אש — מומלץ להיוועץ ביועץ בטיחות אש.',
+      'ההתרעה תשלח הודעה לכבאות. מחסן בתוך בניין ששימושו העיקרי שונה — יחולו דרישות הבניין שבו הוא נמצא. חניון לפי 3.4.11.19.'
+    ]},
+    { id:'parking', name:'חניון', ref:'3.4.11.19', rows:[
+      { desc:'בניין קומה אחת המשמש אך ורק כחניון; או חניון פתוח; או חניון בבניין מגורים ששטחו עד 150 מ״ר', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+      { desc:'חניון אחר', alarm:'יש להתקין', detect:'אין חובה', sprinkler:'יש להתקין', pa:'אין חובה' },
+    ], notes:['בחניון מהשורה הראשונה לא יותקנו גלגילונים. בחניון האחר — גלגילון יותקן בכל מבואה קומתית.']},
+    { id:'agriculture', name:'מבנה חקלאי / מתבן', ref:'3.4.11.20', rows:[
+      { desc:'כל מבנה חקלאי', alarm:'אין חובה', detect:'אין חובה', sprinkler:'אין חובה', pa:'אין חובה' },
+    ], notes:[
+      'ברז כיבוי אש 3" יותקן במרחק שאינו עולה על 100 מ׳ מהכניסה הראשית למבנה.',
+      'ברזי כיבוי 2" יותקנו סביב המבנה, במרחק שלא יעלה על 200 מ׳ בין כל שני ברזים.',
+      'מתבן ימוקם במרחק של 20 מ׳ לפחות ממתבן אחר או ממבנה אחר.'
+    ]},
+    { id:'other', name:'בניין מסוג אחר, שאינו מנוי כאן', ref:'3.4.11.22', rows:[
+      { desc:'כל מקרה שלא נכלל בקטגוריות הקודמות', alarm:'לפי השימוש הדומה ביותר', detect:'לפי השימוש הדומה ביותר', sprinkler:'לפי השימוש הדומה ביותר', pa:'לפי השימוש הדומה ביותר' },
+    ], notes:['לפי החלטת עורך הבקשה. אם אין שימוש דומה — לפי סקר סיכוני אש שיערוך עורך הבקשה ובאישור רשות הכבאות.']},
+  ]
+};
+
+/* ============================================================
+   QUALIFIED — "גורם מוסמך" (who may certify what), from פרק 4
+   (המפרט האחיד לרישוי עסקים), סעיף 4.2.5. Used to auto-suggest
+   who needs to sign off on each system that came up as required.
+   Each entry has keywords used to match against requirement text.
+   ============================================================ */
+const QUALIFIED = [
+  { topic:'אפיון רשת מים', who:'מהנדס / אדריכל / הנדסאי, או גורם בעל תו תקן לתחזוקת מערכת כיבוי אוטומטית במים לפי ת״י 1928', kw:['אפיון רשת מים','גרף'] },
+  { topic:'תקינות אמצעי כיבוי במים (גלגילונים)', who:'מי שהודרך והוסמך ע״י יצרן/ספק הגלגילונים, לפי ת״י 2206 חלק 2', kw:['גלגילון'] },
+  { topic:'תקינות מטפים מיטלטלים', who:'תחזוקאי או מבקר מטפים מוסמך, לפי ת״י 129 חלק 1', kw:['מטפ','מטף'] },
+  { topic:'מערכת חשמל ותאורת חירום', who:'בעל רישיון בתוקף לעבודות חשמל לפי חוק החשמל, בהתאם לסוג רישיונו', kw:['חשמל','תאורת חירום','גנרטור','מפסק'] },
+  { topic:'מערכת גז (גפ״מ)', who:'בעל רישיון בתוקף לעבודות גפ״מ לפי תקנות הגז', kw:['גפ"מ','גפ״מ','גז'] },
+  { topic:'תחזוקת מערכת גילוי אש', who:'בעל תו תקן ממכון התקנים לתחזוקת מערכות גילוי אש, לפי ת״י 1220 חלק 11 (עד 10 גלאים גם בהתקנה)', kw:['גילוי אש','גלאי'] },
+  { topic:'תכנון והתקנת מערכת גילוי אש', who:'מעבדה מוכרת (מעל 10 גלאים); עד 10 גלאים — חברה בעלת תו תקן', kw:['גילוי אש','גלאי'] },
+  { topic:'כיבוי אש בארון חשמל (ארוסול / גז)', who:'בעל תו תקן ממכון התקנים לפי ת״י 1220 חלק 11', kw:['ארון חשמל','ארוסול'] },
+  { topic:'מערכת למסירת הודעות (כריזת חירום)', who:'בעל תו תקן ת״י 1220 חלק 11, או בעל רישיון חשמלאי מוסמך; לתכנון/התקנה — מעבדה מוכרת', kw:['כריזה','כריזת חירום'] },
+  { topic:'מתזים (ספרינקלרים) — תחזוקה ובדיקה', who:'בעל תו תקן ממכון התקנים לתחזוקת מערכת כיבוי אוטומטית במים, לפי ת״י 1928', kw:['מתזים','ספרינקלר'] },
+  { topic:'מתזים — תכנון והתקנה', who:'מעבדה מוכרת (מעל 10 מתזים); עד 10 מתזים — חברה בעלת תו תקן ת״י 1928', kw:['מתזים','ספרינקלר'] },
+  { topic:'גנרטור חירום', who:'בעל רישיון בתוקף לעבודות חשמל, בהתאם לסוג רישיונו', kw:['גנרטור'] },
+  { topic:'מערכת בישול מסחרית (מנדפים)', who:'מתקין מערכת כיבוי לפי ת״י 5356 חלק 2', kw:['בישול','מנדף','מטבח'] },
+  { topic:'אינטגרציה בין מערכות בטיחות אש (הוראת נציב 536)', who:'מהנדס מורשה, או מעבדה מוכרת בעלת הסמכה לת״י 1220 חלק 3', kw:['אינטגרציה','משטר הפעלה'] },
+  { topic:'מערכת שחרור עשן', who:'מהנדס שאינו מתכנן המתקן/המערכת', kw:['שחרור עשן','שליטה בעשן','עשן'] },
+  { topic:'מערכת מיזוג אוויר מרכזית (תעלות ומדפים)', who:'מהנדס, או מורשה למערכות קירור ומיזוג אוויר', kw:['מיזוג אוויר','מדף אש','תעלות'] },
+];
+
+/* ============================================================
+   SUBMISSION_532 — digested from הוראת נציב 532 (אופן הגשת נספח
+   אמצעי בטיחות אש ומקרא אחיד). Two checklists + a clause library.
+   ============================================================ */
+const SUBMISSION_532 = {
+  preCheck: [
+    'מסמך החלטת ועדה בתוקף',
+    'אופיין רשת מים',
+    'שם המבקש ומספר מזהה (ח.פ / ת.ז / עוסק / עמותה) + כתובת וטלפון',
+    'חתימות: עורך הבקשה + ת.ז/ח.פ + טלפון + כתובת',
+    'פרטי בעלי הנכס: ת.ז / ח.פ',
+    'תיאור הבקשה תואם בין התוכנית לבין החלטת הוועדה',
+    'גוש, חלקה, מגרש רשומים',
+    'שימוש עיקרי לבניין (ייעוד) רשום בגוף התוכנית',
+    'כתובת מלאה של הבניין (רחוב, מספר, עיר) בגוף התוכנית',
+    'מספר הבקשה על גבי התוכנית תואם להחלטת הוועדה',
+    'תרשים סביבה על גבי התוכנית (רחובות סמוכים)',
+    'חתך גובה מצורף',
+    'שטחים לחישוב מפורטים',
+  ],
+  appendix: [
+    { id:'a', label:'א', text:'הנספח מוגש על רקע הבקשה להיתר בנייה.' },
+    { id:'b', label:'ב', text:'תיאור הבניין: (1) סיווג לפי גובה — רגיל/גבוה/רב-קומות/רב-קומות מעל 42מ׳; (2) גובה הקומה העליונה מעל מפלס הכניסה הקובעת; (3) סיווג לפי שימוש — מגורים/מסחר/התקהלות/תעסוקה וכו׳; (4) רמת הסיכון שלפיה תוכנן המבנה ואספקת המים לכיבוי (מתזים, הידרנטים פנימיים, ברזי כיבוי חיצוניים).' },
+    { id:'c', label:'ג', text:'על תוכנית האתר מסומנים מרכיבי דרך גישה ורחבת היערכות לרכבי כיבוי: מיקום וסימון מוסכם, מידות הרחבה, מרחק מקיר הבניין/חלון חילוץ, רוחב דרך הגישה, רדיוס סיבוב, סימון סף מונמך של אבני שפה, גובה נקי ממכשולים.' },
+    { id:'d', label:'ד', text:'תפוסה של כל קומה — טבלה בצמוד לתשריט הקומה: תיאור השימוש, שטח, מקדם תפוסה, תפוסה מחושבת (הגדול מבין החישוב לפי תקנות או התכנון), והאם סידורי היציאה עונים לדרישה.' },
+    { id:'e', label:'ה', text:'דרכי מוצא: מרחקי הליכה/פרוזדור ללא מוצא/מהלך משותף מסומנים גרפית על תוכנית כל קומה; מרחק בין יציאות מסומן ביחס לאלכסון הבניין; רוחב יציאות/מדרגות מסומן.' },
+    { id:'f', label:'ו', text:'חלוקת הבניין לאגפי אש, קירות אש ודלתות אש — מסומנים על תשריט כל קומה לפי המקרא האחיד, כולל ציון זמן עמידות האש בשעות.' },
+    { id:'g', label:'ז', text:'עמידות אש של חלקי הבניין ומרכיביו — מפורטת בטבלה (לפי טבלה 3.3.2.1).' },
+    { id:'h', label:'ח', text:'סיווג חומרי הבנייה והגימור לפי תגובתם בשריפה (ת״י 921), בהתאם לייעוד הבניין/הקומה/האגף.' },
+    { id:'i', label:'ט', text:'סידורי אספקת מים לכיבוי אש: מיקום ברזי כיבוי והסנקה מסומן בתוכנית האתר; עמדות כיבוי מסומנות בתוכנית האתר ובכל קומה רלוונטית; מצורפת סכמת מים לכיבוי אש ודו״ח אפיון רשת מים; אם יש מאגר מים — מיקומו ונתוני נפחו מפורטים.' },
+    { id:'j', label:'י', text:'סידורי שליטה בעשן — בכל תוכנית מסומנות צלמיות פינוי עשן (טבעי/מאולץ) בחלקים הרלוונטיים, ונתוני שליטה בעשן.' },
+    { id:'k', label:'י״א', text:'מיקום ציוד כיבוי אש על גבי התוכניות, עם סימון סוג הציוד לפי המקרא האחיד.' },
+    { id:'l', label:'י״ב', text:'סימון אזורים בבניין שבהם יש להתקין מערכות גילוי אש ועשן, מערכות כיבוי אש אוטומטי ומערכות כריזת חירום.' },
+    { id:'m', label:'י״ג', text:'שלטי הכוונה בדרך המוצא ואזורי תאורת חירום — מסומנים גרפית על כל תוכנית רלוונטית, לפי המקרא האחיד.' },
+    { id:'n', label:'י״ד', text:'מיקום לוח פיקוד כבאים מסומן על התוכנית הרלוונטית.' },
+    { id:'o', label:'ט״ו', text:'מיקום לוח חשמל המזין מערכות חירום, מיקום מערכות גז (צובר/פיר), מעלית כבאים ומעלית נושאת אלונקה — מסומנים כל אחד בתוכנית הקומה הרלוונטית.' },
+    { id:'p', label:'ט״ז', text:'אם דרך המוצא כוללת מוצא אופקי — מסומן בתוכנית, כולל ניתוח הנדסי.' },
+    { id:'q', label:'י״ז', text:'מקרא מצורף לנספח כחלק ממנו.' },
+    { id:'r', label:'י״ח', text:'הנספח מוגש בהדפסה צבעונית; לא יוצגו פרטים נוספים (כגון מספרי סעיפים מהתקנות) אלא אם עורך הבקשה החליט אחרת.' },
+  ],
+  clauses: [
+    { id:'pa', label:'מערכת כריזה', text:'התקנת מערכת כריזה אשר עומדת בדרישות תקן ישראלי 1220 חלק 3 ובהתאם להוראת נציב כבאות והצלה ולתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970 (לפי העניין).' },
+    { id:'elevator', label:'שלט "אין להשתמש במעלית"', text:'סמוך למעליות יותקן שלט המורה כי אין להשתמש במעלית בשעת שריפה.' },
+    { id:'stairs_sign', label:'שילוט פולט אור בחדר מדרגות מוגן', text:'בחדרי המדרגות יותקן שילוט פולט אור כנדרש בתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970.' },
+    { id:'extinguisher', label:'מטפה אבקה יבשה 6 ק״ג', text:'מטפי אבקה יבשה 6 ק"ג העומדים בתקן ישראלי 129 יותקנו בהתאם להוראת נציב כבאות והצלה או לתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970 (לפי העניין).' },
+    { id:'independent_detector', label:'גלאי אש ועשן עצמאיים', text:'התקנת גלאי אש ועשן עצמאיים בהתאם להוראת נציב כבאות והצלה או לתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970 (לפי העניין).' },
+    { id:'detection_system', label:'מערכת גילוי אש ועשן', text:'התקנת מערכת גילוי אש ועשן העומדת בדרישות תקן ישראלי 1220, בהתאם להוראת נציב כבאות והצלה ולתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970 (לפי העניין).' },
+    { id:'sprinklers', label:'מערכת מתזי מים אוטומטית', text:'התקנת מערכת מתזים העומדת בדרישות תקן ישראלי 1596, בהתאם להוראת נציב כבאות והצלה ולתקנות התכנון והבניה (בקשה להיתר, תנאיו ואגרות), תש״ל-1970 (לפי העניין).' },
+  ]
+};
+
+function findQualified(textArray){
+  const joined = (textArray || []).join(' ');
+  const seen = new Set();
+  const out = [];
+  QUALIFIED.forEach(q=>{
+    if(seen.has(q.topic)) return;
+    if(q.kw.some(k=>joined.includes(k))){
+      seen.add(q.topic);
+      out.push(q);
+    }
+  });
+  return out;
+}
+
+
+</script>
+<script>
+
+/* DATA = {pool:[strings...], rows:[{g, gd, levels:[{code,desc}, ...], num, req, rem, src}, ...]}
+   `levels` holds exactly as many entries as the row's own anchor depth (0 to
+   MAX_LEVELS) - a level beyond that length means "matches any choice at that
+   level", replacing the old -1-padded fixed-column format.
+
+   HOSTED VERSION (GitHub Pages): unlike the standalone-file build, this
+   version does NOT embed all 60,000+ rows up front - that was the root
+   cause of the memory pressure/crash reports. Instead:
+   - GROUPS_INDEX (tiny, embedded below) lists every {g, gd} pair so the
+     group-picker screen works with zero network calls.
+   - CHUNK_MANIFEST (also tiny, embedded below) maps each group id to the
+     relative path of its own JSON file under data/ (one file per group -
+     git/GitHub Pages handle 97 small files easily, so there's no need to
+     bundle several groups into one file the way the Claude-hosted version
+     had to).
+   - DATA starts empty and only ever holds ONE group's data at a time -
+     ensureGroupLoaded(g) fetches that group's own file (or reuses it from
+     the cache if the group was already visited this session) and swaps
+     DATA to it. Every function below this point (activeRows, nextStep,
+     findQualified, etc.) is unchanged - they already only ever look at
+     "whatever is currently in DATA", the same way they did when DATA held
+     everything. */
+let DATA = { pool: [], rows: [] };
+const loadedGroups = {}; // g -> {pool,rows}, cached per session so re-visiting a group is instant
+async function ensureGroupLoaded(g){
+  if(!loadedGroups[g]){
+    const res = await fetch(CHUNK_MANIFEST[g]);
+    loadedGroups[g] = await res.json();
+  }
+  DATA = loadedGroups[g];
+}
+function s(i){ return (i===-1||i===null||i===undefined) ? null : DATA.pool[i]; }
+const MAX_LEVELS = 6; // some business-license categories nest this deep
+
+function rowsForGroup(g){
+  return DATA.rows.filter(r=>r.g===g);
+}
+
+// path: ordered array of steps: {type:'group', g, gd} | {type:'level', lvl, codeIdx, desc}
+function chosenLevelsFromPath(path){
+  const m = {};
+  path.forEach(p=>{ if(p.type==='level') m[p.lvl]={codeIdx:p.codeIdx, descIdx:p.descIdx}; });
+  return m;
+}
+
+function activeRows(path){
+  const g = path[0].g;
+  const chosen = chosenLevelsFromPath(path);
+  return DATA.rows.filter(r=>{
+    if(r.g!==g) return false;
+    for(const lvl in chosen){
+      const entry = r.levels[lvl]; // absent -> this row's anchor doesn't reach this depth, matches any choice
+      if(!entry) continue;
+      const sel = chosen[lvl];
+      if(entry.code !== sel.codeIdx || entry.desc !== sel.descIdx) return false;
+    }
+    return true;
+  });
+}
+
+// Returns {done:false, lvl, options:[{codeIdx,descIdx,label}], active} for next question,
+// or {done:true, active} when a leaf is reached.
+// Options are keyed by (code+desc) pair, since the same code can carry different descriptions
+// in a handful of categories (e.g. "5.05" covers two distinct scenarios).
+function nextStep(path){
+  const active = activeRows(path);
+  const chosen = chosenLevelsFromPath(path);
+  for(let lvl=0; lvl<MAX_LEVELS; lvl++){
+    if(lvl in chosen) continue;
+    const seen = new Map();
+    active.forEach(r=>{
+      const entry = r.levels[lvl];
+      if(!entry) return;
+      const key = entry.code+'|'+entry.desc;
+      if(!seen.has(key)) seen.set(key, {codeIdx:entry.code, descIdx:entry.desc});
+    });
+    if(seen.size >= 2){
+      // count = requirements still applicable if this option is chosen (rows of this option + rows that apply to any choice here)
+      const options = [...seen.values()].map(v=>({codeIdx:v.codeIdx, descIdx:v.descIdx, label:s(v.descIdx),
+        count: active.filter(r=>{ const e=r.levels[lvl]; return !e || (e.code===v.codeIdx && e.desc===v.descIdx); }).length}));
+      options.sort((a,b)=>a.label.localeCompare(b.label,'he'));
+      return {done:false, lvl, options, active};
+    }
+  }
+  return {done:true, active};
+}
+
+/* ============ Groups list ============ */
+function allGroups(){
+  return GROUPS_INDEX.slice().sort((a,b)=>a.g-b.g);
+}
+function trackOf(g){ return g >= 1000 ? 'business' : 'permit'; } // business groups are offset by 1000 (see the update pipeline's transform.py) so they never collide with permit-track group numbers, which now span both 1-46 (legacy) and 100-143 (2023 amendment)
+
+/* ============ State ============ */
+const STORE_KEY = 'fire-safety-builder:v2';
+let state = {
+  screen:'intro',        // intro | groups | question | results
+  mainTab:'wizard',      // wizard | calc
+  calcTab:'fire',         // fire | occ | walk | barn
+  track:'permit',
+  search:'',
+  path:[],
+  project:{ name:'', address:'', author:'' },
+  notes:{},
+  excluded:{}, // per-requirement "not relevant" marks: {[reqKey]: true} — hidden from print and from the draft
+  reqTags:{}, // per-requirement checkbox state: {[reqKey]: {drawing:bool, note:bool}} — "שייך על גבי השרטוט" / "הערה כללית"
+  calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[], water:[] },
+  checklist532:{},
+  // Remembers the last dropdown selection per calculator, so that adding a row to a
+  // table (which triggers a full re-render) doesn't reset the user back to the first option.
+  calcSelections:{
+    fire:{ el:0, col:0 },
+    occ:{ use:0, width:null },
+    mallPassage:{ shopArea:'', anchorArea:'', width:null },
+    walk:{ use:0, spr:'yes' },
+    systems:{ cat:0, row:0 }
+  },
+  loaded:false
+};
+
+/* ---- Storage adapter: window.storage (Claude artifact) -> localStorage (standalone file) -> memory ---- */
+let __storageMode = 'memory';
+const __memStore = new Map();
+const storageAdapter = {
+  async get(key){
+    if(typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function'){
+      __storageMode = 'artifact';
+      return window.storage.get(key);
+    }
+    let v = null, localOk = false;
+    try{
+      if(typeof localStorage !== 'undefined'){
+        v = localStorage.getItem(key); // null here just means "nothing saved yet", not unavailable
+        localOk = true;
+      }
+    }catch(e){ /* localStorage unavailable (privacy mode etc.) — localOk stays false */ }
+    if(localOk){
+      __storageMode = 'local';
+      if(v === null) throw new Error('not found');
+      return { key, value: v };
+    }
+    __storageMode = 'memory';
+    if(!__memStore.has(key)) throw new Error('not found');
+    return { key, value: __memStore.get(key) };
+  },
+  async set(key, value){
+    if(typeof window.storage !== 'undefined' && window.storage && typeof window.storage.set === 'function'){
+      __storageMode = 'artifact';
+      return window.storage.set(key, value);
+    }
+    try{
+      if(typeof localStorage !== 'undefined'){
+        localStorage.setItem(key, value);
+        __storageMode = 'local';
+        return { key, value };
+      }
+    }catch(e){ /* quota exceeded / privacy mode — fall through to memory */ }
+    __storageMode = 'memory';
+    __memStore.set(key, value);
+    return { key, value };
+  }
+};
+function showStorageWarning(){
+  if(__storageMode !== 'memory') return;
+  if(document.getElementById('storage-warning')) return;
+  const w = document.createElement('div');
+  w.id = 'storage-warning';
+  w.className = 'no-print';
+  w.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#AE3A16;color:#fff;padding:10px 16px;font-size:13px;text-align:center;z-index:1000;';
+  w.textContent = '⚠ לא ניתן לשמור נתונים בדפדפן זה (מצב פרטי / הרשאות חסומות) — ההתקדמות לא תישמר בין רענוני עמוד.';
+  document.body.appendChild(w);
+}
+async function loadState(){
+  let saved = null;
+  try{
+    const res = await storageAdapter.get(STORE_KEY);
+    if(res && res.value) saved = JSON.parse(res.value);
+  }catch(e){ /* first run — nothing saved yet */ }
+
+  state.loaded = true;
+
+  if(saved && hasMeaningfulProgress(saved)){
+    renderResumePrompt(saved);
+  } else {
+    render();
+  }
+  showStorageWarning();
+}
+// Only worth asking about if there's actually something a person could lose —
+// an empty/never-touched session (fresh intro screen, nothing filled in)
+// shouldn't interrupt anyone with a pointless "resume?" choice.
+function hasMeaningfulProgress(saved){
+  const hasPath = Array.isArray(saved.path) && saved.path.length > 0;
+  const p = saved.project || {};
+  const hasProject = !!(p.name || p.address || p.author);
+  const hasNotes = saved.notes && Object.keys(saved.notes).some(k => (saved.notes[k]||'').trim() !== '');
+  const hasCalc = saved.calcTables && Object.values(saved.calcTables).some(arr => Array.isArray(arr) && arr.length > 0);
+  const hasChecklist = saved.checklist532 && Object.values(saved.checklist532).some(Boolean);
+  const hasExcluded = saved.excluded && Object.values(saved.excluded).some(Boolean);
+  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded;
+}
+function summarizeSavedProgress(saved){
+  const parts = [];
+  const p = saved.project || {};
+  if(p.name) parts.push(`פרויקט: "${p.name}"`);
+  const groupEntry = Array.isArray(saved.path) ? saved.path.find(x=>x.type==='group') : null;
+  if(groupEntry) parts.push(`שאלון: ${groupEntry.gd}`);
+  const calcCount = saved.calcTables ? Object.values(saved.calcTables).reduce((n,arr)=>n+(Array.isArray(arr)?arr.length:0), 0) : 0;
+  if(calcCount > 0) parts.push(`${calcCount} שורות במחשבונים`);
+  const checkedCount = saved.checklist532 ? Object.values(saved.checklist532).filter(Boolean).length : 0;
+  if(checkedCount > 0) parts.push(`${checkedCount} סעיפים מסומנים ברשימת ההגשה`);
+  return parts.length ? parts.join(' · ') : 'נמצאו נתונים שמורים מפעם קודמת.';
+}
+function renderResumePrompt(saved){
+  app.innerHTML = '';
+  app.appendChild(el(masthead())); // state.path is still empty here on purpose — no stray group badge before the person has chosen anything
+  const card = el(`<div class="card"></div>`);
+  card.appendChild(el(`<div class="eyebrow">נמצאה עבודה שמורה</div>`));
+  card.appendChild(el(`<h2 class="qtitle">להמשיך מאיפה שהפסקת?</h2>`));
+  card.appendChild(el(`<p class="qsub">${summarizeSavedProgress(saved)}</p>`));
+
+  const btnRow = el(`<div class="toolbar no-print" style="margin-top:16px;"></div>`);
+  const continueBtn = el(`<button class="btn-primary">→ המשך מאיפה שהפסקתי</button>`);
+  const restartBtn = el(`<button class="btn-secondary">↺ התחל מחדש</button>`);
+  continueBtn.addEventListener('click', async ()=>{
+    state = Object.assign(state, saved);
+    const targetScreen = state.screen; // save before we temporarily switch to 'loading'
+    const groupEntry = Array.isArray(state.path) ? state.path.find(p=>p.type==='group') : null;
+    if(groupEntry && (targetScreen==='question' || targetScreen==='results')){
+      state.screen = 'loading';
+      render();
+      try {
+        await ensureGroupLoaded(groupEntry.g);
+      } catch(e) {
+        state.screen = 'groups'; state.path = [];
+        render();
+        toast('שגיאה בטעינת הנתונים — בדקו חיבור לאינטרנט ונסו שוב');
+        return;
+      }
+      state.screen = targetScreen; // restore the screen we were actually resuming to
+    }
+    render();
+  });
+  restartBtn.addEventListener('click', async ()=>{
+    // Clear the saved copy too, not just in-memory state — otherwise the next
+    // load would ask the same question again about data the person just discarded.
+    try{ await storageAdapter.set(STORE_KEY, JSON.stringify({
+      screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
+      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{}
+    })); }catch(e){ /* not fatal — worst case it asks again next time */ }
+    render();
+  });
+  btnRow.appendChild(continueBtn);
+  btnRow.appendChild(restartBtn);
+  card.appendChild(btnRow);
+  app.appendChild(card);
+}
+async function persist(){
+  try{
+    await storageAdapter.set(STORE_KEY, JSON.stringify({
+      screen:state.screen, path:state.path, project:state.project, notes:state.notes,
+      reqTags:state.reqTags, excluded:state.excluded,
+      mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532
+    }));
+    showStorageWarning();
+  }catch(e){ console.error('storage error', e); }
+}
+
+/* ============ Rendering helpers ============ */
+const app = document.getElementById('app');
+function el(html){
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+function flameSvg(){
+  return `<svg class="flame" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 3C20 3 12 12 12 20C12 25 15 27 15 27C13 22 15 18 17 16C17 20 19 22 21 23C24 24.5 26 27 26 30C26 34 22.5 37 20 37C14 37 8 32 8 24C8 14 20 3 20 3Z" fill="#E8873C"/>
+    <path d="M20 15C20 15 17 20 17 24C17 28 19 30 21 30C23 30 25 28 25 25C25 23 24 21 22 20C22.5 22 22 23 21 23.5C20 22 20 18 20 15Z" fill="#F2C08A"/>
+  </svg>`;
+}
+function currentGroupDesc(){
+  const gp = state.path.find(p=>p.type==='group');
+  return gp ? gp.gd : '';
+}
+function formatUpdatedAt(){
+  if(typeof SITE_UPDATED_AT === 'undefined' || !SITE_UPDATED_AT) return null;
+  try{
+    return new Date(SITE_UPDATED_AT).toLocaleDateString('he-IL', {year:'numeric', month:'long', day:'numeric'});
+  }catch(e){ return SITE_UPDATED_AT; }
+}
+function formatDataDate(){
+  if(typeof SITE_DATA_DATE === 'undefined' || !SITE_DATA_DATE) return null;
+  try{ return new Date(SITE_DATA_DATE).toLocaleDateString('he-IL', {year:'numeric', month:'long', day:'numeric'}); }
+  catch(e){ return SITE_DATA_DATE; }
+}
+function masthead(){
+  const gd = currentGroupDesc();
+  const updated = formatUpdatedAt();
+  const dataDate = formatDataDate();
+  return `<div class="masthead">
+    ${(updated||dataDate) ? `<div class="masthead-updated">${dataDate ? `נתוני רשות הכבאות נכון ל-${dataDate}` : ''}${dataDate&&updated ? ' · ' : ''}${updated ? `עדכון אחרון: ${updated}` : ''}</div>` : ''}
+    ${flameSvg()}
+    <div>
+      <h1>בונה תוכנית בטיחות אש</h1>
+      <p>מבוסס על תקנות תכנון ובנייה, הוראות נציבות כבאות והצלה ותקנים ישראליים</p>
+    </div>
+    ${gd ? `<div class="badge-group">${gd}</div>` : ''}
+  </div>`;
+}
+
+function render(){
+  if(!state.loaded) return;
+  app.innerHTML = '';
+  app.appendChild(el(masthead()));
+  app.appendChild(renderTopTabs());
+  if(state.mainTab === 'calc') return renderCalcRoot();
+  if(state.screen === 'intro') return renderIntro();
+  if(state.screen === 'groups') return renderGroups();
+  if(state.screen === 'loading') return renderLoading();
+  if(state.screen === 'question') return renderQuestion();
+  if(state.screen === 'results') return renderResults();
+}
+function renderLoading(){
+  const card = calcCard();
+  card.appendChild(el(`<p class="qsub" style="text-align:center;padding:30px 0;">טוען נתוני קבוצה…</p>`));
+}
+
+function renderTopTabs(){
+  const wrap = el(`<div class="toplevel-tabs no-print"></div>`);
+  const t1 = el(`<button type="button" class="toplevel-tab ${state.mainTab==='wizard'?'active':''}">שאלון דרישות</button>`);
+  const t2 = el(`<button type="button" class="toplevel-tab ${state.mainTab==='calc'?'active':''}">מחשבונים ותוספות</button>`);
+  t1.addEventListener('click', ()=>{ state.mainTab='wizard'; render(); persist(); });
+  t2.addEventListener('click', ()=>{ state.mainTab='calc'; render(); persist(); });
+  wrap.appendChild(t1); wrap.appendChild(t2);
+  return wrap;
+}
+
+/* ============ Intro ============ */
+function renderIntro(){
+  const card = el(`<div class="card">
+    <div class="eyebrow">כלי חדש · כיסוי מלא</div>
+    <h2 class="qtitle">בואו נבנה יחד את דרישות הכבאות לפרויקט שלכם</h2>
+    <p class="qsub">שאלון מודרך שמסתעף אוטומטית לפי סוג המבנה והשימוש שלכם, ובסופו רשימת דרישות הכבאות הרלוונטיות בדיוק למקרה שלכם — מוכנה להדפסה כ-PDF ולצירוף לבקשת ההיתר / הרישוי.</p>
+    <div class="intro-grid">
+      <div class="intro-item"><div class="k">מבוסס על</div><div class="v">מאגר דרישות רשמי: תקנות תכנון ובנייה, הוראת נציב 550, חוק הרשות הארצית לכבאות, תקנים ישראליים</div></div>
+      <div class="intro-item"><div class="k">כיסוי</div><div class="v">${allGroups().length} סוגי מבנים ושימושים — מגורים, מסחר, תעשייה, מוסדות חינוך ובריאות, התקהלות, חניונים ועוד, בשני מסלולים: היתר בנייה ורישוי עסקים</div></div>
+      <div class="intro-item"><div class="k">משך</div><div class="v">כ-3–6 שאלות, לפי סוג המבנה</div></div>
+      <div class="intro-item"><div class="k">פלט</div><div class="v">רשימת דרישות ממוינת לפי מקור, עם דגשים והערות, מוכנה להדפסה</div></div>
+    </div>
+    <button class="btn-primary no-print" id="start-btn">בואו נתחיל ←</button>
+    <div class="disclaimer">
+      <b>חשוב לדעת:</b> כלי זה נועד לסייע באיתור ראשוני של דרישות כבאות רלוונטיות, על בסיס מאגר הדרישות שסופק. הוא <b>אינו תחליף</b> לאישור עקרוני ובחינה של יועץ בטיחות אש מוסמך ו/או מהנדס רישוי כבאות, ואינו מהווה אישור רשמי של רשות הכבאות וההצלה. יש לוודא את הדרישות מול הרשות המקומית ורשות הכבאות בטרם הגשה.
+    </div>
+  </div>`);
+  card.querySelector('#start-btn').addEventListener('click', ()=>{
+    state.screen = 'groups'; state.path = [];
+    render(); persist();
+  });
+  app.appendChild(card);
+}
+
+/* ============ Group picker ============ */
+function renderGroups(){
+  const card = el(`<div class="card"></div>`);
+  card.appendChild(el(`<div class="eyebrow">שלב 1</div>`));
+  card.appendChild(el(`<h2 class="qtitle">מהו סוג המבנה או השימוש?</h2>`));
+  card.appendChild(el(`<p class="qsub">בחרו את המסלול הרלוונטי ואת סוג המבנה. אפשר לחפש לפי מילת מפתח.</p>`));
+
+  const tracks = el(`<div class="track-picker no-print"></div>`);
+  const t1 = el(`<button type="button" class="track-card ${state.track==='permit'?'active':''}">
+    <div class="tc-title">בקשה להיתר בנייה</div>
+    <div class="tc-sub">מגורים, משרדים, מסחר, תעשייה ועוד — לפי תקנות התכנון והבנייה</div>
+  </button>`);
+  const t2 = el(`<button type="button" class="track-card ${state.track==='business'?'active':''}">
+    <div class="tc-title">רישוי עסקים (מפרט אחיד)</div>
+    <div class="tc-sub">מסעדה, מכולת, מוסך, תחנת דלק ועוד — לפי צו רישוי עסקים</div>
+  </button>`);
+  t1.addEventListener('click', ()=>{ state.track='permit'; render(); });
+  t2.addEventListener('click', ()=>{ state.track='business'; render(); });
+  tracks.appendChild(t1); tracks.appendChild(t2);
+  card.appendChild(tracks);
+
+  const searchWrap = el(`<div style="margin:14px 0;"></div>`);
+  const searchInput = el(`<input type="text" placeholder="חיפוש (למשל: מגורים, מסחר, חניון...)" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 12px;font-family:inherit;font-size:14px;background:var(--surface-2);color:var(--ink);"/>`);
+  searchInput.value = state.search;
+  searchInput.addEventListener('input', (e)=>{ state.search = e.target.value; renderGroupList(list); });
+  searchWrap.appendChild(searchInput);
+  card.appendChild(searchWrap);
+
+  const list = el(`<div class="options"></div>`);
+  card.appendChild(list);
+  renderGroupList(list);
+
+  const nav = el(`<div class="nav-row"></div>`);
+  const back = el(`<button class="btn-ghost">→ חזרה</button>`);
+  back.addEventListener('click', ()=>{ state.screen='intro'; render(); persist(); });
+  nav.appendChild(back);
+  card.appendChild(nav);
+
+  app.appendChild(card);
+}
+function renderGroupList(list){
+  list.innerHTML = '';
+  const q = (state.search||'').trim();
+  const groups = allGroups().filter(g=>trackOf(g.g)===state.track && (!q || g.gd.includes(q)));
+  if(groups.length===0){
+    list.appendChild(el(`<div style="font-size:13.5px;color:var(--ink-soft);padding:10px 2px;">לא נמצאו תוצאות. נסו מונח חיפוש אחר.</div>`));
+    return;
+  }
+  groups.forEach((g,i)=>{
+    const btn = el(`<button class="opt" type="button">
+      <span class="num mono">${i+1}</span>
+      <span class="label">${g.gd}</span>
+    </button>`);
+    btn.addEventListener('click', async ()=>{
+      state.path = [{type:'group', g:g.g, gd:g.gd}];
+      state.screen = 'loading';
+      render();
+      try {
+        await ensureGroupLoaded(g.g);
+      } catch(e) {
+        state.screen = 'groups';
+        render();
+        toast('שגיאה בטעינת הנתונים — בדקו חיבור לאינטרנט ונסו שוב');
+        return;
+      }
+      state.screen = 'question';
+      render(); persist();
+    });
+    list.appendChild(btn);
+  });
+}
+
+/* ============ Question (dynamic levels) ============ */
+function renderQuestion(){
+  if(!state.path || state.path.length===0 || !state.path[0] || state.path[0].type!=='group'){
+    // Defensive guard: no valid group selected — send the user back to the picker
+    // instead of crashing on path[0].g being undefined.
+    state.screen = 'groups'; state.path = [];
+    render(); persist();
+    return;
+  }
+  const step = nextStep(state.path);
+  if(step.done){
+    state.screen = 'results';
+    render(); persist();
+    return;
+  }
+  const card = el(`<div class="card"></div>`);
+  const levelNo = state.path.filter(p=>p.type==='level').length + 1;
+  card.appendChild(el(`<div class="eyebrow">שלב ${levelNo+1} · ${currentGroupDesc()}</div>`));
+  card.appendChild(el(`<h2 class="qtitle">איזה מהמקרים הבאים מתאר את המבנה שלכם?</h2>`));
+  card.appendChild(el(`<p class="qsub">בחרו את התרחיש המדויק ביותר. אם לא בטוחים, בחרו באפשרות הרחבה ביותר.</p>`));
+
+  const optWrap = el(`<div class="options"></div>`);
+  step.options.forEach((o,i)=>{
+    const btn = el(`<button class="opt" type="button">
+      <span class="num mono">${i+1}</span>
+      <span class="label">${o.label}</span>
+      <span class="opt-count" title="מספר הדרישות שיחולו לכל היותר אם תבחרו באפשרות זו (שאלות המשך יכולות רק לצמצם)">עד ${o.count} דרישות</span>
+    </button>`);
+    btn.addEventListener('click', ()=>{
+      state.path.push({type:'level', lvl:step.lvl, codeIdx:o.codeIdx, descIdx:o.descIdx, desc:o.label});
+      render(); persist();
+    });
+    optWrap.appendChild(btn);
+  });
+  card.appendChild(optWrap);
+
+  const nav = el(`<div class="nav-row"></div>`);
+  const back = el(`<button class="btn-ghost">→ חזרה</button>`);
+  back.addEventListener('click', ()=>{
+    // pop last level step; if none, go back to group picker
+    const lastLevelIdx = [...state.path].reverse().findIndex(p=>p.type==='level');
+    if(lastLevelIdx === -1){
+      state.screen='groups'; state.path=[];
+    } else {
+      const idxFromStart = state.path.length - 1 - lastLevelIdx;
+      state.path.splice(idxFromStart, 1);
+    }
+    render(); persist();
+  });
+  nav.appendChild(back);
+  card.appendChild(nav);
+
+  // breadcrumb of choices so far
+  const levelChoices = state.path.filter(p=>p.type==='level');
+  if(levelChoices.length){
+    const bc = el(`<div style="margin-top:16px;font-size:12px;color:var(--ink-soft);line-height:1.9;"></div>`);
+    bc.innerHTML = '<b style="color:var(--ink);">נבחר עד כה:</b> ' + levelChoices.map(l=>l.desc).join(' ← ');
+    card.appendChild(bc);
+  }
+
+  app.appendChild(card);
+}
+
+/* ============ Regulation links (Item 10) ============ */
+// Requirements sourced from the Planning & Building Regulations link to the free
+// consolidated text on Hebrew Wikisource. When the requirement number is a chapter-3
+// clause (e.g. 3.2.11.2, or a range like 3.2.11.1-3.2.11.9 -> first number), the link
+// carries a browser "text fragment" (#:~:text=) so Chrome/Edge jump to and highlight the
+// clause. Firefox/Safari open the top of the page instead. '?useformat=desktop' keeps
+// phones on the desktop layout: the Wikisource mobile layout re-renders after load and
+// scrolls back to the top, undoing the jump to the clause. Other numbering schemes
+// (e.g. 10.01) get the plain page link. Commissioner directives link to their gov.il page,
+// NFPA to its free-access portal. Israeli standards (ת"י) link to the SII search/purchase page (paid).
+const REG_WIKI_URL = 'https://he.wikisource.org/wiki/' + encodeURIComponent('תקנות_התכנון_והבניה_(בקשה_להיתר,_תנאיו_ואגרות)').replace(/%28/g,'(').replace(/%29/g,')').replace(/%2C/g,',');
+// On phones Wikisource's mobile skin scrolls back to the top after the jump; '?action=render' serves the bare page (no skin scripts), and the jump stays. Verified by user on phone.
+const REG_IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'');
+const REG_PAGE = REG_WIKI_URL + (REG_IS_MOBILE ? '?action=render' : '');
+const REG_ANCHORS = new Set('3.1.1.1,3.1.1.2,3.1.2.1,3.1.2.2,3.1.2.3,3.1.2.4,3.1.2.5,3.1.2.6,3.1.2.7,3.1.2.8,3.1.2.9,3.2.1.1,3.2.1.2,3.2.1.3,3.2.1.4,3.2.1.5,3.2.1.6,3.2.1.7,3.2.1.8,3.2.1.9,3.2.1.10,3.2.1.11,3.2.1.12,3.2.1.13,3.2.1.14,3.2.1.15,3.2.1.16,3.2.1.17,3.2.1.18,3.2.1.19,3.2.1.20,3.2.1.21,3.2.1.22,3.2.1.23,3.2.1.24,3.2.1.25,3.2.1.26,3.2.1.27,3.2.2.1,3.2.2.2,3.2.2.3,3.2.2.4,3.2.2.5,3.2.2.6,3.2.2.7,3.2.2.8,3.2.2.9,3.2.2.10,3.2.2.11,3.2.2.12,3.2.2.13,3.2.2.14,3.2.2.15,3.2.2.16,3.2.2.17,3.2.2.18,3.2.2.19,3.2.2.20,3.2.2.21,3.2.2.22,3.2.2.23,3.2.2.24,3.2.2.25,3.2.2.26,3.2.2.27,3.2.3.1,3.2.3.2,3.2.3.3,3.2.4.1,3.2.4.2,3.2.4.3,3.2.4.4,3.2.4.5,3.2.4.6,3.2.5.1,3.2.5.2,3.2.6.1,3.2.7.1,3.2.8.1,3.2.9.1,3.2.9.2,3.2.9.3,3.2.9.4,3.2.9.5,3.2.10.1,3.2.10.2,3.2.10.3,3.2.10.4,3.2.10.5,3.2.10.6,3.2.11.1,3.2.11.2,3.2.11.3,3.2.11.4,3.2.11.5,3.2.11.6,3.2.11.7,3.2.11.8,3.2.11.9,3.2.12.1,3.2.12.2,3.2.12.3,3.2.12.4,3.2.12.5,3.2.12.6,3.2.12.7,3.2.12.8,3.2.12.9,3.2.12.10,3.2.13.1,3.2.13.2,3.2.13.3,3.2.13.4,3.2.13.5,3.2.14.1,3.2.14.2,3.2.14.3,3.2.14.4,3.2.14.5,3.2.15.1,3.2.15.2,3.2.15.3,3.2.15.4,3.2.15.5,3.2.15.6,3.2.15.7,3.2.15.8,3.2.15.9,3.2.15.10,3.2.15.11,3.2.15.12,3.2.16.1,3.2.17.1,3.2.18.1,3.2.18.2,3.2.19.1,3.2.20.1,3.2.20.2,3.2.20.3,3.2.20.4,3.2.20.5,3.2.20.6,3.2.20.7,3.2.20.8,3.3.1.1,3.3.1.2,3.3.1.3,3.3.1.4,3.3.1.5,3.3.1.6,3.3.2.1,3.4.1.1,3.4.2.1,3.4.2.2,3.4.2.3,3.4.2.4,3.4.2.5,3.4.3.1,3.4.3.2,3.4.3.3,3.4.3.4,3.4.4.1,3.4.4.2,3.4.5.1,3.4.5.2,3.4.5.3,3.4.5.4,3.4.5.5,3.4.6.1,3.4.6.2,3.4.7.1,3.4.7.2,3.4.7.3,3.4.7.4,3.4.7.5,3.4.7.6,3.4.7.7,3.4.7.8,3.4.7.9,3.4.7.10,3.4.8.1,3.4.9.1,3.4.10.1,3.4.11.1,3.4.11.2,3.4.11.3,3.4.11.4,3.4.11.5,3.4.11.6,3.4.11.7,3.4.11.8,3.4.11.9,3.4.11.10,3.4.11.11,3.4.11.12,3.4.11.13,3.4.11.14,3.4.11.15,3.4.11.16,3.4.11.17,3.4.11.18,3.4.11.19,3.4.11.20,3.4.11.21,3.4.11.22,3.5.1.1,3.5.1.2,3.5.1.3,3.5.1.4,3.5.1.5,3.5.1.6,3.5.1.7,3.5.1.8,3.5.1.9,3.5.2.1,3.5.2.2,3.5.3.1,3.6.1.1,3.6.1.2,3.7.1.1,3.7.1.2,3.7.1.3,3.7.1.4,3.7.1.5,3.7.1.6,3.7.2.1,3.7.3.1,3.7.3.2,3.7.3.3,3.7.3.4,3.7.3.5,3.7.3.6,3.7.3.7,3.7.3.8,3.7.3.9,3.7.3.10,3.7.3.11,3.7.3.12,3.7.3.13,3.7.4.1,3.7.5.1,3.7.5.2,3.8.1.1,3.8.2.1,3.8.2.2,3.8.2.3,3.8.3.1,3.8.3.2,3.8.4.1,3.8.4.2,3.8.4.3,3.8.4.4,3.8.4.5,3.8.4.6,3.8.4.7,3.8.4.10,3.8.4.11,3.8.5.1,3.8.5.2,3.8.5.3,3.8.5.4,3.8.5.5,3.8.5.6,3.8.5.7,3.8.6.1,3.8.6.2,3.8.7.1,3.8.7.2,3.8.8.1,3.8.9.1,3.8.10.1,3.8.11.1,3.8.12.1,3.8.13.1,3.8.14.1,3.8.14.2,3.8.15.1,3.8.15.2,3.8.16.1,3.8.16.2,3.8.17.1,3.8.18.1,3.8.18.2,3.8.19.1,3.8.19.2,3.8.20.1,3.8.20.2,3.8.21.1,3.8.21.2,3.8.22.1,3.8.22.2,3.8.23.1,3.8.24.1,3.8.25.1,3.8.26.1,3.8.26.2,3.8.27.1,3.8.28.1,3.8.29.1,3.8.29.2,3.8.29.3,3.8.29.4,3.8.29.5,3.8.29.6,3.8.29.7,3.8.29.8,3.8.29.9,3.8.29.10,3.8.29.11,3.8.29.12,3.8.29.13,3.8.30.1,3.8.30.2,3.8.30.3,3.8.30.4,3.8.30.5,3.8.30.6,3.9.1.1,3.9.2.1,3.9.2.2,3.9.2.3,3.9.2.4,3.9.3.1,3.9.3.2,3.9.4.1,3.9.4.2,3.9.4.3,3.9.4.4,3.9.4.5,3.9.5.1,3.9.5.2,3.9.5.3,3.9.5.4,3.9.5.5,3.9.5.6,3.9.5.7,3.9.6.1,3.9.6.2,3.9.6.3,3.9.6.4,3.9.6.5,3.9.6.6,3.9.6.7,3.9.7.1,3.9.8.1,3.9.9.1,3.9.10.1,3.9.11.1,3.9.12.1,3.9.13.1,3.9.13.2,3.9.13.3,3.9.13.4,3.9.13.5,3.9.13.6,3.9.13.7,3.9.13.8,3.9.13.9,3.9.14.1,3.9.15.1,3.9.16.1,3.9.16.2,3.9.16.3,3.9.16.4,3.9.16.5,3.9.16.6,3.9.16.7,3.9.16.8,3.9.17.1,3.9.17.2,3.9.17.3,3.9.17.4,3.9.18.1,3.9.18.2,3.9.18.3,3.9.19.1,3.9.19.2,3.9.19.3,3.9.19.4,3.9.20.1,3.9.20.2,3.9.20.3,3.9.20.4,3.9.20.5,3.9.20.6,3.9.20.7,3.9.20.8,3.9.20.9,3.9.20.10,3.9.21.1,3.9.22.1,3.9.22.2,3.9.22.3,3.9.22.4,3.9.22.5,3.9.23.1,3.9.23.2,3.9.23.3,3.9.23.4,3.9.24.1,3.9.24.2,3.9.25.1,3.9.25.2,3.9.26.1,3.9.27.1,3.9.27.2,3.9.28.1,3.9.28.2,3.9.28.3,3.9.28.4,3.9.28.5,3.9.28.6,3.9.29.1,3.9.29.2,3.9.30.1,3.9.31.1,3.9.31.2,3.9.31.3,3.9.31.4,3.9.31.5,3.9.31.6,3.9.31.7,3.9.31.8,3.9.32.1,3.9.32.2,3.9.32.3,3.9.32.4,3.9.33.1,3.9.33.2,3.9.33.3,3.9.34.1,3.9.35.1,3.9.36.1,3.9.36.2,3.9.37.1,3.9.37.2,3.9.37.3,3.9.37.4,3.9.37.5,3.9.37.6,3.9.37.7,3.9.38.1,3.9.38.2,3.9.38.3,3.9.38.4,3.9.38.5,3.9.38.6,3.9.38.7,3.9.38.8,3.9.38.9,3.9.38.10,3.9.38.11,3.9.39.1,3.9.39.2,3.9.39.3,3.9.39.4,3.9.40.1,3.9.40.2,3.9.40.3,3.9.40.4,3.9.41.1,3.9.41.2,3.9.41.3,3.9.41.4,3.9.42.1,3.9.42.2,3.9.42.3,3.9.42.4,3.9.42.5,3.9.42.6,3.9.42.7,3.9.43.1,3.10.1.1,3.10.2.1,3.10.2.2,3.10.2.3,3.10.2.4,3.10.2.5,3.10.2.6,3.10.2.7'.split(',').concat(['14.00','21.1.2.20','21.1.3.9']));
+// Clause titles that occur exactly once on the page: added as a text fragment after the anchor so Chrome/Edge also highlight the clause (anchor alone still jumps if the fragment is unsupported).
+const REG_TITLES = {"3.10.2.1": "סייג לתחולת הוראות חלק זה", "3.10.2.2": "רוחב הפתח המזערי של דלת היציאה מחדר המדרגות", "3.10.2.4": "מיקום פיר מעלית", "3.10.2.7": "שינוי בבניין לאחר תחילת סימן זה", "3.2.1.13": "נעילת דלתות בדרכי מוצא", "3.2.1.18": "מערכות נעילה מיוחדות", "3.2.1.3": "רוחב הפתח המינימלי של דלתות", "3.2.1.6": "כיוון ואופן פתיחה של דלת", "3.2.12.1": "חישוב תפוסה", "3.2.13.2": "מספר פתחי היציאה מחדר או מחלק בניין", "3.2.15.1": "מרחקי הליכה בבניין", "3.2.15.10": "מרחק הליכה בדיור מוגן ובבתי אבות", "3.2.15.11": "מרחק הליכה בבתי מלון ומעונות סטודנטים", "3.2.15.12": "מרחק הליכה בתעשיה רגילה", "3.2.15.6": "מרחק הליכה בגני ילדים", "3.2.20.1": "אמצעי חילוץ מבניין שאינו בניין גבוה או בניין", "3.2.20.2": "רדיוס סיבוב של דרך גישה ורחבת היערכות", "3.2.20.5": "מבנה דרך גישה ורחבת היערכות", "3.2.9.3": "מספר יציאות אל חוץ הבניין", "3.3.1.1": "הפרדה בין דרכי מוצא והבניין", "3.3.1.2": "הפרדת חדר מדרגות מהבניין", "3.3.1.3": "הפרדת קומות השירותים משאר חלקי הבניין", "3.5.1.8": "כמות הפתחים ומיקומם", "3.5.3.1": "סידורי שליטה בעשן בבניין למסחר", "3.6.1.2": "חומרי בניה ומוצרי גימור בחדר מדרגות המשמש מוצ", "3.7.1.2": "חדר מדרגות מוגן ומדרגות חוץ בבניין גבוה", "3.7.1.4": "גישה לגג מחדר מדרגות מוגן בבניין גבוה או בבני", "3.7.1.5": "הפרדת אש אנכית בין קומות", "3.7.1.6": "התקנת חומר חיפוי בחזית הבניין", "3.7.3.12": "איוור המעלית", "3.7.3.7": "ציוד חדר מכונות להפעלת מעלית", "3.7.3.8": "הפעלת מעלית בשעת דליקה", "3.8.16.2": "יציאה ממרתף המשמש חלק מדירת מגורים", "3.8.18.2": "מרחק הליכה בדירת מגורים", "3.8.20.1": "תאורת חירום בבניין מגורים", "3.8.21.1": "שילוט דרכי מוצא בבניין מגורים", "3.8.26.2": "סידורי שליטה בעשן בבנין מגורים", "3.8.29.5": "רוחב הפרוזדור המהווה חלק מדרך מוצא בטוח", "3.8.29.6": "רוחב משטח אופקי בחדר מדרגות", "3.8.30.4": "תוספת של יותר מקומה אחת מעל בניין קיים שאינו", "3.8.30.5": "תוספת של יותר מקומה אחת מעל בניין קיים גבוה", "3.8.30.6": "הוראות נוספות לבנייה של יותר מקומה אחת מעל בנ", "3.8.4.3": "מנעול בדלת בדרך מוצא", "3.8.4.6": "כיוון פתיחת דלת במוצא בטוח", "3.8.6.2": "מעבר מדורג משותף בבנייני מגורים מדורגים", "3.9.16.5": "רוחב מרכיבי דרך מוצא המשרתים אזור ישיבה", "3.9.16.6": "רוחב מעבר ושטח משורת", "3.9.16.7": "רוחב אחיד למעבר", "3.9.17.3": "מרפסת או גלריה", "3.9.18.2": "דרך מוצא מן הזירה או מרצפת אודיטוריום", "3.9.19.1": "אופן מדידת רוחב הגישה למעבר בין שורות המושבים", "3.9.25.1": "תאורת דרכי המוצא", "3.9.29.2": "מרחק מבניין או מאתר סמוך", "3.9.30.1": "כניסות חירום ודרך מעבר לרכב ביטחון", "3.9.31.2": "הפרדת מקום להתקהלות המשמש כחלק מבניין", "3.9.31.4": "צנרת חודרת קירות", "3.9.31.5": "הפרדת במה או במה משולבת", "3.9.31.7": "הפרדת יציע קהל או טריבונה", "3.9.31.8": "הפרדת מיתקני אוורור ומיזוג אוויר", "3.9.36.2": "תיאור דרישות סקר בטיחות", "3.9.38.11": "מערכת לכיבוי אש ועשן עבור במה או במה משולבת", "3.9.4.3": "שלד הגג של אצטדיון או מיתקן ספורט פתוח", "3.9.4.5": "יציע קהל הבנוי מחומרים בלתי דליקים", "3.9.41.3": "יציע וטריבונה הניתנים לפירוק ולהרכבה", "3.9.43.1": "עמידות אש של מושבים ביציע הקהל"};
+const REG_MISSING = {'3.6.1.4':['@תוספת_2_חלק_ג_פרק_ו','תקנות תכנון ובניה — פרק ו׳ חומרי גמר — נפתח בראש הפרק (מספר 3.6.1.4 לפי מאגר הדרישות של רשות הכבאות; אינו מופיע בנוסח התקנות)'], '3.9.4.6':['3.9.4.2','תקנות תכנון ובניה — 3.9.4.6 היא טבלה; נפתח בסעיף 3.9.4.2 שמפנה אליה']};
+const REG_T5 = new Set('2.03,2.04,2.05,2.06,2.07,2.08,2.09,2.10,2.11,2.12,2.13'.split(','));
+function regLinkFor(src, num){
+  if(!src) return null;
+  // Fire Commissioner directives: official gov.il policy page per directive number
+  const dm = /הוראת נציב\s+(\d+)/.exec(src);
+  if(dm) return {url: 'https://www.gov.il/he/departments/policies/directive_' + dm[1], label: 'הוראת נציב ' + dm[1] + ' (gov.il)', deep:false};
+  // NFPA: free read-only access portal (free NFPA account required); no per-standard deep link
+  if(src.indexOf('NFPA') === 0) return {url: 'https://www.nfpa.org/freeaccess', label: src + ' — קריאה חינמית באתר NFPA (נדרשת הרשמה)', deep:false};
+  // Israeli Standards (ת"י): paid only. The per-standard page id on sii.org.il cannot be derived
+  // from the standard number, so link to the SII standards search/purchase page.
+  if(/^ת['׳]י|^תקן ישראלי/.test(src)) return {url: 'https://www.sii.org.il/he/standards-search/', label: src + ' — חיפוש ורכישה במכון התקנים (בתשלום)', deep:false};
+  if(src.indexOf('תקנות תכנון ובניה') !== 0) return null;
+  // ---- Regulation clause -> Wikisource anchor (verified against the live page) ----
+  const t5 = /תוספת חמישית/.test(src);
+  const base = String(num || '').trim().split('-')[0].replace(/\(.*$/, '').trim();   // first of a range, no (א)(1) suffixes
+  const parts = base.split('.');
+  const allStrip = parts.map(x => x.replace(/^0+(?=\d)/, '')).join('.');            // 03.04.02.01 -> 3.4.2.1
+  const firstStrip = parts.map((x, i) => i ? x : x.replace(/^0+(?=\d)/, '')).join('.'); // 02.03 -> 2.03
+  const mk = (id, label, deep) => ({url: REG_PAGE + '#' + encodeURIComponent(id) + (deep && REG_TITLES[id.split('פרט_')[1]] ? ':~:text=' + encodeURIComponent(REG_TITLES[id.split('פרט_')[1]]) : ''), label: label, deep: !!deep});
+  if(t5){
+    if(REG_T5.has(firstStrip)) return mk('תוספת_5_פרט_' + firstStrip, 'תקנות תכנון ובניה, תוספת חמישית — פרט ' + firstStrip, true);
+    return mk('תוספת_5_פרט_2.03', 'תקנות תכנון ובניה — תוספת חמישית', false);
+  }
+  const m4 = /^(3\.\d+\.\d+\.\d+)/.exec(base);   // sub-items like 3.8.30.6.11 -> clause 3.8.30.6
+  for(const c of [base, allStrip, m4 ? m4[1] : base]){
+    if(REG_ANCHORS.has(c)) return mk('תוספת_2_פרט_' + c, 'תקנות תכנון ובניה — סעיף ' + c, true);
+  }
+  if(REG_MISSING[base]) return mk(REG_MISSING[base][0][0]==='@' ? REG_MISSING[base][0].slice(1) : 'תוספת_2_פרט_' + REG_MISSING[base][0], REG_MISSING[base][1], false);
+  return {url: REG_PAGE, label: 'תקנות תכנון ובניה', deep:false};
+}
+function regLinkHtml(src, num){
+  const l = regLinkFor(src, num);
+  if(!l) return '';
+  return `<a class="reg-link no-print" href="${l.url}" target="_blank" rel="noopener">🔗 ${l.label}</a>`;
+}
+
+/* ============ Results ============ */
+function groupBySource(reqs){
+  const map = new Map();
+  reqs.forEach(r=>{
+    const src = s(r.src) || 'מקור לא צוין';
+    if(!map.has(src)) map.set(src, []);
+    map.get(src).push(r);
+  });
+  return map;
+}
+
+function renderResults(){
+  const result = nextStep(state.path);
+  const reqs = result.active;
+  const grouped = groupBySource(reqs);
+  const levelChoices = state.path.filter(p=>p.type==='level');
+  const scenarioLabel = levelChoices.length ? levelChoices.map(l=>l.desc).join(' · ') : 'ללא תת-סיווג נוסף';
+
+  const card = el(`<div class="card result-header"></div>`);
+  card.appendChild(el(`<div class="stamp no-print">טיוטה ראשונית</div>`));
+  card.appendChild(el(`<div class="eyebrow">תוצאה</div>`));
+  card.appendChild(el(`<h2>תוכנית בטיחות אש – ${currentGroupDesc()}</h2>`));
+  card.appendChild(el(`<div class="meta">תרחיש מזוהה: ${scenarioLabel}</div>`));
+
+  const form = el(`<div class="project-form no-print"></div>`);
+  const fields = [['name','שם הפרויקט'],['address','כתובת'],['author','הוכן ע״י']];
+  fields.forEach(([key,label])=>{
+    const wrap = el(`<div><label>${label}</label><input type="text" data-key="${key}" value="${state.project[key]||''}"/></div>`);
+    wrap.querySelector('input').addEventListener('input', (e)=>{
+      state.project[key] = e.target.value; persist(); updatePrintHeader(scenarioLabel);
+    });
+    form.appendChild(wrap);
+  });
+  card.appendChild(form);
+
+  if(!state.excluded) state.excluded = {};
+  const keyOfReq = r => (s(r.num)||'')+'|'+(s(r.req)||'').slice(0,40);
+  const excludedCount = () => reqs.filter(r=>state.excluded[keyOfReq(r)]).length;
+  const summary = el(`<div class="summary-row"></div>`);
+  summary.appendChild(el(`<span class="chip">${reqs.length} דרישות</span>`));
+  summary.appendChild(el(`<span class="chip">${grouped.size} מקורות רגולציה</span>`));
+  const exChip = el(`<span class="chip chip-excluded no-print"></span>`);
+  const refreshExChip = ()=>{ const n = excludedCount(); exChip.textContent = n ? `${n} סומנו כלא רלוונטיות (לא יודפסו)` : ''; exChip.style.display = n ? '' : 'none'; };
+  refreshExChip();
+  summary.appendChild(exChip);
+  card.appendChild(summary);
+
+  // Item 2: quick shortcuts from the results screen straight to the relevant
+  // data tables — since no reliable, literal phrase for "prepare a table of
+  // X" was found across the real requirement text (checked directly against
+  // the full dataset), this is a direct-access shortcut rather than a
+  // per-requirement auto-detected link.
+  const shortcuts = el(`<div class="toolbar no-print" style="margin-top:4px;"></div>`);
+  [['areas','🗺️ טבלת שטחים'],['openings','🚪 טבלת פתחים ודלתות'],['windows','🪟 מחשבון חלונות']].forEach(([tab,label])=>{
+    const b = el(`<button class="btn-secondary">${label}</button>`);
+    b.addEventListener('click', ()=>{ state.mainTab='calc'; state.calcTab=tab; render(); persist(); });
+    shortcuts.appendChild(b);
+  });
+  card.appendChild(shortcuts);
+
+  const toolbar = el(`<div class="toolbar no-print"></div>`);
+  const printBtn = el(`<button class="btn-primary">🖨️ הדפס / שמור כ-PDF</button>`);
+  printBtn.addEventListener('click', ()=>window.print());
+  const editBtn = el(`<button class="btn-secondary">✎ ערוך תשובות</button>`);
+  editBtn.addEventListener('click', ()=>{
+    // Drop just the last answered level so the user re-answers only that one question.
+    const lastLevel = [...state.path].reverse().find(p=>p.type==='level');
+    if(lastLevel){
+      const idx = state.path.lastIndexOf(lastLevel);
+      state.path.splice(idx,1);
+      state.screen = 'question';
+    } else {
+      // This group had no branching questions at all (single-leaf group) —
+      // there is nothing to re-answer, so go back to the group picker instead.
+      state.path = [];
+      state.screen = 'groups';
+    }
+    render(); persist();
+  });
+  const restartBtn = el(`<button class="btn-secondary">↺ מבנה אחר</button>`);
+  restartBtn.addEventListener('click', ()=>{
+    state.path = []; state.screen = 'groups';
+    render(); persist();
+  });
+  toolbar.appendChild(printBtn);
+  toolbar.appendChild(editBtn);
+  toolbar.appendChild(restartBtn);
+  card.appendChild(toolbar);
+
+  app.appendChild(card);
+
+  const printHeader = el(`<div class="card" id="print-header" style="display:none;"></div>`);
+  app.appendChild(printHeader);
+  updatePrintHeader(scenarioLabel);
+
+  const list = el(`<div class="card"></div>`);
+  [...grouped.entries()].forEach(([src, items])=>{
+    const block = el(`<div class="source-block"></div>`);
+    block.appendChild(el(`<div class="source-title"><span>${src}</span><span class="count">${items.length}</span></div>`));
+    items.forEach(r=>{
+      const num = s(r.num), req = s(r.req), rem = s(r.rem);
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
+      top.appendChild(el(`<div class="req-text">${req||''}</div>`));
+      item.appendChild(top);
+      const rl = regLinkHtml(s(r.src), num);
+      if(rl) item.appendChild(el(`<div class="req-links">${rl}</div>`));
+      if(rem){
+        item.appendChild(el(`<div class="req-rem"><b>דגשים: </b>${rem}</div>`));
+      }
+      const reqKey = (num||'')+'|'+(req||'').slice(0,40);
+      const exBtn = el(`<button type="button" class="btn-ex no-print"></button>`);
+      const applyEx = ()=>{
+        const on = !!state.excluded[reqKey];
+        item.classList.toggle('req-excluded', on);
+        exBtn.textContent = on ? '↺ החזר לתוכנית' : '✕ לא רלוונטי';
+        exBtn.title = on ? 'הדרישה סומנה כלא רלוונטית: היא לא תודפס ולא תיכנס לטיוטה' : 'סמן שהדרישה לא רלוונטית לפרויקט — היא לא תודפס ולא תיכנס לטיוטה';
+      };
+      exBtn.addEventListener('click', ()=>{
+        if(state.excluded[reqKey]) delete state.excluded[reqKey]; else state.excluded[reqKey] = true;
+        applyEx(); refreshExChip(); updatePrintHeader(scenarioLabel); persist();
+      });
+      applyEx();
+
+      // Two independent tags per requirement — "belongs on the drawing itself"
+      // and/or "goes in the general written notes" — so the final document
+      // knows which section to place each requirement's content into.
+      const tagBadges = el(`<div class="req-tag-badges"></div>`);
+      function renderTagBadges(){
+        const t = state.reqTags[reqKey] || {};
+        tagBadges.innerHTML = '';
+        if(t.drawing) tagBadges.appendChild(el(`<span class="req-tag-badge">🖼 שרטוט</span>`));
+        if(t.note) tagBadges.appendChild(el(`<span class="req-tag-badge">📝 הערה כללית</span>`));
+      }
+      renderTagBadges();
+      item.appendChild(tagBadges);
+
+      const tagRow = el(`<div class="req-tags no-print"></div>`);
+      const saved = state.reqTags[reqKey] || {};
+      const drawingCb = el(`<label class="req-tag-check"><input type="checkbox" ${saved.drawing?'checked':''}/> שייך על גבי השרטוט</label>`);
+      const noteCb = el(`<label class="req-tag-check"><input type="checkbox" ${saved.note?'checked':''}/> הערה כללית</label>`);
+      drawingCb.querySelector('input').addEventListener('change', (e)=>{
+        if(!state.reqTags[reqKey]) state.reqTags[reqKey] = {};
+        state.reqTags[reqKey].drawing = e.target.checked;
+        renderTagBadges(); persist();
+      });
+      noteCb.querySelector('input').addEventListener('change', (e)=>{
+        if(!state.reqTags[reqKey]) state.reqTags[reqKey] = {};
+        state.reqTags[reqKey].note = e.target.checked;
+        renderTagBadges(); persist();
+      });
+      tagRow.appendChild(drawingCb); tagRow.appendChild(noteCb); tagRow.appendChild(exBtn);
+      item.appendChild(tagRow);
+
+      const noteKey = reqKey;
+      const noteBox = el(`<div class="notebox no-print"><textarea placeholder="הערה / סטטוס ביצוע (אופציונלי)">${state.notes[noteKey]||''}</textarea></div>`);
+      noteBox.querySelector('textarea').addEventListener('input',(e)=>{
+        state.notes[noteKey] = e.target.value; persist();
+      });
+      item.appendChild(noteBox);
+      block.appendChild(item);
+    });
+    list.appendChild(block);
+  });
+  app.appendChild(list);
+
+  const allTexts = reqs.map(r=>(s(r.req)||'')+' '+(s(r.rem)||''));
+  const qs = findQualified(allTexts);
+  if(qs.length){
+    const qcard = el(`<div class="card"></div>`);
+    qcard.appendChild(el(`<div class="eyebrow">תוספת</div>`));
+    qcard.appendChild(el(`<h3 style="margin:0 0 10px;font-size:16px;">מסמכים ואישורים נדרשים — מי מוסמך לאשר</h3>`));
+    qcard.appendChild(el(`<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;">זיהוי אוטומטי, לפי המערכות שעלו ברשימת הדרישות למעלה. יש לוודא מול יועץ בטיחות אש.</p>`));
+    qs.forEach(q=>{
+      qcard.appendChild(el(`<div class="req-item"><div class="req-text"><b>${q.topic}:</b> ${q.who}</div></div>`));
+    });
+    app.appendChild(qcard);
+  }
+
+  app.appendChild(el(`<footer class="note">מסמך זה הופק אוטומטית על סמך מאגר דרישות כבאות ואינו מהווה אישור רשמי. יש לאמת מול יועץ בטיחות אש מוסמך ורשות הכבאות.</footer>`));
+}
+
+function updatePrintHeader(scenarioLabel){
+  const ph = document.getElementById('print-header');
+  if(!ph) return;
+  const p = state.project;
+  ph.innerHTML = `<h2 style="margin:0 0 10px;">תוכנית בטיחות אש – ${p.name || currentGroupDesc()}</h2>
+    <div style="font-size:13px;color:#4B5B60;line-height:1.9;">
+      ${p.address? 'כתובת: '+p.address+'<br/>':''}
+      ${p.author? 'הוכן ע״י: '+p.author+'<br/>':''}
+      סוג מבנה: ${currentGroupDesc()}<br/>
+      נתיב בחירה: ${[currentGroupDesc()].concat(state.path.filter(x=>x.type==='level').map(x=>x.desc)).join(' ← ')}<br/>
+      ${formatDataDate() ? 'נתוני דרישות: מאגר רשות הכבאות וההצלה (data.gov.il) נכון ל-'+formatDataDate()+'<br/>' : ''}
+      ${(()=>{ let n = 0; try{ n = nextStep(state.path).active.filter(r=>(state.excluded||{})[(s(r.num)||'')+'|'+(s(r.req)||'').slice(0,40)]).length; }catch(e){} return n ? n+' דרישות סומנו כלא רלוונטיות ואינן מופיעות בהדפסה<br/>' : ''; })()}
+      תאריך הפקה: ${new Date().toLocaleDateString('he-IL')}
+    </div>`;
+  ph.classList.add('print-only-card');
+}
+
+const style2 = document.createElement('style');
+style2.textContent = `
+  #print-header{display:none;}
+  @media print{ #print-header.print-only-card{display:block !important;} }
+  @media (max-width:700px){
+    .masthead{flex-wrap:wrap;}
+    .masthead-updated{position:static;order:-1;flex-basis:100%;white-space:normal;line-height:1.5;}
+    .masthead > div:not(.masthead-updated):not(.badge-group){flex:1;min-width:0;}
+  }
+  .calc-table th{padding:7px 8px;border-bottom:2px solid var(--steel-soft);color:var(--steel);white-space:nowrap;}
+  .calc-table td{padding:7px 8px;border-bottom:1px solid var(--line);}
+  .calc-table td:not(:first-child), .calc-table th:not(:first-child){text-align:center;font-variant-numeric:tabular-nums;}
+  .opt-count{margin-inline-start:auto;font-size:11.5px;color:var(--ink-soft);white-space:nowrap;padding-inline-start:10px;}
+  .btn-ex{margin-inline-start:auto;flex:none;font:inherit;font-size:11.5px;border:1px solid var(--line, #d9dfe1);background:transparent;color:var(--ink-soft);border-radius:999px;padding:3px 10px;cursor:pointer;}
+  .btn-ex:hover{color:var(--ink);}
+  .req-excluded{opacity:.45;}
+  .req-excluded .req-text{text-decoration:line-through;}
+  .chip-excluded{background:#fdecea;color:#8a2a1f;}
+  @media print{ .req-excluded{display:none !important;} }
+`;
+document.head.appendChild(style2);
+
+/* ============ Calculators ============ */
+function copyTSV(rows){
+  const tsv = rows.map(r=>r.join('\t')).join('\n');
+  const done = ()=>{ toast('הטבלה הועתקה — אפשר להדביק באקסל / וורד'); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(tsv).then(done).catch(()=>fallbackCopy(tsv, done));
+  } else {
+    fallbackCopy(tsv, done);
+  }
+}
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  document.body.removeChild(ta);
+}
+function toast(msg){
+  let t = document.getElementById('toast');
+  if(!t){
+    t = el(`<div id="toast" class="toast"></div>`);
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function renderCalcRoot(){
+  const card = el(`<div class="card"></div>`);
+  card.appendChild(el(`<div class="eyebrow">מחשבונים ותוספות</div>`));
+  card.appendChild(el(`<h2 class="qtitle">כלים לחישוב נתונים לתוכנית הבטיחות</h2>`));
+  card.appendChild(el(`<p class="qsub">כל מחשבון מבוסס על טבלה רשמית מהתקנות. אחרי חישוב, לחצו "הוסף לטבלה" ואז "העתק טבלה" כדי להדביק את התוצאות ישירות לוורד / אקסל / התוכנית.</p>`));
+
+  const tabs = el(`<div class="group-picker no-print"></div>`);
+  const defs = [
+    ['fire','עמידות אש שלד הבניין'],
+    ['occ','תפוסה ורוחב יציאות'],
+    ['walk','מרחקי הליכה'],
+    ['areas','טבלת שטחים לפי חלל'],
+    ['openings','טבלת פתחים ודלתות'],
+    ['windows','מחשבון חלונות'],
+    ['barn','גודל מתבן'],
+    ['systems','מערכות בטיחות אש נדרשות'],
+    ['water','ספיקות ונפחי מים (הוראה 529)'],
+    ['business','עסק קטן/בינוני (מפרט אחיד)'],
+    ['draft','טיוטה להגשה (שבלונה)'],
+    ['submission','בדיקת הגשה (הוראת 532)']
+  ];
+  defs.forEach(([id,label])=>{
+    const b = el(`<button type="button" class="group-pill ${state.calcTab===id?'active':''}">${label}</button>`);
+    b.addEventListener('click', ()=>{ state.calcTab=id; render(); persist(); });
+    tabs.appendChild(b);
+  });
+  card.appendChild(tabs);
+  app.appendChild(card);
+
+  if(state.calcTab==='fire') renderCalcFire();
+  if(state.calcTab==='occ') renderCalcOcc();
+  if(state.calcTab==='walk') renderCalcWalk();
+  if(state.calcTab==='areas') renderCalcAreas();
+  if(state.calcTab==='openings') renderCalcOpenings();
+  if(state.calcTab==='windows') renderCalcWindows();
+  if(state.calcTab==='barn') renderCalcBarn();
+  if(state.calcTab==='systems') renderCalcSystems();
+  if(state.calcTab==='water') renderCalcWater();
+  if(state.calcTab==='business') renderCalcBusiness();
+  if(state.calcTab==='draft') renderCalcDraft();
+  if(state.calcTab==='submission') renderCalcSubmission();
+}
+
+function calcCard(){
+  const card = el(`<div class="card"></div>`);
+  app.appendChild(card);
+  return card;
+}
+function tableCard(title, headers, rows, tabKey){
+  const card = el(`<div class="card"></div>`);
+  const head = el(`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;"></div>`);
+  head.appendChild(el(`<h3 style="margin:0;font-size:15px;">${title} <span class="chip" style="margin-inline-start:6px;">${rows.length} שורות</span></h3>`));
+  const btns = el(`<div class="no-print" style="display:flex;gap:8px;"></div>`);
+  const copyBtn = el(`<button class="btn-secondary">📋 העתק טבלה</button>`);
+  copyBtn.addEventListener('click', ()=>{
+    if(rows.length===0){ toast('אין עדיין שורות בטבלה'); return; }
+    copyTSV([headers, ...rows]);
+  });
+  const clearBtn = el(`<button class="btn-ghost">נקה טבלה</button>`);
+  clearBtn.addEventListener('click', ()=>{
+    state.calcTables[tabKey] = []; render(); persist();
+  });
+  btns.appendChild(copyBtn); btns.appendChild(clearBtn);
+  head.appendChild(btns);
+  card.appendChild(head);
+
+  if(rows.length===0){
+    card.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">עדיין לא נוספו שורות. חשבו למעלה ולחצו "הוסף לטבלה".</div>`));
+  } else {
+    const wrap = el(`<div style="overflow-x:auto;"></div>`);
+    const table = el(`<table style="width:100%;border-collapse:collapse;font-size:12.5px;"></table>`);
+    const thead = el(`<thead></thead>`);
+    const htr = el(`<tr></tr>`);
+    headers.forEach(h=>htr.appendChild(el(`<th style="text-align:right;padding:7px 8px;border-bottom:2px solid var(--steel-soft);color:var(--steel);white-space:nowrap;">${h}</th>`)));
+    thead.appendChild(htr); table.appendChild(thead);
+    const tbody = el(`<tbody></tbody>`);
+    rows.forEach((r,ri)=>{
+      const tr = el(`<tr></tr>`);
+      r.forEach(c=>tr.appendChild(el(`<td style="padding:7px 8px;border-bottom:1px solid var(--line);">${c}</td>`)));
+      const delTd = el(`<td class="no-print"></td>`);
+      const delBtn = el(`<button class="btn-ghost" style="font-size:11px;">✕</button>`);
+      delBtn.addEventListener('click', ()=>{
+        state.calcTables[tabKey].splice(ri,1); render(); persist();
+      });
+      delTd.appendChild(delBtn);
+      tr.appendChild(delTd);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+  }
+  app.appendChild(card);
+}
+
+/* ---- 1. Fire resistance (עמידות אש) ---- */
+function renderCalcFire(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טבלה 3.3.2.1</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">סיווג שלד הבניין לפי עמידות אש (בשעות)</h3>`));
+
+  const row = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const elWrap = el(`<div><label>אלמנט מבנה</label></div>`);
+  const elSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  CALC.fireResistance.rows.forEach((r,i)=>elSel.appendChild(el(`<option value="${i}">${r.element}</option>`)));
+  elSel.value = state.calcSelections.fire.el;
+  elWrap.appendChild(elSel);
+
+  const colWrap = el(`<div><label>סוג שלד הבניין</label></div>`);
+  const colSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  CALC.fireResistance.cols.forEach((c,i)=>colSel.appendChild(el(`<option value="${i}">${c.code} — ${c.label}</option>`)));
+  colSel.value = state.calcSelections.fire.col;
+  colWrap.appendChild(colSel);
+
+  row.appendChild(elWrap); row.appendChild(colWrap);
+  card.appendChild(row);
+
+  const resultBox = el(`<div class="disclaimer" style="background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);font-weight:700;font-size:15px;"></div>`);
+  function updateResult(){
+    state.calcSelections.fire.el = +elSel.value;
+    state.calcSelections.fire.col = +colSel.value;
+    const r = CALC.fireResistance.rows[+elSel.value];
+    const c = +colSel.value;
+    resultBox.textContent = 'עמידות אש נדרשת: ' + r.values[c] + ' שעות';
+  }
+  elSel.addEventListener('change', updateResult);
+  colSel.addEventListener('change', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    const r = CALC.fireResistance.rows[+elSel.value];
+    const c = CALC.fireResistance.cols[+colSel.value];
+    state.calcTables.fire.push([r.element, c.code+' — '+c.label, String(r.values[+colSel.value])]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת עמידות אש שנבנתה', ['אלמנט מבנה','סוג שלד','עמידות בשעות'], state.calcTables.fire, 'fire');
+}
+
+/* ---- 2. Occupancy & exit width (תפוסה ורוחב יציאות) ---- */
+function renderCalcOcc(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טבלאות 3.2.12.2 ו-3.2.12.4</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">חישוב תפוסה ורוחב יציאות נדרש</h3>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const useWrap = el(`<div><label>סוג שימוש</label></div>`);
+  const useSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  CALC.occupancy.forEach((o,i)=>useSel.appendChild(el(`<option value="${i}">${o.num}. ${o.use}</option>`)));
+  useSel.value = state.calcSelections.occ.use;
+  useWrap.appendChild(useSel);
+  const areaWrap = el(`<div><label>שטח (מ״ר)</label></div>`);
+  const areaInput = el(`<input type="number" min="0" step="0.1" value="${state.calcSelections.occ.area ?? 100}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+  areaWrap.appendChild(areaInput);
+  row1.appendChild(useWrap); row1.appendChild(areaWrap);
+  card.appendChild(row1);
+
+  const widthWrap = el(`<div style="margin-top:10px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">קטגוריית מקדם רוחב (טבלה 3.2.12.4)</label></div>`);
+  const widthSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  const defaultWidthIdx = CALC.width.findIndex(w=>w.use==='כל האחרים');
+  CALC.width.forEach((w,i)=>widthSel.appendChild(el(`<option value="${i}">${w.use}</option>`)));
+  widthSel.value = (state.calcSelections.occ.width===null || state.calcSelections.occ.width===undefined)
+    ? defaultWidthIdx : state.calcSelections.occ.width;
+  widthWrap.appendChild(widthSel);
+  card.appendChild(widthWrap);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:2;"></div>`);
+  function updateResult(){
+    state.calcSelections.occ.use = +useSel.value;
+    state.calcSelections.occ.area = areaInput.value;
+    state.calcSelections.occ.width = +widthSel.value;
+    const o = CALC.occupancy[+useSel.value];
+    const area = parseFloat(areaInput.value)||0;
+    const w = CALC.width[+widthSel.value];
+    const factorNum = typeof o.factor === 'number' ? o.factor : parseFloat(o.factor);
+    if(!factorNum || isNaN(factorNum)){
+      resultBox.innerHTML = `<b>שימו לב:</b> עבור "${o.use}" מקדם התפוסה אינו מספר קבוע (${o.factor}) — יש לחשב ידנית לפי ההערה ברשומה, ואינו ניתן לחישוב אוטומטי.`;
+      return null;
+    }
+    const occupancy = area / factorNum;
+    const widthHoriz = occupancy * w.horizontal;
+    const widthStairs = occupancy * w.stairs;
+    resultBox.innerHTML = `מקדם תפוסה: <b>${factorNum} מ״ר/נפש</b> (${o.area_type||''})<br/>
+      תפוסה מחושבת: <b>${occupancy.toFixed(1)} נפשות</b><br/>
+      רוחב יציאות נדרש (מהלך אופקי): <b>${Math.ceil(widthHoriz)} ס״מ</b><br/>
+      רוחב יציאות נדרש (מדרגות): <b>${Math.ceil(widthStairs)} ס״מ</b>
+      ${o.notes? '<br/><span style="font-size:12px;">הערה: '+o.notes+'</span>':''}`;
+    return {use:o.use, area, factor:factorNum, occupancy, widthHoriz, widthStairs};
+  }
+  let lastCalc = null;
+  function refresh(){ lastCalc = updateResult(); }
+  useSel.addEventListener('change', refresh);
+  areaInput.addEventListener('input', refresh);
+  widthSel.addEventListener('change', refresh);
+  refresh();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!lastCalc){ toast('אין ערך מספרי לחישוב עבור שימוש זה'); return; }
+    state.calcTables.occ.push([
+      lastCalc.use, lastCalc.area.toFixed(1), lastCalc.factor,
+      lastCalc.occupancy.toFixed(1), Math.ceil(lastCalc.widthHoriz), Math.ceil(lastCalc.widthStairs)
+    ]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת תפוסה ורוחב יציאות שנבנתה',
+    ['שימוש','שטח מ"ר','מקדם תפוסה','תפוסה (נפש)','רוחב אופקי נדרש (ס"מ)','רוחב מדרגות נדרש (ס"מ)'],
+    state.calcTables.occ, 'occ');
+
+  renderMallPassageCalc();
+}
+
+/* ---- 2b. Mall covered public passage (קניון - מעבר ציבורי משותף מוגן עשן) ----
+   A separate calculation from the main occupancy table: the factor itself is
+   looked up from a break-point table keyed on the combined shop area, not
+   chosen from a use-type dropdown. See פרט 3.2.12.3(ד)(1).
+   Only rendered when CALC.mallPassage is present in the data - the same
+   script_3.js is shared between the "original" and "corrected" builds, and
+   only the corrected CALC includes this table, so this stays silent/absent
+   rather than erroring when it's missing. */
+function renderMallPassageCalc(){
+  if(!CALC.mallPassage) return;
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">פרט 3.2.12.3(ד)(1) — מחשבון נפרד</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">קניון — מעבר ציבורי משותף מוגן עשן</h3>`));
+  card.appendChild(el(`<p class="qsub" style="margin-top:-6px;">חישוב התפוסה למעבר ציבורי משותף ומקורה שהוא מוגן עשן: סך שטח כל החנויות בקומה, בתוספת 50% משטחי חנויות עוגן (חנות ששטחה עולה על 2,000 מ״ר), מחולק במקדם הנמוך ביותר המתאים לשטח הכולל.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const shopWrap = el(`<div><label>סך שטח כל החנויות בקומה (מ״ר)</label></div>`);
+  const shopInput = el(`<input type="number" min="0" step="0.1" value="${state.calcSelections.mallPassage.shopArea}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+  shopWrap.appendChild(shopInput);
+  const anchorWrap = el(`<div><label>סך שטחי חנויות עוגן בקומה (מ״ר)</label></div>`);
+  const anchorInput = el(`<input type="number" min="0" step="0.1" value="${state.calcSelections.mallPassage.anchorArea}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+  anchorWrap.appendChild(anchorInput);
+  row1.appendChild(shopWrap); row1.appendChild(anchorWrap);
+  card.appendChild(row1);
+
+  const widthWrap = el(`<div style="margin-top:10px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">קטגוריית מקדם רוחב (טבלה 3.2.12.4)</label></div>`);
+  const widthSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  const defaultWidthIdx = CALC.width.findIndex(w=>w.use==='כל האחרים');
+  CALC.width.forEach((w,i)=>widthSel.appendChild(el(`<option value="${i}">${w.use}</option>`)));
+  widthSel.value = (state.calcSelections.mallPassage.width===null || state.calcSelections.mallPassage.width===undefined)
+    ? defaultWidthIdx : state.calcSelections.mallPassage.width;
+  widthWrap.appendChild(widthSel);
+  card.appendChild(widthWrap);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:2;"></div>`);
+  function factorFor(effectiveArea){
+    for(const bp of CALC.mallPassage.breakpoints){
+      if(bp.maxArea === null || effectiveArea < bp.maxArea) return bp.factor;
+    }
+    return CALC.mallPassage.breakpoints[CALC.mallPassage.breakpoints.length-1].factor;
+  }
+  let lastCalc = null;
+  function updateResult(){
+    state.calcSelections.mallPassage.shopArea = shopInput.value;
+    state.calcSelections.mallPassage.anchorArea = anchorInput.value;
+    state.calcSelections.mallPassage.width = +widthSel.value;
+    const shopArea = parseFloat(shopInput.value)||0;
+    const anchorArea = parseFloat(anchorInput.value)||0;
+    const effectiveArea = shopArea + 0.5*anchorArea;
+    const factor = factorFor(effectiveArea);
+    const w = CALC.width[+widthSel.value];
+    const occupancy = factor>0 ? effectiveArea/factor : 0;
+    const widthHoriz = occupancy * w.horizontal;
+    const widthStairs = occupancy * w.stairs;
+    resultBox.innerHTML = `שטח מחושב (סך שטח + 50% משטחי עוגן): <b>${effectiveArea.toFixed(1)} מ״ר</b><br/>
+      מקדם תפוסה מתאים: <b>${factor} מ״ר/נפש</b><br/>
+      תפוסה מחושבת: <b>${occupancy.toFixed(1)} נפשות</b><br/>
+      רוחב יציאות נדרש (מהלך אופקי): <b>${Math.ceil(widthHoriz)} ס״מ</b><br/>
+      רוחב יציאות נדרש (מדרגות): <b>${Math.ceil(widthStairs)} ס״מ</b>`;
+    lastCalc = {use:'קניון - מעבר ציבורי משותף מוגן עשן', area:effectiveArea, factor, occupancy, widthHoriz, widthStairs};
+  }
+  shopInput.addEventListener('input', updateResult);
+  anchorInput.addEventListener('input', updateResult);
+  widthSel.addEventListener('change', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!lastCalc){ toast('אין ערך מספרי לחישוב'); return; }
+    state.calcTables.occ.push([
+      lastCalc.use, lastCalc.area.toFixed(1), lastCalc.factor,
+      lastCalc.occupancy.toFixed(1), Math.ceil(lastCalc.widthHoriz), Math.ceil(lastCalc.widthStairs)
+    ]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+}
+
+/* ---- 3. Walking distances (מרחקי הליכה) ---- */
+function renderCalcWalk(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טבלה 3.2.15.5</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">מרחקי הליכה, פרוזדור ללא מוצא ומהלך משותף</h3>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const useWrap = el(`<div><label>סוג שימוש</label></div>`);
+  const useSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  CALC.walking.forEach((w,i)=>useSel.appendChild(el(`<option value="${i}">${w.num}. ${w.use}</option>`)));
+  useSel.value = state.calcSelections.walk.use;
+  useWrap.appendChild(useSel);
+  const sprWrap = el(`<div><label>האם מותקנת מערכת מתזים בבניין?</label></div>`);
+  const sprSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);">
+    <option value="yes">כן, עם מתזים</option><option value="no">לא, ללא מתזים</option></select>`);
+  sprSel.value = state.calcSelections.walk.spr;
+  sprWrap.appendChild(sprSel);
+  row1.appendChild(useWrap); row1.appendChild(sprWrap);
+  card.appendChild(row1);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:2;"></div>`);
+  let lastWalkLimit = null;
+  function updateResult(){
+    state.calcSelections.walk.use = +useSel.value;
+    state.calcSelections.walk.spr = sprSel.value;
+    const w = CALC.walking[+useSel.value];
+    const spr = sprSel.value === 'yes';
+    const walk = spr? w.walk_sprinkler : w.walk_none;
+    const corr = spr? w.corridor_sprinkler : w.corridor_none;
+    const comm = spr? w.common_sprinkler : w.common_none;
+    resultBox.innerHTML = `מרחק הליכה מותר: <b>${walk ?? '—'}</b> מ׳<br/>
+      פרוזדור ללא מוצא מותר: <b>${corr ?? '—'}</b> מ׳<br/>
+      מהלך משותף מותר: <b>${comm ?? '—'}</b> מ׳`;
+    lastWalkLimit = (typeof walk === 'number') ? walk : null;
+    return {use:w.use, sprinklered:spr?'עם מתזים':'ללא מתזים', walk, corr, comm};
+  }
+
+  // Item 8: let the user enter the ACTUAL measured walking distance from the
+  // plan, and compare it against the allowed limit above. If it's exceeded,
+  // suggest the most direct fix — an additional exit door nearer the
+  // over-length area, which shortens the walking distance for that area
+  // without requiring a different use classification or sprinkler retrofit.
+  // (Declared here, before the first refresh() call below, so refresh() can
+  // safely call checkActualDistance() without a temporal-dead-zone error.)
+  const actualWrap = el(`<div style="margin-top:14px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">מרחק הליכה בפועל בתוכנית (מ׳) — אופציונלי, להשוואה מול המותר</label></div>`);
+  const actualInput = el(`<input type="number" min="0" step="0.1" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+  actualWrap.appendChild(actualInput);
+  const exceedBox = el(`<div class="disclaimer no-print" style="display:none;margin-top:10px;background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);"></div>`);
+  function checkActualDistance(){
+    const actual = parseFloat(actualInput.value);
+    if(!actual || lastWalkLimit === null || actual <= lastWalkLimit){
+      exceedBox.style.display = 'none';
+      return;
+    }
+    exceedBox.style.display = 'block';
+    exceedBox.innerHTML = `⚠ מרחק ההליכה בתוכנית (${actual} מ׳) חורג מהמותר (${lastWalkLimit} מ׳).<br/>
+      פתרון אפשרי: הוספת דרך-מוצא/דלת יציאה נוספת בקרבת האזור החורג — כך שמרחק ההליכה בפועל לנקודה הרחוקה ביותר יתקצר, בלי לשנות את סיווג השימוש או להוסיף מתזים. יש לוודא את המיקום המדויק מול יועץ בטיחות אש.`;
+  }
+  actualInput.addEventListener('input', checkActualDistance);
+
+  let lastCalc = null;
+  function refresh(){ lastCalc = updateResult(); checkActualDistance(); }
+  useSel.addEventListener('change', refresh);
+  sprSel.addEventListener('change', refresh);
+  refresh();
+  card.appendChild(resultBox);
+  card.appendChild(actualWrap);
+  card.appendChild(exceedBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    state.calcTables.walk.push([lastCalc.use, lastCalc.sprinklered, lastCalc.walk, lastCalc.corr, lastCalc.comm]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת מרחקי הליכה שנבנתה',
+    ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')'],
+    state.calcTables.walk, 'walk');
+}
+
+/* ---- Fire-fighting water flows & volumes (הוראת נציב 529, נספחים 3-4) ----
+   Hazard classes and the use list are copied from Directive 529 (June 2019), appendix 3 (translated
+   from NFPA 13); flows/areas/durations from appendix 4. Hydrant spacing from section 6, hydrant
+   arrangement by building height from section 7, water-source rules from sections 3.1.9 / 3.1.12 / 8. */
+const WATER529 = {
+  hazards: {
+    light: {name:'סיכון קל', en:'Light Hazard', density:4.1, densityGpm:0.10, area:139, areaFt:1500, spk:570, spkGpm:150, spkM3h:35, hyd:500, hydM3h:30, total:1100, totalM3h:65, time:30, spacing:100},
+    ord1:  {name:'סיכון רגיל – קבוצה 1', en:'Ordinary Hazard Gr.1', density:6.1, densityGpm:0.15, area:139, areaFt:1500, spk:850, spkGpm:225, spkM3h:50, hyd:1000, hydM3h:60, total:1850, totalM3h:110, time:60, spacing:80},
+    ord2:  {name:'סיכון רגיל – קבוצה 2', en:'Ordinary Hazard Gr.2', density:8.1, densityGpm:0.20, area:139, areaFt:1500, spk:1125, spkGpm:300, spkM3h:67, hyd:1000, hydM3h:60, total:2200, totalM3h:130, time:60, spacing:80},
+    ext1:  {name:'סיכון מיוחד – קבוצה 1', en:'Extra Hazard Gr.1', density:12.2, densityGpm:0.30, area:232, areaFt:2500, spk:2830, spkGpm:750, spkM3h:170, hyd:2000, hydM3h:120, total:4800, totalM3h:300, time:120, spacing:60},
+    ext2:  {name:'סיכון מיוחד – קבוצה 2', en:'Extra Hazard Gr.2', density:16.3, densityGpm:0.40, area:232, areaFt:2500, spk:3780, spkGpm:1000, spkM3h:225, hyd:2000, hydM3h:120, total:6000, totalM3h:360, time:120, spacing:60}
+  },
+  uses: {
+    light: ['בתי תפילה','מועדונים','בתי החלמה','מבני חינוך','בתי חולים','מוסדות','ספריות, למעט חדרי אחסנה גדולים','מוזיאונים','מגורים','משרדים, כולל עיבוד נתונים','אזורי ישיבה במסעדות','תיאטרונים, אודיטוריום, למעט אזורי הבמה','כרכובים וזיזים, במידה ועשויים חומרים דליקים ותחתם אין חומרים דליקים','עליות גג לא בשימוש'],
+    ord1:  ['חניונים מקורים ואולמות תצוגה','מאפיות','מפעלי משקאות','מפעלי שימורים','מפעלים לייצור מוצרי חלב (מחלבות)','מפעלי אלקטרוניקה','מפעלי זכוכית','מכבסות','אזורי שירות – מסעדות'],
+    ord2:  ['טחנות דגן (קמח, אורז וכו\')','מפעלים כימיים – רגילים','מפעלים לייצור דברי מתיקה','מזקקות','ניקוי יבש','מפעלי מזון','אורוות סוסים','מפעלי עור','ספריות – חדרי אחסנה גדולים','חנויות למכונות','עבודות מתכת','בתי מסחר','מפעלי נייר','מזחים ורציפים','בתי דואר','בתי דפוס והוצאה לאור','מוסכים','מפעלי טכסטיל','בימות – בתיאטרונים וכו\'','מפעלי צמיגים','מפעלי טבק','מפעלים לעבוד עץ וגומי, לרבות נגריות','מפעלים להרכבת מוצרי עץ'],
+    ext1:  ['הנגרי מטוסים','אזורים בהם יש שימוש בנוזלים הידראוליים דליקים','בתי יציקה','שיחול מתכות','מפעלים לייצור דיקטים ולוחות עץ','דפוס (שימוש בדיו בעל נקודת הבזק קטנה מ-37.9°C)','ייצור גומי','בתי מלאכה לנסירת עצים','עיבוד מוצרי טכסטיל','ריפוד בקצפים פלסטיים'],
+    ext2:  ['ריווי אספלט','התזה של נוזלים דליקים','ציפוי בנוזלים דליקים','ייצור או הרכבה מודולאריים של בתים מחומרים דליקים','כיבוי וצינון פתוח בשמן','עיבוד חומרים פלסטיים','ניקוי בממיסים למיניהם','טבילת צבע ולכה']
+  }
+};
+function renderCalcWater(){
+  if(!state.calcTables.water) state.calcTables.water = [];
+  if(!state.calcSelections.water) state.calcSelections.water = {use:'', hazard:'light', area:'', height:'', spkSrc:'reservoir', hydSrc:'reservoir'};
+  const sel = state.calcSelections.water;
+  const H = WATER529.hazards;
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">הוראת נציב 529 · נספחים 3 ו-4</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">ספיקות ונפחי מים לכיבוי (מתזים + ברזי כיבוי)</h3>`));
+  const inputStyle = 'width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);';
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const useWrap = el(`<div><label>ייעוד המבנה (נספח 3)</label></div>`);
+  const useSel = el(`<select class="calc-select" style="${inputStyle}"></select>`);
+  useSel.appendChild(el(`<option value="">— בחירה ישירה של דרגת סיכון —</option>`));
+  Object.keys(WATER529.uses).forEach(hk=>{
+    const og = document.createElement('optgroup'); og.label = H[hk].name;
+    WATER529.uses[hk].forEach(u=>{ const o = document.createElement('option'); o.value = hk+'|'+u; o.textContent = u; og.appendChild(o); });
+    useSel.appendChild(og);
+  });
+  useSel.value = sel.use || '';
+  useWrap.appendChild(useSel);
+  const hazWrap = el(`<div><label>דרגת סיכון</label></div>`);
+  const hazSel = el(`<select class="calc-select" style="${inputStyle}"></select>`);
+  Object.keys(H).forEach(hk=>hazSel.appendChild(el(`<option value="${hk}">${H[hk].name} (${H[hk].en})</option>`)));
+  hazSel.value = sel.hazard || 'light';
+  hazWrap.appendChild(hazSel);
+  row1.appendChild(useWrap); row1.appendChild(hazWrap);
+  card.appendChild(row1);
+
+  const row2 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const areaWrap = el(`<div><label>שטח המבנה / האזור המוגן (מ"ר) — אופציונלי</label></div>`);
+  const areaIn = el(`<input type="number" min="0" step="1" style="${inputStyle}" value="${sel.area||''}"/>`);
+  areaWrap.appendChild(areaIn);
+  const hWrap = el(`<div><label>גובה הבניין (מ') — אופציונלי</label></div>`);
+  const hIn = el(`<input type="number" min="0" step="0.1" style="${inputStyle}" value="${sel.height||''}"/>`);
+  hWrap.appendChild(hIn);
+  row2.appendChild(areaWrap); row2.appendChild(hWrap);
+  card.appendChild(row2);
+
+  const row3 = el(`<div class="project-form" style="grid-template-columns:1fr 1fr;"></div>`);
+  const srcOpts = `<option value="reservoir">מאגר מים ומשאבות</option><option value="city">רשת המים העירונית</option>`;
+  const spkWrap = el(`<div><label>מקור מים למתזים</label></div>`);
+  const spkSel = el(`<select class="calc-select" style="${inputStyle}">${srcOpts}</select>`); spkSel.value = sel.spkSrc;
+  spkWrap.appendChild(spkSel);
+  const hydWrap = el(`<div><label>מקור מים לברזי הכיבוי</label></div>`);
+  const hydSel = el(`<select class="calc-select" style="${inputStyle}">${srcOpts}</select>`); hydSel.value = sel.hydSrc;
+  hydWrap.appendChild(hydSel);
+  row3.appendChild(spkWrap); row3.appendChild(hydWrap);
+  card.appendChild(row3);
+
+  const resultBox = el(`<div style="margin-top:14px;"></div>`);
+  const warnBox = el(`<div class="disclaimer" style="display:none;margin-top:10px;background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);line-height:1.9;"></div>`);
+  const notesBox = el(`<div class="disclaimer" style="margin-top:10px;line-height:1.9;font-size:12.5px;"></div>`);
+  card.appendChild(resultBox); card.appendChild(warnBox); card.appendChild(notesBox);
+
+  const n0 = v => Math.round(v).toLocaleString('he-IL');
+  const n1 = v => (Math.round(v*10)/10).toLocaleString('he-IL');
+  const gpm = lpm => lpm / 3.785;
+  const m3h = lpm => lpm * 60 / 1000;
+  const heightClass = h => h <= 0 ? null : h <= 13 ? 'regular' : h <= 29 ? 'high' : h <= 42 ? 'multi' : 'sky';
+  const HEIGHT_LABEL = {regular:'בניין רגיל (עד 13 מ\')', high:'בניין גבוה (13–29 מ\')', multi:'בניין רב קומות (29–42 מ\')', sky:'גורד שחקים (מעל 42 מ\')'};
+
+  let last = null;
+  function update(){
+    // choosing a use sets the hazard; the hazard can still be changed by hand afterwards
+    sel.use = useSel.value; sel.hazard = hazSel.value; sel.area = areaIn.value; sel.height = hIn.value;
+    sel.spkSrc = spkSel.value; sel.hydSrc = hydSel.value;
+    const hk = hazSel.value, h = H[hk];
+    const useName = sel.use ? sel.use.split('|')[1] : '';
+    const useHk = sel.use ? sel.use.split('|')[0] : null;
+    const area = parseFloat(areaIn.value), height = parseFloat(hIn.value);
+    const hasArea = area > 0, smaller = hasArea && area < h.area;
+    const spkAct = smaller ? area * h.density : h.spk;
+    const totAct = smaller ? spkAct + h.hyd : h.total;
+    const volTable = h.total * h.time / 1000, volSpk = h.spk * h.time / 1000;
+
+    let html = `<div class="table-wrap" style="overflow-x:auto;"><table class="calc-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr><th></th><th>ל/ד</th><th>GPM</th><th>מק"ש</th></tr></thead><tbody>
+      <tr><td><b>מתזים</b> — ${h.density} ל/ד/מ"ר × ${h.area} מ"ר</td><td>${n0(h.spk)}</td><td>${n0(h.spkGpm)}</td><td>${n0(h.spkM3h)}</td></tr>
+      <tr><td><b>ברזי כיבוי</b> (בלחצים 2.5–7 בר)</td><td>${n0(h.hyd)}</td><td>${n0(gpm(h.hyd))}</td><td>${n0(h.hydM3h)}</td></tr>
+      <tr><td><b>צריכה כוללת</b> — מתזים + ברזי כיבוי</td><td><b>${n0(h.total)}</b></td><td>${n0(gpm(h.total))}</td><td><b>${n0(h.totalM3h)}</b></td></tr>
+      </tbody></table></div>
+      <div style="margin-top:10px;line-height:2;font-size:13.5px;">
+        דרגת סיכון: <b>${h.name}</b> (${h.en})${useName ? ` · ייעוד: ${useName}` : ''}<br/>
+        צפיפות: <b>${h.density}</b> ל/ד/מ"ר (${h.densityGpm} GPM/ft²) · שטח יישום: <b>${h.area}</b> מ"ר (${h.areaFt} ft²)<br/>
+        משך זמן עבודה של מערכות המים: <b>${h.time}</b> דקות<br/>
+        נפח מים כולל (צריכה כוללת × משך): <b>${n0(volTable)}</b> מ"ק · מתוכו למתזים: ${n0(volSpk)} מ"ק<br/>
+        מרחק מרבי בין ברזי כיבוי 3" מחוץ למבנה (סעיף 6): <b>${h.spacing}</b> מ' (סטייה מותרת של 10 מ')
+      </div>`;
+    if(smaller){
+      html += `<div style="margin-top:8px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;">אינדיקציה בלבד: שטח המבנה (${n0(area)} מ"ר) קטן משטח היישום בטבלה. לפי השטח בפועל:
+        מתזים ${n0(spkAct)} ל/ד (${n1(m3h(spkAct))} מק"ש), צריכה כוללת ${n0(totAct)} ל/ד (${n1(m3h(totAct))} מק"ש), נפח ${n1(totAct*h.time/1000)} מ"ק. הנתון הקובע הוא החישוב ההידראולי של מתכנן המתזים לפי ת"י 1596.</div>`;
+    }
+    const hc = height > 0 ? heightClass(height) : null;
+    if(hc){
+      const arr = hc === 'multi' || hc === 'sky' ? 'ברז כיבוי כפול 2×3" על גבי זקף 4" סמוך לרחבת ההיערכות לרכב כיבוי אש (סעיף 7.1)'
+                : hc === 'high' ? 'ניתן להסתפק בברז כיבוי אחד 3" על זקף 4", וברז הסנקה לאחר ה"גמל" בתחום הנכס (סעיף 7.2)'
+                : 'סעיף 7 לא קובע הסדר מיוחד לבניין רגיל — לפי הוראת נציב 550 ותקנות התכנון והבנייה';
+      html += `<div style="margin-top:8px;line-height:1.9;font-size:13.5px;">סיווג לפי גובה: <b>${HEIGHT_LABEL[hc]}</b><br/>ברזי כיבוי בבניין: ${arr}</div>`;
+    }
+    resultBox.innerHTML = html;
+
+    const warns = [];
+    if(useHk && useHk !== hk) warns.push(`דרגת הסיכון שונתה ידנית: לפי נספח 3 הייעוד "${useName}" הוא ${H[useHk].name}.`);
+    const extra = hk === 'ext1' || hk === 'ext2';
+    if(extra && (spkSel.value === 'city' || hydSel.value === 'city'))
+      warns.push('בסיכון מיוחד (קבוצות 1 ו-2) יש לדרוש מאגר מים ומשאבות, שיחושב לפי רמת הסיכון של המבנה, ולא להתבסס רק על רשת המים העירונית (סעיף 3.1.12).');
+    if(!extra && (spkSel.value === 'city' || hydSel.value === 'city'))
+      warns.push('רשת עירונית אפשרית בסיכון קל ורגיל רק אם בדיקת מעבדה מוכרת של זמינות הרשת (לאחר הגמל) מאשרת שהספיקה והלחץ עומדים בדרישות. אם לא — יש להשלים מאגר ומשאבות (סעיפים 3.1.9–3.1.11, ופרק 8).');
+    if(hc && hc !== 'regular' && hydSel.value === 'city')
+      warns.push('ברזי הכיבוי של הבניין (סעיף 7) אינם נספרים במניין ברזי הכיבוי של רשת המים העירונית (סעיף 7.3).');
+    warnBox.style.display = warns.length ? 'block' : 'none';
+    warnBox.innerHTML = warns.map(w=>'⚠ '+w).join('<br/>');
+
+    notesBox.innerHTML = `<b>הערות מנספח 4:</b> הטבלה מתייחסת לגובה אחסנה מרבי של 3.7 מ' (מטעני פלסטיק A — 3 מ'). שטח היישום, ולכן כמות המים למתזים, עשויים להשתנות לפי גובה התקרה וסוג המתזים — על המתכנן לציין זאת לפי התקן ואישורי UL/FM.
+      מחסנים ואופי האחסון — בנפרד. כשיש הוראה אחרת (למשל לבתי חולים או למפעלים ביטחוניים) או דרישה בת"י 1596 — קובעת הכמות הגדולה מביניהן.`;
+
+    last = [useName || '—', h.name, hasArea ? n0(area) : '—', height > 0 ? n1(height) : '—', String(h.density), String(h.area),
+            n0(h.spk), n0(h.hyd), n0(h.total), String(h.time), n0(volTable)];
+    persist();
+  }
+  useSel.addEventListener('change', ()=>{ if(useSel.value) hazSel.value = useSel.value.split('|')[0]; update(); });
+  [hazSel, spkSel, hydSel].forEach(x=>x.addEventListener('change', update));
+  [areaIn, hIn].forEach(x=>x.addEventListener('input', update));
+  update();
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{ state.calcTables.water.push(last); render(); persist(); });
+  card.appendChild(addBtn);
+  card.appendChild(el(`<div class="req-links no-print" style="margin-top:10px;"><a class="reg-link" href="https://www.gov.il/he/departments/policies/directive_529" target="_blank" rel="noopener">🔗 הוראת נציב 529 (gov.il)</a></div>`));
+
+  tableCard('טבלת ספיקות ונפחי מים שנבנתה', WATER_TABLE_HEADERS, state.calcTables.water, 'water');
+}
+const WATER_TABLE_HEADERS = ['ייעוד','דרגת סיכון','שטח (מ"ר)','גובה (מ\')','צפיפות (ל/ד/מ"ר)','שטח יישום (מ"ר)','מתזים (ל/ד)','ברזי כיבוי (ל/ד)','צריכה כוללת (ל/ד)','משך (דק\')','נפח כולל (מ"ק)'];
+
+/* ---- 3b. Area table per space (טבלת שטחים לפי חלל) ----
+   Simple room-by-room area builder from the floor plan (גרמושקה): name the
+   space, enter its length/width, get the area, add it to a running table. */
+function renderCalcAreas(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טבלת שטחים לפי חלל</h3>`));
+  card.appendChild(el(`<p class="qsub">לכל חלל בגרמושקה (חדר, מחסן, מבואה, יציאה וכו׳) — הזינו שם ומידות, ותקבלו טבלת שטחים מצטברת.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: חדר שינה 1"/>`);
+  nameWrap.appendChild(nameInput);
+  const lenWrap = el(`<div><label>אורך (מ׳)</label></div>`);
+  const lenInput = el(`<input type="number" min="0" step="0.01"/>`);
+  lenWrap.appendChild(lenInput);
+  const widWrap = el(`<div><label>רוחב (מ׳)</label></div>`);
+  const widInput = el(`<input type="number" min="0" step="0.01"/>`);
+  widWrap.appendChild(widInput);
+  row1.appendChild(nameWrap); row1.appendChild(lenWrap); row1.appendChild(widWrap);
+  card.appendChild(row1);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;"></div>`);
+  let lastArea = null;
+  function updateResult(){
+    const len = parseFloat(lenInput.value)||0, wid = parseFloat(widInput.value)||0;
+    lastArea = len*wid;
+    resultBox.innerHTML = `שטח החלל: <b>${lastArea.toFixed(2)}</b> מ״ר`;
+  }
+  lenInput.addEventListener('input', updateResult);
+  widInput.addEventListener('input', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    state.calcTables.areas.push([nameInput.value.trim(), (parseFloat(lenInput.value)||0).toFixed(2), (parseFloat(widInput.value)||0).toFixed(2), lastArea.toFixed(2)]);
+    nameInput.value = ''; lenInput.value = ''; widInput.value = '';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  const totalRow = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0), 0);
+  tableCard(`טבלת שטחים שנבנתה — סה״כ ${totalRow.toFixed(2)} מ״ר`,
+    ['שם החלל','אורך (מ\')','רוחב (מ\')','שטח (מ"ר)'],
+    state.calcTables.areas, 'areas');
+}
+
+/* ---- 3c. Openings / doors table (טבלת פתחים ודלתות) ----
+   Per space: the size of its opening/door, for quick reference alongside the
+   area table above. */
+function renderCalcOpenings(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טבלת פתחים ודלתות</h3>`));
+  card.appendChild(el(`<p class="qsub">לכל חלל — גודל הפתח/דלת שלו, לצורך התאמה מול דרישות רוחב יציאה.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: מבואת כניסה"/>`);
+  nameWrap.appendChild(nameInput);
+  const widWrap = el(`<div><label>רוחב פתח (ס״מ)</label></div>`);
+  const widInput = el(`<input type="number" min="0" step="1"/>`);
+  widWrap.appendChild(widInput);
+  const heightWrap = el(`<div><label>גובה פתח (ס״מ) — אופציונלי</label></div>`);
+  const heightInput = el(`<input type="number" min="0" step="1"/>`);
+  heightWrap.appendChild(heightInput);
+  row1.appendChild(nameWrap); row1.appendChild(widWrap); row1.appendChild(heightWrap);
+  card.appendChild(row1);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    if(!widInput.value){ toast('יש להזין רוחב פתח'); return; }
+    state.calcTables.openings.push([nameInput.value.trim(), widInput.value, heightInput.value||'—']);
+    nameInput.value=''; widInput.value=''; heightInput.value='';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת פתחים ודלתות שנבנתה',
+    ['שם החלל','רוחב פתח (ס"מ)','גובה פתח (ס"מ)'],
+    state.calcTables.openings, 'openings');
+}
+
+/* ---- 3d. Windows calculator (מחשבון חלונות) ----
+   Two independent thresholds, as specified: room height above 4.5m requires
+   an automatic (smoke/fire) system; window sill height above 1.8m requires a
+   manually-operable window plus a note for the firefighter panel. */
+function renderCalcWindows(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">מחשבון חלונות</h3>`));
+  card.appendChild(el(`<p class="qsub">גובה חלל 4.5 מ׳ ומעלה — נדרשת מערכת אוטומטית. גובה חלון (מהרצפה) 1.8 מ׳ ומעלה — נדרש חלון פתיחה ידני, עם הערה לפאנל כבאים.</p>`));
+
+  const row1 = el(`<div class="project-form" style="grid-template-columns:2fr 1fr 1fr;"></div>`);
+  const nameWrap = el(`<div><label>שם החלל</label></div>`);
+  const nameInput = el(`<input type="text" placeholder="לדוגמה: חדר מדרגות"/>`);
+  nameWrap.appendChild(nameInput);
+  const roomHWrap = el(`<div><label>גובה החלל (מ׳)</label></div>`);
+  const roomHInput = el(`<input type="number" min="0" step="0.1"/>`);
+  roomHWrap.appendChild(roomHInput);
+  const winHWrap = el(`<div><label>גובה החלון מהרצפה (מ׳)</label></div>`);
+  const winHInput = el(`<input type="number" min="0" step="0.1"/>`);
+  winHWrap.appendChild(winHInput);
+  row1.appendChild(nameWrap); row1.appendChild(roomHWrap); row1.appendChild(winHWrap);
+  card.appendChild(row1);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:1.9;"></div>`);
+  let lastFlags = null;
+  function updateResult(){
+    const roomH = parseFloat(roomHInput.value)||0, winH = parseFloat(winHInput.value)||0;
+    const needsAutoSystem = roomH >= 4.5;
+    const needsManualWindow = winH >= 1.8;
+    const lines = [];
+    lines.push(needsAutoSystem
+      ? '⚠ גובה החלל 4.5 מ׳ ומעלה — נדרשת מערכת אוטומטית.'
+      : '✓ גובה החלל מתחת ל-4.5 מ׳ — אין דרישה למערכת אוטומטית מטעם זה.');
+    lines.push(needsManualWindow
+      ? '⚠ גובה החלון 1.8 מ׳ ומעלה — נדרש חלון פתיחה ידני, ויש לציין הערה בפאנל כבאים.'
+      : '✓ גובה החלון מתחת ל-1.8 מ׳ — אין דרישה לפתיחה ידנית מטעם זה.');
+    resultBox.innerHTML = lines.join('<br/>');
+    lastFlags = {needsAutoSystem, needsManualWindow};
+  }
+  roomHInput.addEventListener('input', updateResult);
+  winHInput.addEventListener('input', updateResult);
+  updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    if(!nameInput.value.trim()){ toast('יש להזין שם לחלל'); return; }
+    state.calcTables.windows.push([
+      nameInput.value.trim(),
+      (parseFloat(roomHInput.value)||0).toFixed(1),
+      (parseFloat(winHInput.value)||0).toFixed(1),
+      lastFlags.needsAutoSystem ? 'כן' : 'לא',
+      lastFlags.needsManualWindow ? 'כן' : 'לא',
+    ]);
+    nameInput.value=''; roomHInput.value=''; winHInput.value='';
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת חלונות שנבנתה',
+    ['שם החלל','גובה חלל (מ\')','גובה חלון (מ\')','נדרשת מערכת אוטומטית','נדרש חלון פתיחה ידני'],
+    state.calcTables.windows, 'windows');
+}
+
+/* ---- 4. Barn / hay storage size (גודל מתבן) ---- */
+function renderCalcBarn(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">חישוב עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">חישוב גודל מתבן וכמות בלות</h3>`));
+  card.appendChild(el(`<p class="qsub">יש לעדכן את הנתונים המסומנים לפי הנתונים בפועל מהתוכנית.</p>`));
+
+  const fields = [
+    ['baleL','אורך בלה (ס״מ)',85],
+    ['baleW','רוחב בלה (ס״מ)',45],
+    ['baleH','גובה בלה (ס״מ)',35],
+    ['baleWeight','משקל בלה (ק״ג)',20],
+    ['barnArea','שטח המתבן (מ״ר)',200],
+    ['barnHeight','גובה המבנה (מ׳)',5.8],
+    ['layerHeight','גובה שכבת בלות (מ׳)',0.35],
+  ];
+  const grid = el(`<div class="project-form" style="grid-template-columns:1fr 1fr 1fr;"></div>`);
+  const inputs = {};
+  fields.forEach(([key,label,def])=>{
+    const wrap = el(`<div><label>${label}</label></div>`);
+    const inp = el(`<input type="number" step="0.01" value="${def}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+    inputs[key] = inp;
+    wrap.appendChild(inp);
+    grid.appendChild(wrap);
+  });
+  card.appendChild(grid);
+
+  const resultBox = el(`<div class="disclaimer" style="margin-top:14px;line-height:2;"></div>`);
+  function updateResult(){
+    const v = {};
+    Object.keys(inputs).forEach(k=>v[k]=parseFloat(inputs[k].value)||0);
+    const baleAreaSqm = (v.baleL * v.baleW) / 10000;
+    const unitsPerFloor = baleAreaSqm>0 ? v.barnArea / baleAreaSqm : 0;
+    const floors = v.layerHeight>0 ? v.barnHeight / v.layerHeight : 0;
+    const totalUnits = unitsPerFloor * floors;
+    const totalTons = (totalUnits * v.baleWeight) / 1000;
+    let cls = 'מתבן קטן (עד 200 טון)';
+    if(totalTons>=200 && totalTons<600) cls='מתבן בינוני (200–600 טון)';
+    if(totalTons>=600) cls='מתבן גדול (מעל 600 טון)';
+    resultBox.innerHTML = `שטח בלה: <b>${baleAreaSqm.toFixed(3)} מ״ר</b><br/>
+      יחידות בלות בקומה: <b>${unitsPerFloor.toFixed(1)}</b><br/>
+      מספר "קומות" בלות: <b>${floors.toFixed(1)}</b><br/>
+      סה״כ יחידות בלות: <b>${totalUnits.toFixed(0)}</b><br/>
+      משקל כולל: <b>${totalTons.toFixed(1)} טון</b><br/>
+      סיווג: <b>${cls}</b>`;
+    return {baleAreaSqm, unitsPerFloor, floors, totalUnits, totalTons, cls, barnArea:v.barnArea, barnHeight:v.barnHeight};
+  }
+  let lastCalc = null;
+  Object.values(inputs).forEach(inp=>inp.addEventListener('input', ()=>{ lastCalc = updateResult(); }));
+  lastCalc = updateResult();
+  card.appendChild(resultBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    state.calcTables.barn.push([
+      lastCalc.barnArea, lastCalc.barnHeight, lastCalc.unitsPerFloor.toFixed(1),
+      lastCalc.floors.toFixed(1), lastCalc.totalUnits.toFixed(0), lastCalc.totalTons.toFixed(1), lastCalc.cls
+    ]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת חישובי מתבן שנבנתה',
+    ['שטח מתבן (מ"ר)','גובה מבנה (מ\')','יחידות בלות/קומה','מס\' קומות בלות','סה"כ יחידות','משקל (טון)','סיווג'],
+    state.calcTables.barn, 'barn');
+}
+
+/* ---- 5. Systems required by use-type (טבלאות 3.4.11.1-22) ---- */
+function renderCalcSystems(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טבלאות 3.4.11.1–3.4.11.22</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">אילו מערכות בטיחות אש חובה להתקין?</h3>`));
+  card.appendChild(el(`<p class="qsub">בחרו את סוג המבנה/השימוש ואת התרחיש המתאים ביותר, ותקבלו טבלה של 4 המערכות (התרעה, גילוי, מתזים, כריזה) שחובה או אין חובה להתקין.</p>`));
+
+  const catWrap = el(`<div style="margin-bottom:10px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">סוג מבנה / שימוש</label></div>`);
+  const catSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  SYSTEMS_TABLE.categories.forEach((c,i)=>catSel.appendChild(el(`<option value="${i}">${c.name}</option>`)));
+  catSel.value = state.calcSelections.systems.cat;
+  catWrap.appendChild(catSel);
+  card.appendChild(catWrap);
+
+  const rowWrap = el(`<div style="margin-bottom:10px;"><label style="font-size:11.5px;color:var(--ink-soft);font-weight:700;display:block;margin-bottom:4px;">תרחיש</label></div>`);
+  const rowSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);"></select>`);
+  rowWrap.appendChild(rowSel);
+  card.appendChild(rowWrap);
+
+  const resultBox = el(`<div style="margin-top:14px;"></div>`);
+  const notesBox = el(`<div class="disclaimer" style="margin-top:10px;"></div>`);
+  const qualifiedCard = el(`<div class="card" style="display:none;"></div>`);
+
+  function populateRows(keepRow){
+    rowSel.innerHTML = '';
+    const cat = SYSTEMS_TABLE.categories[+catSel.value];
+    cat.rows.forEach((r,i)=>rowSel.appendChild(el(`<option value="${i}">${r.desc}</option>`)));
+    rowSel.value = (keepRow!=null && keepRow < cat.rows.length) ? keepRow : 0;
+  }
+  function updateResult(){
+    state.calcSelections.systems.cat = +catSel.value;
+    state.calcSelections.systems.row = +rowSel.value;
+    const cat = SYSTEMS_TABLE.categories[+catSel.value];
+    const r = cat.rows[+rowSel.value];
+    resultBox.innerHTML = '';
+    const grid = el(`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>`);
+    const items = [['מערכת התרעת אש', r.alarm], ['מערכת גילוי אש', r.detect], ['מתזים', r.sprinkler], ['מערכת כריזה', r.pa]];
+    items.forEach(([label,val])=>{
+      const req = /^יש להתקין/.test(val);
+      const notreq = /^אין חובה/.test(val);
+      const color = req ? 'var(--accent)' : (notreq ? 'var(--ok)' : 'var(--steel)');
+      const bg = req ? 'var(--accent-soft)' : (notreq ? 'var(--ok-soft)' : 'var(--steel-soft)');
+      grid.appendChild(el(`<div style="border-radius:10px;padding:12px;background:${bg};">
+        <div style="font-size:11.5px;font-weight:700;color:${color};text-transform:uppercase;">${label}</div>
+        <div style="font-size:13px;margin-top:4px;line-height:1.5;">${val}</div>
+      </div>`));
+    });
+    resultBox.appendChild(grid);
+    notesBox.innerHTML = cat.notes && cat.notes.length ? '<b>הערות (' + cat.ref + '):</b><ul style="margin:6px 0 0;padding-inline-start:18px;">' + cat.notes.map(n=>`<li style="margin-bottom:4px;">${n}</li>`).join('') + '</ul>' : '';
+
+    // Qualified-persons hint — recomputed here so it stays in sync with the live selection,
+    // instead of being frozen at whatever was selected when the tab was first opened.
+    qualifiedCard.innerHTML = '';
+    const qs = findQualified([r.alarm, r.detect, r.sprinkler, r.pa]);
+    if(qs.length){
+      qualifiedCard.appendChild(el(`<h3 style="margin:0 0 10px;font-size:15px;">מי מוסמך לאשר את המערכות שנבחרו</h3>`));
+      qs.forEach(q=>{
+        qualifiedCard.appendChild(el(`<div class="req-item"><div class="req-text"><b>${q.topic}:</b> ${q.who}</div></div>`));
+      });
+      qualifiedCard.style.display = '';
+    } else {
+      qualifiedCard.style.display = 'none';
+    }
+  }
+  catSel.addEventListener('change', ()=>{ populateRows(); updateResult(); persist(); });
+  rowSel.addEventListener('change', ()=>{ updateResult(); persist(); });
+  populateRows(state.calcSelections.systems.row);
+  updateResult();
+
+  card.appendChild(resultBox);
+  card.appendChild(notesBox);
+
+  const addBtn = el(`<button class="btn-primary no-print" style="margin-top:14px;">+ הוסף לטבלה</button>`);
+  addBtn.addEventListener('click', ()=>{
+    const cat = SYSTEMS_TABLE.categories[+catSel.value];
+    const r = cat.rows[+rowSel.value];
+    state.calcTables.systems.push([cat.name, r.desc, r.alarm, r.detect, r.sprinkler, r.pa]);
+    render(); persist();
+  });
+  card.appendChild(addBtn);
+  app.appendChild(card);
+
+  tableCard('טבלת מערכות בטיחות אש שנבנתה',
+    ['סוג מבנה','תרחיש','התרעת אש','גילוי אש','מתזים','כריזה'],
+    state.calcTables.systems, 'systems');
+
+  app.appendChild(qualifiedCard);
+}
+
+/* ---- 6. Business licensing checklist (מפרט אחיד לעסקים) ---- */
+function computeBusinessChecklist(v){
+  const items = [];
+  const add = (ref, text, applies, note)=>{ items.push({ref, text, applies, note}); };
+
+  add('4.6.1', 'דרכי הגישה לעסק יהיו פנויות מכל מכשול בכל עת.', true);
+  add('4.8.1(1)', 'פתח יציאה אחד לפחות ברוחב 0.9 מ׳ נטו לפחות; נדרשים פתחים נוספים אם מרחק ההליכה מכל נקודה בעסק ועד הפתח עולה על 30 מ׳.', true);
+  add('4.8.1(2)', 'עסק המיועד למסחר בשטח מעל 100 מ״ר: רוחב פתח היציאה לא יפחת מ-1.10 מ׳ נטו.', v.isCommerce && v.area>100);
+  add('4.8.1(2)', 'עסק המיועד להכיל מעל 50 איש: כיוון פתיחת הדלתות בפתחי היציאה יהיה לכיוון המילוט.', v.occupancy>50);
+  add('4.8.2–4.8.3', 'דרכי המוצא יהיו פנויות בכל עת; מנעול על דלת בדרך מוצא יאפשר פתיחה מכיוון המילוט ללא מפתח נשלף.', true);
+  add('4.9.1', 'עסק/קומה המיועדים להכיל מעל 100 איש: תותקן ידית (מנגנון) בהלה בדלת היציאה.', v.occupancy>100);
+  add('4.10.1–4.10.2', 'שילוט וסימון בדרכי מוצא, ו-8 שלטים פולטי אור לפי הרשימה בתקנות (לוח חשמל, מפסק ראשי, עמדת כיבוי, ברזים, מעלית, חדרי שירות).', true);
+  add('4.11.1–4.11.4', 'תאורת חירום בדרכי המוצא, מעל פתחי העסק ובמעברים המשרתים מעל 6 אנשים / שאורכם מעל 15 מ׳.', true);
+  add('4.12.1', 'עסק ששטחו הכולל מעל 1,000 מ״ר: ברזי כיבוי אש בתחום הנכס בקוטר 3" על זקף 4", ליד המבנה (או ברז עירוני עד 120 מ׳ ממנו).', v.area>1000);
+  add('4.12.2', 'מבנה בעל 3 קומות ומעלה: חיבור הסנקת מים לברזי הכיבוי, עד 6 מ׳ מהעסק.', v.floors>=3);
+  add('4.13.1', 'עסק ששטחו 50–200 מ״ר: גלגילון כיבוי אש 3/4" עם מזנק צמוד, מתשתית מתכת, לכיסוי מלא של שטח העסק.', v.area>=50 && v.area<=200);
+  add('4.13.2–4.13.4', 'עסק ששטחו מעל 200 מ״ר: עמדות כיבוי אש מלאות לכיסוי השטח (ברז 2", 2 זרנוקים 2"×15מ׳, מזנק 2", גלגילון 3/4", מטפה אבקה 6 ק״ג, בארון תקני).', v.area>200);
+  add('4.13.5', 'מטפי אבקה יבשה 6 ק״ג, לפי כמות ומיקום עפ״י ת״י 129 חלק 2.', true);
+  add('4.14.1(1)', 'מבנה/עסק ששטחו מעל 1,000 מ״ר: מערכת מתזים (ת״י 1596) בכל שטח המבנה/העסק.', v.area>1000);
+  add('4.14.1(2)', 'עסק מתחת לבניין מגורים / בשדרת חנויות, עם הפרדת אש 60 דק׳ מהעסקים הסמוכים, ששטחו מעל 500 מ״ר: מתזים בשטח העסק בלבד (חלף הדרישה הכללית).', v.underResidentialSeparated && v.area>500);
+  add('4.14.1(3)', 'קומה תת-קרקעית ששטחה הכולל מעל 140 מ״ר: מתזים בקומה זו.', v.undergroundArea>140);
+  add('4.15.1(1)', 'מבנה/עסק ששטחו 300–1,000 מ״ר: מערכת גילוי אש ועשן מלאה (ת״י 1220 חלק 3).', v.area>=300 && v.area<1000);
+  add('4.15.1(2)', 'מבנה/עסק ששטחו 1,000–3,000 מ״ר: התקנת צופרים ונצנצים בלבד, בשטחים הציבוריים ובשטח העסק.', v.area>=1000 && v.area<3000);
+  add('4.15.1(3)', 'מבנה/עסק ששטחו מעל 3,000 מ״ר: מערכת גילוי אש ועשן מלאה.', v.area>=3000);
+  add('4.16.1(1)', 'לוח חשמל בזרם 63 אמפר ומעלה: אם נדרשת בעסק מערכת גילוי אש — יותקן גלאי עשן גם בלוח החשמל.', v.panelAmps>=63 && v.panelAmps<80);
+  add('4.16.1(2)', 'לוח חשמל בזרם 80 אמפר ומעלה: גלאי עשן בלוח + מערכת ניתוק הלוח ממקור ההזנה.', v.panelAmps>=80 && v.panelAmps<100);
+  add('4.16.1(3)', 'לוח חשמל בזרם 100 אמפר ומעלה: מערכת גילוי אש (גלאים) + מערכת כיבוי אוטומטית יבשה + ניתוק ממקור ההזנה — אלא אם הלוח עומד בת״י 61439-2, או שיש בו גלאי עשן + ניתוק + כיסוי מתזים.', v.panelAmps>=100);
+  add('4.16.4', 'עסק ששטחו עולה על 500 מ״ר: מפסק חשמל לשעת חירום, במקום בולט ונגיש.', v.area>500);
+  add('4.16.5', 'מתקני החשמל בעסק ייבדקו באופן תקופתי לפי כל דין.', true);
+  add('4.17.1', 'עסק ששטחו עולה על 500 מ״ר: סידורי שליטה בעשן (בכפוף לתנאי היתר הבנייה).', v.area>500);
+  add('4.19.1', 'עסק ששטחו הכולל מעל 1,000 מ״ר: מערכת למסירת הודעות (כריזת חירום).', v.area>1000);
+  add('4.20.1', 'אם נדרשות משאבות מים לכיבוי אש או מפוחי יניקת עשן: מקור מתח חלופי (גנרטור/מצבר) להפעלתם.', (v.area>1000) || (v.area>500));
+  add('4.21.1', 'אם נדרשות מערכות מתזים/גלאים/ניהול עשן: לוח פיקוד כבאים הכולל את הרכיבים הנדרשים (מפסקים, חיווי גנרטור, שליטה במעליות, תיק חירום ועוד).', (v.area>1000) || (v.area>500));
+  add('4.22.1', 'מערכת הגפ״מ (אם קיימת בעסק) תעמוד בדרישות ת״י 158.', v.hasGas);
+  add('4.23.1', 'עסק ששטחו הכולל עולה על 2,000 מ״ר: הגשת תיק שטח (תיק הגנה מאש) לפי הוראת נציב 503, ועדכונו לפחות אחת לשנה.', v.area>2000);
+  add('4.24.1', 'אם נדרשת מערכת גילוי/התרעה/כיבוי אוטומטית לפיקוד על מערכות שליטה בעשן או הפרדות אש: תידרש בדיקת אינטגרציה (הוראת נציב 536).', v.area>500);
+  add('4.7', 'הפרדות אש ועמידות אש (קירות שעתיים, דלתות 30 דק׳) — נדרשות אם נקבעו בתנאי היתר הבנייה או בעקבות שינוי מהותי.', true, 'תלוי תנאי היתר — יש לבדוק מול היתר הבנייה הספציפי.');
+
+  return items;
+}
+
+function renderCalcBusiness(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">פרק 4 — המפרט האחיד לרישוי עסקים</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">רשימת דרישות לעסק לפי שטח ותפוסה</h3>`));
+  card.appendChild(el(`<p class="qsub">מתאים לעסק העובר במסלול רישוי עסקים (לא בקשה להיתר בנייה). מלאו את הנתונים ותקבלו רשימת דרישות מלאה עם סימון מה חל על העסק שלכם.</p>`));
+
+  const fields = [
+    ['area','שטח כולל (מ״ר)','number',150],
+    ['occupancy','תפוסה מרבית (אנשים)','number',30],
+    ['floors','מספר קומות בבניין','number',1],
+    ['undergroundArea','שטח קומה תת-קרקעית, אם יש (מ״ר)','number',0],
+    ['panelAmps','זרם לוח החשמל הגדול ביותר (אמפר)','number',40],
+  ];
+  const grid = el(`<div class="project-form" style="grid-template-columns:1fr 1fr 1fr;"></div>`);
+  const inputs = {};
+  fields.forEach(([key,label,type,def])=>{
+    const wrap = el(`<div><label>${label}</label></div>`);
+    const inp = el(`<input type="${type}" step="1" value="${def}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);"/>`);
+    inputs[key]=inp; wrap.appendChild(inp); grid.appendChild(wrap);
+  });
+  card.appendChild(grid);
+
+  const checks = [
+    ['isCommerce','עסק המיועד למסחר'],
+    ['underResidentialSeparated','העסק מתחת למגורים/בשדרת חנויות, עם הפרדת אש 60 דק׳'],
+    ['hasGas','קיימת בעסק מערכת גז (גפ״מ)'],
+  ];
+  const checksWrap = el(`<div style="display:flex;flex-wrap:wrap;gap:14px;margin:14px 0;"></div>`);
+  const boxes = {};
+  checks.forEach(([key,label])=>{
+    const wrap = el(`<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"></label>`);
+    const cb = el(`<input type="checkbox"/>`);
+    boxes[key]=cb;
+    wrap.appendChild(cb);
+    wrap.appendChild(el(`<span>${label}</span>`));
+    checksWrap.appendChild(wrap);
+  });
+  card.appendChild(checksWrap);
+  app.appendChild(card);
+
+  const resultsCard = el(`<div class="card"></div>`);
+  function readValues(){
+    const v = {};
+    Object.keys(inputs).forEach(k=>v[k]=parseFloat(inputs[k].value)||0);
+    Object.keys(boxes).forEach(k=>v[k]=boxes[k].checked);
+    return v;
+  }
+  function render_(){
+    resultsCard.innerHTML = '';
+    const v = readValues();
+    const items = computeBusinessChecklist(v);
+    const applicable = items.filter(i=>i.applies);
+    const head = el(`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;"></div>`);
+    head.appendChild(el(`<h3 style="margin:0;font-size:15px;">רשימת דרישות חלות <span class="chip" style="margin-inline-start:6px;">${applicable.length} מתוך ${items.length}</span></h3>`));
+    const copyBtn = el(`<button class="btn-primary no-print">📋 העתק רשימה</button>`);
+    copyBtn.addEventListener('click', ()=>{
+      copyTSV([['סעיף','דרישה'], ...applicable.map(i=>[i.ref, i.text + (i.note? ' ('+i.note+')':'')])]);
+    });
+    head.appendChild(copyBtn);
+    resultsCard.appendChild(head);
+
+    applicable.forEach(i=>{
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      top.appendChild(el(`<span class="req-num mono">${i.ref}</span>`));
+      top.appendChild(el(`<div class="req-text">${i.text}</div>`));
+      item.appendChild(top);
+      if(i.note) item.appendChild(el(`<div class="req-rem"><b>הערה: </b>${i.note}</div>`));
+      resultsCard.appendChild(item);
+    });
+
+    const qs = findQualified(applicable.map(i=>i.text));
+    if(qs.length){
+      const qWrap = el(`<div style="margin-top:20px;"></div>`);
+      qWrap.appendChild(el(`<h3 style="font-size:14px;margin-bottom:8px;">מסמכים ואישורים נדרשים — מי מוסמך לאשר</h3>`));
+      qs.forEach(q=>{
+        qWrap.appendChild(el(`<div class="req-item"><div class="req-text"><b>${q.topic}:</b> ${q.who}</div></div>`));
+      });
+      resultsCard.appendChild(qWrap);
+    }
+  }
+  Object.values(inputs).forEach(inp=>inp.addEventListener('input', render_));
+  Object.values(boxes).forEach(cb=>cb.addEventListener('change', render_));
+  render_();
+  app.appendChild(resultsCard);
+  app.appendChild(el(`<div class="disclaimer">מבוסס על פרק 4 למפרט האחיד לרישוי עסקים (הרשות הארצית לכבאות והצלה). דרישות ההפרדות/עמידות האש (4.7) ומערכות שליטה בעשן/אינטגרציה תלויות בתנאי היתר הבנייה הספציפי — יש לבדוק מולו. אינו תחליף לאישור רשות הכבאות.</div>`));
+}
+
+/* ---- 7. Submission checklist (הוראת נציב 532) ---- */
+/* ---- Draft / submission template (טיוטה להגשה / שבלונת הגשה) ----
+   Items 11+12 from the partner's request list, confirmed to be the same
+   feature ("אותו דבר"): one consolidated, printable document built from
+   data already entered elsewhere in the tool — it adds no new inputs of
+   its own. It pulls together:
+     - the project details (name/address/author) from the results screen,
+     - the requirements tagged "שייך על גבי השרטוט" / "הערה כללית" on the
+       results screen (Item 1), reconstructed from the CURRENT wizard path
+       (state.path) the same way the results screen itself computes them,
+     - every calculator table (areas/openings/windows and the rest) that
+       has at least one row.
+   It relies on the same group/path the wizard is currently on, so it is
+   used the same way the Item 2 shortcut buttons are: finish the
+   questionnaire for a scenario first, then switch here to see the
+   compiled draft. */
+function renderCalcDraft(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">טיוטה / שבלונת הגשה</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">טיוטה מרוכזת להגשה</h3>`));
+  card.appendChild(el(`<p class="qsub">מסמך אחד המרכז את פרטי הפרויקט, הדרישות שסומנו לשרטוט או להערה כללית במסך התוצאות, וטבלאות המחשבונים שמולאו — מוכן להדפסה או להעתקה לפני הגשה.</p>`));
+
+  const hasGroup = state.path.some(p=>p.type==='group');
+  if(!hasGroup){
+    card.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">יש להשלים קודם את השאלון (״שאלון דרישות״) עבור סוג המבנה הרלוונטי — הטיוטה תתמלא אוטומטית מהתוצאות ומהמחשבונים שמולאו.</div>`));
+    return;
+  }
+
+  let reqs = [];
+  try{
+    const result = nextStep(state.path);
+    reqs = result.active || [];
+  }catch(e){ reqs = []; }
+
+  const p = state.project;
+  const levelChoices = state.path.filter(pp=>pp.type==='level');
+  const scenarioLabel = levelChoices.length ? levelChoices.map(l=>l.desc).join(' · ') : 'ללא תת-סיווג נוסף';
+
+  const projCard = el(`<div class="card"></div>`);
+  projCard.appendChild(el(`<div class="eyebrow">פרטי הפרויקט</div>`));
+  projCard.appendChild(el(`<div style="font-size:13.5px;line-height:2;">
+    ${p.name? '<b>שם הפרויקט:</b> '+p.name+'<br/>':''}
+    ${p.address? '<b>כתובת:</b> '+p.address+'<br/>':''}
+    ${p.author? '<b>הוכן ע״י:</b> '+p.author+'<br/>':''}
+    <b>סוג מבנה:</b> ${currentGroupDesc()}<br/>
+    <b>תרחיש:</b> ${scenarioLabel}<br/>
+    <b>תאריך:</b> ${new Date().toLocaleDateString('he-IL')}
+  </div>`));
+  app.appendChild(projCard);
+
+  function reqKeyOf(r){ return (s(r.num)||'')+'|'+(s(r.req)||'').slice(0,40); }
+
+  const drawingItems = reqs.filter(r=>{ const t = state.reqTags[reqKeyOf(r)]; return t && t.drawing && !(state.excluded||{})[reqKeyOf(r)]; });
+  const drawCard = el(`<div class="card"></div>`);
+  drawCard.appendChild(el(`<div class="source-title"><span>🖼 פריטים לסימון על גבי השרטוט</span><span class="count">${drawingItems.length}</span></div>`));
+  if(drawingItems.length===0){
+    drawCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא סומנו דרישות לשרטוט. אפשר לסמן במסך התוצאות ("שייך על גבי השרטוט").</div>`));
+  } else {
+    drawingItems.forEach(r=>{
+      const num = s(r.num), req = s(r.req);
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
+      top.appendChild(el(`<div class="req-text">${req||''}</div>`));
+      item.appendChild(top);
+      const rl2 = regLinkHtml(s(r.src), num);
+      if(rl2) item.appendChild(el(`<div class="req-links">${rl2}</div>`));
+      drawCard.appendChild(item);
+    });
+  }
+  app.appendChild(drawCard);
+
+  const noteItems = reqs.filter(r=>{ const t = state.reqTags[reqKeyOf(r)]; return t && t.note && !(state.excluded||{})[reqKeyOf(r)]; });
+  const noteCard = el(`<div class="card"></div>`);
+  noteCard.appendChild(el(`<div class="source-title"><span>📝 הערות כלליות</span><span class="count">${noteItems.length}</span></div>`));
+  if(noteItems.length===0){
+    noteCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא סומנו דרישות כהערה כללית. אפשר לסמן במסך התוצאות ("הערה כללית").</div>`));
+  } else {
+    noteItems.forEach(r=>{
+      const num = s(r.num), req = s(r.req);
+      const key = reqKeyOf(r);
+      const item = el(`<div class="req-item"></div>`);
+      const top = el(`<div class="req-top"></div>`);
+      if(num) top.appendChild(el(`<span class="req-num mono">${num}</span>`));
+      top.appendChild(el(`<div class="req-text">${req||''}</div>`));
+      item.appendChild(top);
+      const noteText = state.notes[key];
+      if(noteText) item.appendChild(el(`<div class="req-rem"><b>הערה: </b>${noteText}</div>`));
+      noteCard.appendChild(item);
+    });
+  }
+  app.appendChild(noteCard);
+
+  const areasTotal = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0),0);
+  const tableDefs = [
+    ['areas', `טבלת שטחים — סה״כ ${areasTotal.toFixed(2)} מ״ר`, ['שם החלל','אורך (מ\')','רוחב (מ\')','שטח (מ"ר)']],
+    ['openings', 'טבלת פתחים ודלתות', ['שם החלל','רוחב פתח (ס"מ)','גובה פתח (ס"מ)']],
+    ['windows', 'טבלת חלונות', ['שם החלל','גובה חלל (מ\')','גובה חלון (מ\')','נדרשת מערכת אוטומטית','נדרש חלון פתיחה ידני']],
+    ['fire', 'טבלת עמידות אש', ['אלמנט מבנה','סוג שלד','עמידות בשעות']],
+    ['occ', 'טבלת תפוסה ורוחב יציאות', ['שימוש','שטח מ"ר','מקדם תפוסה','תפוסה (נפש)','רוחב אופקי נדרש (ס"מ)','רוחב מדרגות נדרש (ס"מ)']],
+    ['walk', 'טבלת מרחקי הליכה', ['שימוש','מצב מתזים','מרחק הליכה (מ\')','פרוזדור ללא מוצא (מ\')','מהלך משותף (מ\')']],
+    ['barn', 'טבלת חישובי מתבן', ['שטח מתבן (מ"ר)','גובה מבנה (מ\')','יחידות בלות/קומה','מס\' קומות בלות','סה"כ יחידות','משקל (טון)','סיווג']],
+    ['systems', 'טבלת מערכות בטיחות אש', ['סוג מבנה','תרחיש','התרעת אש','גילוי אש','מתזים','כריזה']],
+    ['water', 'טבלת ספיקות ונפחי מים לכיבוי (הוראת נציב 529)', WATER_TABLE_HEADERS]
+  ];
+  const filledTables = tableDefs.filter(([key])=>(state.calcTables[key]||[]).length > 0);
+  if(filledTables.length){
+    const tblHeader = el(`<div class="card"></div>`);
+    tblHeader.appendChild(el(`<div class="eyebrow">טבלאות מחשבונים שמולאו</div>`));
+    app.appendChild(tblHeader);
+    filledTables.forEach(([key,title,headers])=>{
+      tableCard(title, headers, state.calcTables[key], key);
+    });
+  } else {
+    const emptyTablesCard = el(`<div class="card"></div>`);
+    emptyTablesCard.appendChild(el(`<div style="font-size:13px;color:var(--ink-soft);">לא מולאו עדיין טבלאות במחשבונים. טבלה שתמולאו בכל אחד מהמחשבונים (שטחים, פתחים, חלונות ועוד) תופיע כאן אוטומטית.</div>`));
+    app.appendChild(emptyTablesCard);
+  }
+
+  const toolbar = el(`<div class="toolbar no-print" style="margin-top:16px;"></div>`);
+  const printBtn = el(`<button class="btn-primary">🖨️ הדפס / שמור כ-PDF</button>`);
+  printBtn.addEventListener('click', ()=>window.print());
+  toolbar.appendChild(printBtn);
+  app.appendChild(toolbar);
+
+  app.appendChild(el(`<footer class="note">מסמך זה מרכז את הנתונים שהוזנו במערכת ואינו מהווה אישור רשמי. יש לאמת מול יועץ בטיחות אש מוסמך ורשות הכבאות לפני הגשה.</footer>`));
+}
+
+function renderCalcSubmission(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">הוראת נציב 532</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">בדיקת הגשה — נספח תיאור אמצעים לבטיחות אש</h3>`));
+  card.appendChild(el(`<p class="qsub">צ׳ק-ליסט לפני הגשת הבקשה להיתר: נתונים כלליים שיש לוודא, ותוכן הנספח הגרפי עצמו (סעיפים א'–י"ח). הסימונים נשמרים אוטומטית.</p>`));
+  app.appendChild(card);
+
+  const allKeys = [];
+  SUBMISSION_532.preCheck.forEach((_,i)=>allKeys.push('pre'+i));
+  SUBMISSION_532.appendix.forEach(a=>allKeys.push('app'+a.id));
+  const doneCount = allKeys.filter(k=>state.checklist532[k]).length;
+
+  const progressCard = el(`<div class="card"></div>`);
+  progressCard.appendChild(el(`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <h3 style="margin:0;font-size:15px;">התקדמות</h3>
+    <span class="chip">${doneCount} מתוך ${allKeys.length}</span>
+  </div>`));
+  progressCard.appendChild(el(`<div class="progress-seg" style="height:8px;"><i style="width:${Math.round(100*doneCount/allKeys.length)}%;"></i></div>`));
+  app.appendChild(progressCard);
+
+  function checkItem(key, label, sub){
+    const item = el(`<label class="req-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;"></label>`);
+    const cb = el(`<input type="checkbox" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>`);
+    cb.checked = !!state.checklist532[key];
+    cb.addEventListener('change', ()=>{
+      state.checklist532[key] = cb.checked; persist();
+      progressCard.querySelector('.chip').textContent = allKeys.filter(k=>state.checklist532[k]).length + ' מתוך ' + allKeys.length;
+      progressCard.querySelector('.progress-seg i').style.width = Math.round(100*allKeys.filter(k=>state.checklist532[k]).length/allKeys.length)+'%';
+      item.style.opacity = cb.checked ? '0.55' : '1';
+    });
+    item.style.opacity = cb.checked ? '0.55' : '1';
+    const textWrap = el(`<div></div>`);
+    textWrap.appendChild(el(`<div class="req-text">${label}</div>`));
+    if(sub) textWrap.appendChild(el(`<div class="req-rem" style="border:none;padding:0;margin-top:4px;">${sub}</div>`));
+    item.appendChild(cb);
+    item.appendChild(textWrap);
+    return item;
+  }
+
+  const preCard = el(`<div class="card"></div>`);
+  preCard.appendChild(el(`<div class="source-title"><span>שלב 1 · נתונים כלליים לבדיקה לפני הגשה</span><span class="count">${SUBMISSION_532.preCheck.length}</span></div>`));
+  SUBMISSION_532.preCheck.forEach((text,i)=>preCard.appendChild(checkItem('pre'+i, text)));
+  app.appendChild(preCard);
+
+  const appCard = el(`<div class="card"></div>`);
+  appCard.appendChild(el(`<div class="source-title"><span>שלב 2 · תוכן נספח תיאור אמצעים לבטיחות אש (סעיפים א'–י"ח)</span><span class="count">${SUBMISSION_532.appendix.length}</span></div>`));
+  SUBMISSION_532.appendix.forEach(a=>appCard.appendChild(checkItem('app'+a.id, `(${a.label}) ${a.text}`)));
+  app.appendChild(appCard);
+
+  const clauseCard = el(`<div class="card"></div>`);
+  clauseCard.appendChild(el(`<div class="eyebrow">נוסחי הערה כלליים מוכנים</div>`));
+  clauseCard.appendChild(el(`<h3 style="margin:0 0 6px;font-size:15px;">7 נוסחים סטנדרטיים — להעתקה ישירה לתוכנית</h3>`));
+  clauseCard.appendChild(el(`<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;">לפי הוראת 532, ניתן לציין אמצעים אלה בהערה כללית ליד נתוני התפוסה של הקומה, ללא צורך בסימון מפורט על גבי התוכנית.</p>`));
+  SUBMISSION_532.clauses.forEach(c=>{
+    const row = el(`<div class="req-item"></div>`);
+    const top = el(`<div class="req-top"></div>`);
+    top.appendChild(el(`<span class="req-num mono">${c.label}</span>`));
+    top.appendChild(el(`<div class="req-text">${c.text}</div>`));
+    row.appendChild(top);
+    const btn = el(`<button class="btn-secondary no-print" style="margin-top:8px;font-size:12px;padding:8px 14px;">📋 העתק נוסח זה</button>`);
+    btn.addEventListener('click', ()=>{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(c.text).then(()=>toast('הנוסח הועתק')).catch(()=>fallbackCopy(c.text, ()=>toast('הנוסח הועתק')));
+      } else fallbackCopy(c.text, ()=>toast('הנוסח הועתק'));
+    });
+    row.appendChild(btn);
+    clauseCard.appendChild(row);
+  });
+  const copyAllBtn = el(`<button class="btn-primary no-print" style="margin-top:6px;">📋 העתק את כל 7 הנוסחים</button>`);
+  copyAllBtn.addEventListener('click', ()=>{
+    const all = SUBMISSION_532.clauses.map(c=>c.label+': '+c.text).join('\n\n');
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(all).then(()=>toast('כל הנוסחים הועתקו')).catch(()=>fallbackCopy(all, ()=>toast('כל הנוסחים הועתקו')));
+    } else fallbackCopy(all, ()=>toast('כל הנוסחים הועתקו'));
+  });
+  clauseCard.appendChild(copyAllBtn);
+  app.appendChild(clauseCard);
+
+  app.appendChild(el(`<div class="disclaimer">מבוסס על הוראת נציב 532 (אופן הגשת נספח אמצעי בטיחות אש ומקרא אחיד). הנוסחים הכלליים תקפים רק אם האמצעי בפועל מותקן בהתאם לתקן הרלוונטי — אין בהעתקת הנוסח כדי להחליף התקנה בפועל.</div>`));
+}
+
+loadState();
+
+
+</script>
+
+
+
+</body></html>

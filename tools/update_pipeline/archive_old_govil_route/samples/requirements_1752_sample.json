@@ -1,0 +1,58 @@
+[
+  {
+    "CATEGORY_ID": 1, "PARENT_CATEGORY_ID": 0, "CATEGORY_TYPE_ID": 1, "CATEGORY_CODE": "_01",
+    "CATEGORY_DESC": " קבוצה 1-מגורים", "CATEGORY_REQUIREMENT_ID": -1,
+    "REQUIREMENT_ID": 204, "ORDER_NUM": 68,
+    "REQUIREMENT_SUBJECT_DESC": "09 - פרק ח' - מגורים",
+    "REQUIREMENT_SIGN_DESC": "סימן ד' - דלתות (מגורים)",
+    "REQUIREMENT_NUMBER": "3.8.4.3",
+    "REQUIREMENT_DESC": "מנעול בדלת בדרך המוצא",
+    "IS_CERTIFICATE": false,
+    "REQUIREMENT_REMARKS": "כל דלת תהיה ניתנת לפתיחה מכיוון המילוט ללא מפתח נשלף(באמצעות כגון:מנעול פרפר או לחילופין סיבוב הידית גורם לפתיחת הנעילה מכיוון המילוט)",
+    "REQUIREMENT_CATEGORY_REMARKS": "",
+    "UPDATED_DATE": "2015-09-08T16:28:36", "VERSION_NUMBER": 3,
+    "REQUIREMENT_SOURCE_DESC": "תקנות תכנון ובניה"
+  },
+  {
+    "CATEGORY_ID": 2, "PARENT_CATEGORY_ID": 1, "CATEGORY_TYPE_ID": 1, "CATEGORY_CODE": "_01.03",
+    "CATEGORY_DESC": "בניין מגורים עד גובה של 13 מ'", "CATEGORY_REQUIREMENT_ID": -1,
+    "REQUIREMENT_ID": 1, "ORDER_NUM": 11,
+    "REQUIREMENT_SUBJECT_DESC": "00 - התקנות עיקריות",
+    "REQUIREMENT_SIGN_DESC": "כללי",
+    "REQUIREMENT_NUMBER": "0.11",
+    "REQUIREMENT_DESC": "נספח תיאור אמצעים לבטיחות אש על פי תקנות התכנון והבנייה (הקמת מכון בקרה ודרכי עבודתו), התשע\"ח-2018 (11א לשעבר) שיסומן בתוכנית בהתאם להוראת נציב 532 \"אופן הגשת נספח אמצעי בטיחות אש ומקרא אחיד\"",
+    "IS_CERTIFICATE": false,
+    "REQUIREMENT_REMARKS": "",
+    "REQUIREMENT_CATEGORY_REMARKS": "",
+    "UPDATED_DATE": "2020-08-23T09:35:21", "VERSION_NUMBER": 13,
+    "REQUIREMENT_SOURCE_DESC": "תקנות תכנון ובניה"
+  },
+  {
+    "CATEGORY_ID": 1752, "PARENT_CATEGORY_ID": 2, "CATEGORY_TYPE_ID": 1, "CATEGORY_CODE": "_01.03.01",
+    "CATEGORY_DESC": "הכולל חלקי בניין תת קרקעיים וחניונים", "CATEGORY_REQUIREMENT_ID": -1,
+    "REQUIREMENT_ID": 153, "ORDER_NUM": 1,
+    "REQUIREMENT_SUBJECT_DESC": "61-הוראת נציב 550",
+    "REQUIREMENT_SIGN_DESC": "סימן ו'- מערכת הספקת מים לכיבוי אש",
+    "REQUIREMENT_NUMBER": "03.04.06.04",
+    "REQUIREMENT_DESC": "חיבור כבאים להסנקת מים לברזי כיבוי אש בבניין.  הערה: זקף ברז ההסנקה יצבע בכחול.",
+    "IS_CERTIFICATE": false,
+    "REQUIREMENT_REMARKS": "1)נדרש לבניין בעל 3 קומות ומעלה; 2)מיקום חיבור ההסנקה יהיה נגיש, בחזית הבניין ובסמוך לכניסה הראשית לבנין.",
+    "REQUIREMENT_CATEGORY_REMARKS": "",
+    "UPDATED_DATE": "2022-07-18T10:14:20", "VERSION_NUMBER": 15,
+    "REQUIREMENT_SOURCE_DESC": "הוראת נציב 550"
+  },
+  {
+    "CATEGORY_ID": 1752, "PARENT_CATEGORY_ID": 2, "CATEGORY_TYPE_ID": 1, "CATEGORY_CODE": "_01.03.01",
+    "CATEGORY_DESC": "הכולל חלקי בניין תת קרקעיים וחניונים", "CATEGORY_REQUIREMENT_ID": -1,
+    "REQUIREMENT_ID": 375, "ORDER_NUM": 2,
+    "REQUIREMENT_SUBJECT_DESC": "30.01 - אישורי מעבדות",
+    "REQUIREMENT_SIGN_DESC": "",
+    "REQUIREMENT_NUMBER": "30.01.02",
+    "REQUIREMENT_DESC": "אישור מעבדה מוכרת כי מערכת כיבוי אש במים תוכננה ובוצע עפ'י ת'י 1596.",
+    "IS_CERTIFICATE": true,
+    "REQUIREMENT_REMARKS": "",
+    "REQUIREMENT_CATEGORY_REMARKS": "",
+    "UPDATED_DATE": "2023-01-11T10:20:48", "VERSION_NUMBER": 16,
+    "REQUIREMENT_SOURCE_DESC": "תקן ישראלי ת'י 1596 "
+  }
+]

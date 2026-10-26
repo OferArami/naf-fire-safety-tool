@@ -1,0 +1,4 @@
+# update pipeline working files (large, regenerated every month)
+tools/update_pipeline/opendata/*.json
+tools/update_pipeline/output/
+__pycache__/
