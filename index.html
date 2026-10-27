@@ -749,6 +749,7 @@ let state = {
   checklist532:{},
   development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
   checklistStairs:{},
+  panelDetection:{ tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false },
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
   calcSelections:{
@@ -842,7 +843,8 @@ function hasMeaningfulProgress(saved){
   const hasExcluded = saved.excluded && Object.values(saved.excluded).some(Boolean);
   const hasDevelopment = saved.development && Object.values(saved.development).some(v => (v||'').trim() !== '');
   const hasChecklistStairs = saved.checklistStairs && Object.values(saved.checklistStairs).some(Boolean);
-  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment || hasChecklistStairs;
+  const hasPanelDetection = saved.panelDetection && (saved.panelDetection.requiresDetection || saved.panelDetection.tier !== 'a63' || saved.panelDetection.path61439 || saved.panelDetection.cond1 || saved.panelDetection.cond2 || saved.panelDetection.cond3);
+  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment || hasChecklistStairs || hasPanelDetection;
 }
 function summarizeSavedProgress(saved){
   const parts = [];
@@ -893,7 +895,8 @@ function renderResumePrompt(saved){
       screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
       mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{},
       development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
-      checklistStairs:{}
+      checklistStairs:{},
+      panelDetection:{ tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false }
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -908,7 +911,7 @@ async function persist(){
       screen:state.screen, path:state.path, project:state.project, notes:state.notes,
       reqTags:state.reqTags, excluded:state.excluded,
       mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532,
-      development:state.development, checklistStairs:state.checklistStairs
+      development:state.development, checklistStairs:state.checklistStairs, panelDetection:state.panelDetection
     }));
     showStorageWarning();
   }catch(e){ console.error('storage error', e); }
@@ -1467,6 +1470,7 @@ function renderCalcRoot(){
     ['water','ספיקות ונפחי מים (הוראה 529)'],
     ['development','תוכנית פיתוח ומערכות מים'],
     ['stairs','חדרי מדרגות מוגנים ומעליות'],
+    ['panel','לוח חשמל - גילוי אש וכיבוי'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
     ['draft','טיוטה להגשה (שבלונה)'],
     ['submission','בדיקת הגשה (הוראת 532)']
@@ -1490,6 +1494,7 @@ function renderCalcRoot(){
   if(state.calcTab==='water') renderCalcWater();
   if(state.calcTab==='development') renderCalcDevelopment();
   if(state.calcTab==='stairs') renderCalcStairs();
+  if(state.calcTab==='panel') renderCalcPanel();
   if(state.calcTab==='business') renderCalcBusiness();
   if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
@@ -2461,6 +2466,116 @@ function renderCalcStairs(){
   app.appendChild(el(`<div class="disclaimer">מבוסס על תקנות התכנון והבנייה ותקנים ישראליים ת"י 1142, ת"י 1918 ו-ת"י 2481. הנוסחים תקפים רק אם האמצעי בפועל מותקן בהתאם לתקן הרלוונטי - אין בסימון כדי להחליף התקנה בפועל ובדיקת יועץ מוסמך.</div>`));
 }
 
+function renderCalcPanel(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">חוק החשמל, תשי"ד-1954</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">לוח חשמל - גילוי אש וכיבוי</h3>`));
+  card.appendChild(el(`<p class="qsub">דרישות גילוי אש/עשן וכיבוי אוטומטי בלוחות חשמל, לפי זרם הלוח, כשנדרשת בעסק/בנכס מערכת גילוי אש ועשן. מבוסס על תקנות חוק החשמל העדכניות ות"י 1220 חלק 3.</p>`));
+  app.appendChild(card);
+
+  if(!state.panelDetection) state.panelDetection = { tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false };
+  const pd = state.panelDetection;
+
+  const inputCard = el(`<div class="card"></div>`);
+  inputCard.appendChild(el(`<label style="font-weight:700;font-size:13.5px;display:block;margin-bottom:6px;">זרם הלוח</label>`));
+  const tierSel = el(`<select class="calc-select" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);">
+    <option value="a63">עד 63 אמפר</option>
+    <option value="a80">מעל 63 ועד 80 אמפר</option>
+    <option value="a100">100 אמפר ומעלה</option>
+  </select>`);
+  tierSel.value = pd.tier;
+  inputCard.appendChild(tierSel);
+
+  const reqWrap = el(`<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin-top:14px;"></label>`);
+  const reqCb = el(`<input type="checkbox" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>`);
+  reqCb.checked = !!pd.requiresDetection;
+  reqWrap.appendChild(reqCb);
+  reqWrap.appendChild(el(`<div style="font-size:13.5px;">נדרשת בעסק/בנכס מערכת גילוי אש ועשן (כלל, לא רק בלוח)</div>`));
+  inputCard.appendChild(reqWrap);
+  app.appendChild(inputCard);
+
+  const verdictBox = el(`<div class="card" style="margin-top:10px;"></div>`);
+  const exemptionBox = el(`<div class="card" style="margin-top:10px;display:none;"></div>`);
+  app.appendChild(verdictBox);
+  app.appendChild(exemptionBox);
+
+  function update(){
+    pd.tier = tierSel.value;
+    pd.requiresDetection = reqCb.checked;
+    persist();
+
+    if(!pd.requiresDetection){
+      verdictBox.innerHTML = `<div class="eyebrow">חובת התקנה בלוח</div>
+        <div style="font-size:13.5px;line-height:1.8;margin-top:6px;">אין חובה - הדרישה להתקין גלאי/מערכת בלוח החשמל חלה רק כאשר כבר נדרש להתקין בעסק/בנכס מערכת גילוי אש ועשן.</div>`;
+      exemptionBox.style.display = 'none';
+      return;
+    }
+
+    let text = '';
+    if(pd.tier === 'a63'){
+      text = 'יותקן גלאי עשן בלוח החשמל. מערכת הגילוי בלוח תותקן עפ"י ת"י 1220 חלק 3 (הוראות התקנה ודרישות כלליות).';
+    } else if(pd.tier === 'a80'){
+      text = 'יותקן גלאי עשן בלוח החשמל, וכן מערכת ניתוק זרם חשמל ממקור ההזנה. מערכת הגילוי בלוח תותקן עפ"י ת"י 1220 חלק 3.';
+    } else {
+      text = 'תותקן מערכת גילוי אש ועשן מלאה בלוח, הכוללת: גלאים, מערכת כיבוי אוטומטית יבשה, ומערכת ניתוק הלוח ממקור ההזנה. מערכת הגילוי - עפ"י ת"י 1220 חלק 3; מערכת הכיבוי האוטומטית היבשה - עפ"י ת"י 5210 (כיבוי באירוסול) או ת"י 1597 (כיבוי אוטומטי בגז כיבוי), לפי סוג המערכת.';
+    }
+    verdictBox.innerHTML = `<div class="eyebrow">חובת התקנה בלוח (זרם ${pd.tier==='a63'?'עד 63':pd.tier==='a80'?'63-80':'100+'} אמפר)</div>
+      <div style="font-size:13.5px;line-height:1.8;margin-top:6px;font-weight:700;">${text}</div>`;
+
+    if(pd.tier === 'a100'){
+      exemptionBox.style.display = '';
+      const path61439Cb = exemptionBox.querySelector('[data-k="path61439"]');
+      const cond1Cb = exemptionBox.querySelector('[data-k="cond1"]');
+      const cond2Cb = exemptionBox.querySelector('[data-k="cond2"]');
+      const cond3Cb = exemptionBox.querySelector('[data-k="cond3"]');
+      let exemptVerdict;
+      if(pd.path61439){
+        exemptVerdict = 'הלוח פטור ממערכת הכיבוי האוטומטית (חלופה א\' - הלוח עומד בדרישות ת"י 61439 חלק 2, בכפוף להצגת אישור מעבדה על התאמת הלוח לתקן). חובת הגלאים ומערכת הניתוק עדיין חלה.';
+      } else if(pd.cond1 && pd.cond2 && pd.cond3){
+        exemptVerdict = 'הלוח פטור ממערכת הכיבוי האוטומטית (חלופה ב\' - שלוש הדרישות המצטברות מתקיימות: גלאי עשן + מערכת ניתוק + הלוח באזור כיסוי ספרינקלרים).';
+      } else {
+        exemptVerdict = 'אין פטור ממערכת כיבוי אוטומטית - יש להתקין מערכת כיבוי אוטומטית יבשה בלוח, אלא אם תסומנו כל התנאים של אחת משתי החלופות למטה.';
+      }
+      exemptionBox.innerHTML = `<div class="eyebrow">פטור ממערכת כיבוי אוטומטית בלוח 100A+</div>
+        <div style="font-size:13px;line-height:1.8;margin:6px 0 10px;">לוח בזרם 100 אמפר ומעלה פטור מהתקנת מערכת כיבוי אוטומטית בהתקיים אחת משתי החלופות:</div>
+        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin-bottom:10px;">
+          <input type="checkbox" data-k="path61439" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>
+          <div style="font-size:13px;"><b>חלופה א':</b> הלוח עומד בדרישות ת"י 61439 חלק 2 (לוחות מיתוג ובקרה למתח נמוך - לוחות הספק), עם אישור מעבדה על ההתאמה.</div>
+        </label>
+        <div style="font-size:12.5px;color:var(--ink-soft);margin:4px 0 10px;">- או -</div>
+        <div style="font-size:13px;margin-bottom:6px;"><b>חלופה ב':</b> מתקיימות במצטבר כל שלוש הדרישות הבאות:</div>
+        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin-bottom:6px;margin-right:14px;">
+          <input type="checkbox" data-k="cond1" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>
+          <div style="font-size:13px;">מותקן בלוח גלאי עשן</div>
+        </label>
+        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin-bottom:6px;margin-right:14px;">
+          <input type="checkbox" data-k="cond2" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>
+          <div style="font-size:13px;">מותקנת מערכת ניתוק הלוח ממקור ההזנה</div>
+        </label>
+        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin-bottom:10px;margin-right:14px;">
+          <input type="checkbox" data-k="cond3" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>
+          <div style="font-size:13px;">הלוח נמצא באזור כיסוי של מערכת כיבוי אוטומטית (ספרינקלרים)</div>
+        </label>
+        <div style="font-size:13.5px;line-height:1.8;margin-top:10px;font-weight:700;">${exemptVerdict}</div>`;
+      exemptionBox.querySelector('[data-k="path61439"]').checked = !!pd.path61439;
+      exemptionBox.querySelector('[data-k="cond1"]').checked = !!pd.cond1;
+      exemptionBox.querySelector('[data-k="cond2"]').checked = !!pd.cond2;
+      exemptionBox.querySelector('[data-k="cond3"]').checked = !!pd.cond3;
+      exemptionBox.querySelector('[data-k="path61439"]').addEventListener('change', (e)=>{ pd.path61439 = e.target.checked; update(); });
+      exemptionBox.querySelector('[data-k="cond1"]').addEventListener('change', (e)=>{ pd.cond1 = e.target.checked; update(); });
+      exemptionBox.querySelector('[data-k="cond2"]').addEventListener('change', (e)=>{ pd.cond2 = e.target.checked; update(); });
+      exemptionBox.querySelector('[data-k="cond3"]').addEventListener('change', (e)=>{ pd.cond3 = e.target.checked; update(); });
+    } else {
+      exemptionBox.style.display = 'none';
+    }
+  }
+  tierSel.addEventListener('change', update);
+  reqCb.addEventListener('change', update);
+  update();
+
+  app.appendChild(el(`<div class="disclaimer">מבוסס על חוק החשמל, תשי"ד-1954 ותקנותיו העדכניות, ות"י 1220 חלק 3 / ת"י 61439 חלק 2 / ת"י 5210 / ת"י 1597. יש לאמת את סיווג העסק/הנכס ואת נתוני הלוח בפועל מול חשמלאי/יועץ בטיחות מוסמך לפני ביצוע.</div>`));
+}
+
 function renderCalcBusiness(){
   const card = calcCard();
   card.appendChild(el(`<div class="eyebrow">פרק 4 — המפרט האחיד לרישוי עסקים</div>`));
@@ -2664,6 +2779,23 @@ function renderCalcDraft(){
       stairsCard.appendChild(row);
     });
     app.appendChild(stairsCard);
+  }
+
+  if(state.panelDetection && state.panelDetection.requiresDetection){
+    const pd = state.panelDetection;
+    const panelCard = el(`<div class="card"></div>`);
+    panelCard.appendChild(el(`<div class="eyebrow">לוח חשמל - גילוי אש וכיבוי</div>`));
+    const tierLabel = pd.tier==='a63'?'עד 63 אמפר':pd.tier==='a80'?'63-80 אמפר':'100 אמפר ומעלה';
+    let panelText = '';
+    if(pd.tier === 'a63') panelText = 'גלאי עשן בלוח החשמל (ת"י 1220 חלק 3).';
+    else if(pd.tier === 'a80') panelText = 'גלאי עשן + מערכת ניתוק זרם ממקור ההזנה (ת"י 1220 חלק 3).';
+    else {
+      panelText = 'מערכת גילוי אש ועשן מלאה + מערכת כיבוי אוטומטית יבשה + ניתוק מהזנה (ת"י 1220 חלק 3, ת"י 5210/1597).';
+      if(pd.path61439) panelText += ' פטור ממערכת כיבוי אוטומטית - חלופה א\' (ת"י 61439 חלק 2).';
+      else if(pd.cond1 && pd.cond2 && pd.cond3) panelText += ' פטור ממערכת כיבוי אוטומטית - חלופה ב\' (שלוש הדרישות המצטברות).';
+    }
+    panelCard.appendChild(el(`<div class="req-item"><div class="req-text"><b>זרם הלוח: ${tierLabel}.</b> ${panelText}</div></div>`));
+    app.appendChild(panelCard);
   }
 
   const areasTotal = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0),0);
