@@ -1894,8 +1894,9 @@ function renderCalcWater(){
 
   const resultBox = el(`<div style="margin-top:14px;"></div>`);
   const warnBox = el(`<div class="disclaimer" style="display:none;margin-top:10px;background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);line-height:1.9;"></div>`);
+  const reservoirBox = el(`<div class="card" style="margin-top:10px;"></div>`);
   const notesBox = el(`<div class="disclaimer" style="margin-top:10px;line-height:1.9;font-size:12.5px;"></div>`);
-  card.appendChild(resultBox); card.appendChild(warnBox); card.appendChild(notesBox);
+  card.appendChild(resultBox); card.appendChild(warnBox); card.appendChild(reservoirBox); card.appendChild(notesBox);
 
   const n0 = v => Math.round(v).toLocaleString('he-IL');
   const n1 = v => (Math.round(v*10)/10).toLocaleString('he-IL');
@@ -1955,6 +1956,37 @@ function renderCalcWater(){
       warns.push('ברזי הכיבוי של הבניין (סעיף 7) אינם נספרים במניין ברזי הכיבוי של רשת המים העירונית (סעיף 7.3).');
     warnBox.style.display = warns.length ? 'block' : 'none';
     warnBox.innerHTML = warns.map(w=>'⚠ '+w).join('<br/>');
+
+    // Reservoir verdict - synthesizes the city/reservoir choice above and the hazard
+    // class into a plain-language answer to "is a reservoir required", following the
+    // 4-step decision process (risk → water demand → network characterization →
+    // decision) anchored in regulation 3.4.2.1(ג) לתקנות התכנון והבנייה.
+    let verdict, verdictClass;
+    if(extra){
+      verdict = 'כן - בדרגת סיכון גבוהה (קבוצות 1/2) יש לתכנן מאגר מים ומשאבות, ואין להסתפק ברשת העירונית גם אם היא תקינה.';
+      verdictClass = 'need';
+    } else if(spkSel.value === 'reservoir' && hydSel.value === 'reservoir'){
+      verdict = 'נבחר מאגר מים ומשאבות כמקור ההזנה למתזים ולברזי הכיבוי כאחד.';
+      verdictClass = 'chosen';
+    } else if(spkSel.value === 'city' && hydSel.value === 'city'){
+      verdict = 'ייתכן שלא - בתנאי שבדיקת אפיון רשת מים (ספיקה זמינה, לחץ סטטי ולחץ שיורי בזרימה) ומאזן מים לפי הוראת 529 מוכיחים שהרשת העירונית עומדת בדרישות שחושבו למעלה. אם הבדיקה לא עומדת בדרישות - יש לתכנן מאגר מים ומשאבות.';
+      verdictClass = 'maybe';
+    } else {
+      verdict = 'מקור מעורב (עירוני + מאגר) - יש לוודא שההפרדה בין המערכות תואמת את מאזן המים הנדרש ושכל מערכת מוזנת כראוי מהמקור שנבחר לה.';
+      verdictClass = 'maybe';
+    }
+    reservoirBox.innerHTML = `<div class="eyebrow">האם נדרש מאגר מים?</div>
+      <div style="font-size:13.5px;line-height:1.8;margin:6px 0 10px;font-weight:700;">${verdict}</div>
+      <details style="font-size:12.5px;color:var(--ink-soft);line-height:1.9;">
+        <summary style="cursor:pointer;font-weight:700;">תהליך הבדיקה המלא (4 שלבים)</summary>
+        <div style="margin-top:8px;">
+          <b>א. קביעת רמת הסיכון</b> - ייעוד, שטח, גובה, סוג חומרים וגובה אחסון קובעים את סיווג הסיכון ואת מערכות הכיבוי הנדרשות (זהו החישוב למעלה בעמוד זה).<br/>
+          <b>ב. קביעת דרישות אספקת המים</b> - חישוב ספיקה ולחץ נדרשים למתזים, לברזי כיבוי פנימיים וחיצוניים, ודרישת הפעלה בו-זמנית לפי התקן הרלוונטי.<br/>
+          <b>ג. בדיקת רשת המים</b> - אפיון הרשת העירונית בפועל: ספיקה זמינה, לחץ סטטי ולחץ שיורי בזמן זרימה, ומאזן מים הכולל את דרישות המתזים וברזי הכיבוי (הוראת נציב 529).<br/>
+          <b>ד. החלטה</b> - אם הרשת מוכחת כאמינה ועומדת בדרישות, ואין חובת מאגר עצמאית מכוח הוראה אחרת (כגון דרגת סיכון גבוהה) - ניתן לתכנן הזנה ללא מאגר. אם לא - יש לתכנן מאגר מים ומערכת להגברת לחץ.<br/>
+          העיקרון מעוגן בסעיף 3.4.2.1(ג) לתקנות התכנון והבנייה.
+        </div>
+      </details>`;
 
     notesBox.innerHTML = `<b>הערות מנספח 4:</b> הטבלה מתייחסת לגובה אחסנה מרבי של 3.7 מ' (מטעני פלסטיק A — 3 מ'). שטח היישום, ולכן כמות המים למתזים, עשויים להשתנות לפי גובה התקרה וסוג המתזים — על המתכנן לציין זאת לפי התקן ואישורי UL/FM.
       מחסנים ואופי האחסון — בנפרד. כשיש הוראה אחרת (למשל לבתי חולים או למפעלים ביטחוניים) או דרישה בת"י 1596 — קובעת הכמות הגדולה מביניהן.`;
