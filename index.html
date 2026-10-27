@@ -741,6 +741,7 @@ let state = {
   reqTags:{}, // per-requirement checkbox state: {[reqKey]: {drawing:bool, note:bool}} — "שייך על גבי השרטוט" / "הערה כללית"
   calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[], water:[] },
   checklist532:{},
+  development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
   calcSelections:{
@@ -832,7 +833,8 @@ function hasMeaningfulProgress(saved){
   const hasCalc = saved.calcTables && Object.values(saved.calcTables).some(arr => Array.isArray(arr) && arr.length > 0);
   const hasChecklist = saved.checklist532 && Object.values(saved.checklist532).some(Boolean);
   const hasExcluded = saved.excluded && Object.values(saved.excluded).some(Boolean);
-  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded;
+  const hasDevelopment = saved.development && Object.values(saved.development).some(v => (v||'').trim() !== '');
+  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment;
 }
 function summarizeSavedProgress(saved){
   const parts = [];
@@ -881,7 +883,8 @@ function renderResumePrompt(saved){
     // load would ask the same question again about data the person just discarded.
     try{ await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
-      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{}
+      mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{},
+      development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' }
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -895,7 +898,8 @@ async function persist(){
     await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:state.screen, path:state.path, project:state.project, notes:state.notes,
       reqTags:state.reqTags, excluded:state.excluded,
-      mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532
+      mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532,
+      development:state.development
     }));
     showStorageWarning();
   }catch(e){ console.error('storage error', e); }
@@ -1452,6 +1456,7 @@ function renderCalcRoot(){
     ['barn','גודל מתבן'],
     ['systems','מערכות בטיחות אש נדרשות'],
     ['water','ספיקות ונפחי מים (הוראה 529)'],
+    ['development','תוכנית פיתוח ומערכות מים'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
     ['draft','טיוטה להגשה (שבלונה)'],
     ['submission','בדיקת הגשה (הוראת 532)']
@@ -1473,6 +1478,7 @@ function renderCalcRoot(){
   if(state.calcTab==='barn') renderCalcBarn();
   if(state.calcTab==='systems') renderCalcSystems();
   if(state.calcTab==='water') renderCalcWater();
+  if(state.calcTab==='development') renderCalcDevelopment();
   if(state.calcTab==='business') renderCalcBusiness();
   if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
@@ -2322,6 +2328,44 @@ function computeBusinessChecklist(v){
   return items;
 }
 
+/* ---- Development plan & site water systems (תוכנית פיתוח ומערכות מים) ----
+   Not a numeric calculator — a structured note sheet for the items that need
+   to be marked on the development plan (תוכנית פיתוח) and the building plan
+   so that hydrants, hose reels, fire cabinets and drain valves can actually be
+   located on site, including a note field for future-use changes. Feeds the
+   consolidated draft (renderCalcDraft) like the other calculator tables. */
+const DEVELOPMENT_FIELDS = [
+  ['mainValve', 'מיקום מגוף המים הראשי (מונה/מגוף אב)', 'למשל: בחזית המגרש, סמוך לשער הכניסה הראשי, עומק הנחה מ-פני הקרקע'],
+  ['mainLine', 'מיקום קו המים הראשי העובר במגרש', 'מסלול הקו מנקודת החיבור לרשת העירונית ועד למבנה — חיוני לתכנון מיקום ההידרנטים'],
+  ['hydrants', 'מיקום הידרנטים מתוכננים', 'ראו מרווק מקסימלי מחושב במחשבון "ספיקות ולחצי מים" לפי סיווג חומר הבעירה'],
+  ['hoseReels', 'מיקום גלגלונים', 'מיקום בתוך המבנה, נגישות מכל חלל'],
+  ['fireCabinets', 'מיקום עמדות כיבוי אש (ארונות כיבוי)', 'מיקום, מרחק ממוקדי סיכון וממוצא'],
+  ['drainValves', 'מיקום ברזי הסנקה', 'לניקוז/בדיקת מערכות הכיבוי'],
+  ['futureUse', 'הערות לתכנון עתידי (שינוי ייעוד/הרחבה)', 'למשל: אם מתוכננת בעתיד הרחבת המבנה או שינוי ייעוד שעשוי להשפיע על עומס המערכות']
+];
+function renderCalcDevelopment(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">תוכנית פיתוח ומערכות מים</h3>`));
+  card.appendChild(el(`<p class="qsub">רשימת הנקודות שיש לסמן בתוכנית הפיתוח ובתוכנית המבנה כדי שאפשר יהיה לתכנן בפועל הידרנטים, גלגלונים, עמדות כיבוי וברזי הסנקה. הטקסט שתזינו כאן נשמר אוטומטית ומופיע גם בטיוטה להגשה.</p>`));
+  app.appendChild(card);
+
+  if(!state.development) state.development = { mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' };
+
+  DEVELOPMENT_FIELDS.forEach(([key,label,hint])=>{
+    const fieldCard = el(`<div class="card"></div>`);
+    fieldCard.appendChild(el(`<label style="font-weight:700;font-size:13.5px;display:block;margin-bottom:4px;">${label}</label>`));
+    fieldCard.appendChild(el(`<div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;">${hint}</div>`));
+    const ta = el(`<textarea rows="2" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:var(--surface-2);color:var(--ink);resize:vertical;"></textarea>`);
+    ta.value = state.development[key] || '';
+    ta.addEventListener('input', (e)=>{ state.development[key] = e.target.value; persist(); });
+    fieldCard.appendChild(ta);
+    app.appendChild(fieldCard);
+  });
+
+  app.appendChild(el(`<div class="disclaimer">דף זה הוא כלי ארגון בלבד ואינו מחליף תכנון הנדסי של מערכות המים והכיבוי — יש לוודא התאמה מול תוכנית הפיתוח המאושרת ומול יועץ המים/האינסטלציה של הפרויקט.</div>`));
+}
+
 function renderCalcBusiness(){
   const card = calcCard();
   card.appendChild(el(`<div class="eyebrow">פרק 4 — המפרט האחיד לרישוי עסקים</div>`));
@@ -2502,6 +2546,18 @@ function renderCalcDraft(){
     });
   }
   app.appendChild(noteCard);
+
+  const devFilled = DEVELOPMENT_FIELDS.filter(([key])=>((state.development||{})[key]||'').trim() !== '');
+  if(devFilled.length){
+    const devCard = el(`<div class="card"></div>`);
+    devCard.appendChild(el(`<div class="eyebrow">תוכנית פיתוח ומערכות מים</div>`));
+    devFilled.forEach(([key,label])=>{
+      const item = el(`<div class="req-item"></div>`);
+      item.appendChild(el(`<div class="req-text"><b>${label}:</b> ${state.development[key]}</div>`));
+      devCard.appendChild(item);
+    });
+    app.appendChild(devCard);
+  }
 
   const areasTotal = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0),0);
   const tableDefs = [
