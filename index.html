@@ -615,6 +615,12 @@ const SUBMISSION_532 = {
   ]
 };
 
+const STAIRS_ELEVATORS_CHECKLIST = [
+  { id:'railings', label:'מעקות, מסעדים ובתי אחיזה', citation:'ת"י 1142, ת"י 1918', text:'מעקות, מסעדים ובתי אחיזה יותקנו בהתאם לתקנות התכנון והבנייה (תכן הבניה)(בטיחות משתמשים במבנים), ת"י 1142; באזורים נגישים - בהתאם לת"י 1918 על חלקיו.' },
+  { id:'elevatorKey', label:'מפתח מני - פתיחת חירום של דלתות פיר המעלית', citation:'ת"י 2481', text:'פתיחת חירום מכנית של דלתות פיר המעלית תתאפשר באמצעות מפתח ייעודי (מפתח מני) בהתאם לת"י 2481.' },
+  { id:'shaftVenting', label:'שחרור/שליטה בעשן בפיר המעלית', citation:'פרט 3.5.2.1(6), פרט 3.7.3.12 לתוספת השנייה; ת"י 2481', text:'פיר המעלית יתוכנן לשחרור/שליטה בעשן בהתאם לפרט 3.5.2.1(6) ופרט 3.7.3.12 לתוספת השנייה לתקנות התכנון והבנייה; אוורור הפיר יבוצע לכיוון גג הבניין ודרכו. המעלית והפיר יתאימו לת"י 2481 על חלקיו.' }
+];
+
 function findQualified(textArray){
   const joined = (textArray || []).join(' ');
   const seen = new Set();
@@ -742,6 +748,7 @@ let state = {
   calcTables:{ fire:[], occ:[], walk:[], areas:[], openings:[], windows:[], barn:[], systems:[], water:[] },
   checklist532:{},
   development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
+  checklistStairs:{},
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
   calcSelections:{
@@ -834,7 +841,8 @@ function hasMeaningfulProgress(saved){
   const hasChecklist = saved.checklist532 && Object.values(saved.checklist532).some(Boolean);
   const hasExcluded = saved.excluded && Object.values(saved.excluded).some(Boolean);
   const hasDevelopment = saved.development && Object.values(saved.development).some(v => (v||'').trim() !== '');
-  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment;
+  const hasChecklistStairs = saved.checklistStairs && Object.values(saved.checklistStairs).some(Boolean);
+  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment || hasChecklistStairs;
 }
 function summarizeSavedProgress(saved){
   const parts = [];
@@ -884,7 +892,8 @@ function renderResumePrompt(saved){
     try{ await storageAdapter.set(STORE_KEY, JSON.stringify({
       screen:'intro', path:[], project:{name:'',address:'',author:''}, notes:{},
       mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[]}, checklist532:{},
-      development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' }
+      development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
+      checklistStairs:{}
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -899,7 +908,7 @@ async function persist(){
       screen:state.screen, path:state.path, project:state.project, notes:state.notes,
       reqTags:state.reqTags, excluded:state.excluded,
       mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532,
-      development:state.development
+      development:state.development, checklistStairs:state.checklistStairs
     }));
     showStorageWarning();
   }catch(e){ console.error('storage error', e); }
@@ -1457,6 +1466,7 @@ function renderCalcRoot(){
     ['systems','מערכות בטיחות אש נדרשות'],
     ['water','ספיקות ונפחי מים (הוראה 529)'],
     ['development','תוכנית פיתוח ומערכות מים'],
+    ['stairs','חדרי מדרגות מוגנים ומעליות'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
     ['draft','טיוטה להגשה (שבלונה)'],
     ['submission','בדיקת הגשה (הוראת 532)']
@@ -1479,6 +1489,7 @@ function renderCalcRoot(){
   if(state.calcTab==='systems') renderCalcSystems();
   if(state.calcTab==='water') renderCalcWater();
   if(state.calcTab==='development') renderCalcDevelopment();
+  if(state.calcTab==='stairs') renderCalcStairs();
   if(state.calcTab==='business') renderCalcBusiness();
   if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
@@ -2398,6 +2409,58 @@ function renderCalcDevelopment(){
   app.appendChild(el(`<div class="disclaimer">דף זה הוא כלי ארגון בלבד ואינו מחליף תכנון הנדסי של מערכות המים והכיבוי — יש לוודא התאמה מול תוכנית הפיתוח המאושרת ומול יועץ המים/האינסטלציה של הפרויקט.</div>`));
 }
 
+function renderCalcStairs(){
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">כלי עזר</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">חדרי מדרגות מוגנים ומעליות</h3>`));
+  card.appendChild(el(`<p class="qsub">צ'ק-ליסט לדרישות התקן על מעקות ובתי אחיזה, מפתח חירום למעלית ושליטה בעשן בפיר המעלית. סמנו פריט שבדקתם והוא עומד בדרישה; הנוסח המוכן ניתן להעתקה ישירה לתוכנית.</p>`));
+  app.appendChild(card);
+
+  if(!state.checklistStairs) state.checklistStairs = {};
+
+  const allIds = STAIRS_ELEVATORS_CHECKLIST.map(x=>x.id);
+  const doneCount0 = allIds.filter(k=>state.checklistStairs[k]).length;
+  const progressCard = el(`<div class="card"></div>`);
+  progressCard.appendChild(el(`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <h3 style="margin:0;font-size:15px;">התקדמות</h3>
+    <span class="chip">${doneCount0} מתוך ${allIds.length}</span>
+  </div>`));
+  progressCard.appendChild(el(`<div class="progress-seg" style="height:8px;"><i style="width:${Math.round(100*doneCount0/allIds.length)}%;"></i></div>`));
+  app.appendChild(progressCard);
+
+  STAIRS_ELEVATORS_CHECKLIST.forEach(item=>{
+    const itemCard = el(`<div class="card"></div>`);
+    const row = el(`<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;"></label>`);
+    const cb = el(`<input type="checkbox" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>`);
+    cb.checked = !!state.checklistStairs[item.id];
+    const textWrap = el(`<div style="flex:1;"></div>`);
+    textWrap.appendChild(el(`<div style="font-weight:700;font-size:13.5px;">${item.label}</div>`));
+    textWrap.appendChild(el(`<div style="font-size:11.5px;color:var(--ink-soft);margin-top:2px;">${item.citation}</div>`));
+    row.appendChild(cb);
+    row.appendChild(textWrap);
+    cb.addEventListener('change', ()=>{
+      state.checklistStairs[item.id] = cb.checked; persist();
+      const doneCount = allIds.filter(k=>state.checklistStairs[k]).length;
+      progressCard.querySelector('.chip').textContent = doneCount + ' מתוך ' + allIds.length;
+      progressCard.querySelector('.progress-seg i').style.width = Math.round(100*doneCount/allIds.length)+'%';
+      itemCard.style.opacity = cb.checked ? '0.6' : '1';
+    });
+    itemCard.style.opacity = cb.checked ? '0.6' : '1';
+    itemCard.appendChild(row);
+    itemCard.appendChild(el(`<div style="font-size:12.5px;color:var(--ink-soft);line-height:1.8;margin-top:8px;">${item.text}</div>`));
+    const btn = el(`<button class="btn-secondary no-print" style="margin-top:8px;font-size:12px;padding:8px 14px;">📋 העתק נוסח זה</button>`);
+    btn.addEventListener('click', ()=>{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(item.text).then(()=>toast('הנוסח הועתק')).catch(()=>fallbackCopy(item.text, ()=>toast('הנוסח הועתק')));
+      } else fallbackCopy(item.text, ()=>toast('הנוסח הועתק'));
+    });
+    itemCard.appendChild(btn);
+    app.appendChild(itemCard);
+  });
+
+  app.appendChild(el(`<div class="disclaimer">מבוסס על תקנות התכנון והבנייה ותקנים ישראליים ת"י 1142, ת"י 1918 ו-ת"י 2481. הנוסחים תקפים רק אם האמצעי בפועל מותקן בהתאם לתקן הרלוונטי - אין בסימון כדי להחליף התקנה בפועל ובדיקת יועץ מוסמך.</div>`));
+}
+
 function renderCalcBusiness(){
   const card = calcCard();
   card.appendChild(el(`<div class="eyebrow">פרק 4 — המפרט האחיד לרישוי עסקים</div>`));
@@ -2589,6 +2652,18 @@ function renderCalcDraft(){
       devCard.appendChild(item);
     });
     app.appendChild(devCard);
+  }
+
+  const stairsChecked = STAIRS_ELEVATORS_CHECKLIST.filter(item=>(state.checklistStairs||{})[item.id]);
+  if(stairsChecked.length){
+    const stairsCard = el(`<div class="card"></div>`);
+    stairsCard.appendChild(el(`<div class="eyebrow">חדרי מדרגות מוגנים ומעליות</div>`));
+    stairsChecked.forEach(item=>{
+      const row = el(`<div class="req-item"></div>`);
+      row.appendChild(el(`<div class="req-text"><b>${item.label}</b> (${item.citation}): ${item.text}</div>`));
+      stairsCard.appendChild(row);
+    });
+    app.appendChild(stairsCard);
   }
 
   const areasTotal = state.calcTables.areas.reduce((sum,r)=>sum+parseFloat(r[3]||0),0);
