@@ -747,6 +747,7 @@ let state = {
   development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
   checklistStairs:{},
   panelDetection:{ tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false },
+  checklistOccupancy:{},
   // Remembers the last dropdown selection per calculator, so that adding a row to a
   // table (which triggers a full re-render) doesn't reset the user back to the first option.
   calcSelections:{
@@ -841,7 +842,8 @@ function hasMeaningfulProgress(saved){
   const hasDevelopment = saved.development && Object.values(saved.development).some(v => (v||'').trim() !== '');
   const hasChecklistStairs = saved.checklistStairs && Object.values(saved.checklistStairs).some(Boolean);
   const hasPanelDetection = saved.panelDetection && (saved.panelDetection.requiresDetection || saved.panelDetection.tier !== 'a63' || saved.panelDetection.path61439 || saved.panelDetection.cond1 || saved.panelDetection.cond2 || saved.panelDetection.cond3);
-  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment || hasChecklistStairs || hasPanelDetection;
+  const hasOccupancy = saved.checklistOccupancy && Object.values(saved.checklistOccupancy).some(Boolean);
+  return hasPath || hasProject || hasNotes || hasCalc || hasChecklist || hasExcluded || hasDevelopment || hasChecklistStairs || hasPanelDetection || hasOccupancy;
 }
 function summarizeSavedProgress(saved){
   const parts = [];
@@ -893,7 +895,8 @@ function renderResumePrompt(saved){
       mainTab:'wizard', calcTab:'fire', calcTables:{fire:[],occ:[],walk:[],areas:[],openings:[],windows:[],barn:[],systems:[],water:[],exits:[]}, checklist532:{},
       development:{ mainValve:'', mainLine:'', hydrants:'', hoseReels:'', fireCabinets:'', drainValves:'', futureUse:'' },
       checklistStairs:{},
-      panelDetection:{ tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false }
+      panelDetection:{ tier:'a63', requiresDetection:false, path61439:false, cond1:false, cond2:false, cond3:false },
+      checklistOccupancy:{}
     })); }catch(e){ /* not fatal — worst case it asks again next time */ }
     render();
   });
@@ -908,7 +911,7 @@ async function persist(){
       screen:state.screen, path:state.path, project:state.project, notes:state.notes,
       reqTags:state.reqTags, excluded:state.excluded,
       mainTab:state.mainTab, calcTab:state.calcTab, calcTables:state.calcTables, checklist532:state.checklist532,
-      development:state.development, checklistStairs:state.checklistStairs, panelDetection:state.panelDetection
+      development:state.development, checklistStairs:state.checklistStairs, panelDetection:state.panelDetection, checklistOccupancy:state.checklistOccupancy
     }));
     showStorageWarning();
   }catch(e){ console.error('storage error', e); }
@@ -990,7 +993,7 @@ function renderTopTabs(){
 // Update this list by hand on each data refresh and bump FIRE_AUTH_UPDATES_AS_OF.
 const FIRE_AUTH_UPDATES_AS_OF = '30.10.2026';
 const FIRE_AUTH_UPDATES = [
-  { date:'10.2026', title:'מתקנים לאגירת אנרגיה - עדכון 10/2026', url:'https://beregulation.102.gov.il/9028_1026_92b1ae6e91/9028_1026_92b1ae6e91.pdf' },
+  { date:'22.10.2026', title:'מתקנים לאגירת אנרגיה - עדכון 10/2026', url:'https://beregulation.102.gov.il/9028_1026_92b1ae6e91/9028_1026_92b1ae6e91.pdf' },
   { date:'15.09.2026', title:'נוהל 27 - דוח הערכת סיכוני אש למבני תעשייה ואחסון (מהדורה 3)', url:'https://beregulation.102.gov.il/3_6_9_26_9035_b747c48636/3_6_9_26_9035_b747c48636.pdf' },
   { date:'08.09.2026', title:'השגה 127 - השגה על קביעת סידורי כבאות בהתאם לתקנות רישוי עסקים (הוראות כלליות), התשס"א-2000', url:'https://beregulation.102.gov.il/127_22a89c90da/127_22a89c90da.pdf' }
 ];
@@ -1512,7 +1515,8 @@ function renderCalcRoot(){
     ['panel','לוח חשמל - גילוי אש וכיבוי'],
     ['business','עסק קטן/בינוני (מפרט אחיד)'],
     ['draft','טיוטה להגשה (שבלונה)'],
-    ['submission','בדיקת הגשה (הוראת 532)']
+    ['submission','בדיקת הגשה (הוראת 532)'],
+    ['occupancy','אישורים לאכלוס (נוהל 19)']
   ];
   defs.forEach(([id,label])=>{
     const b = el(`<button type="button" class="group-pill ${state.calcTab===id?'active':''}">${label}</button>`);
@@ -1538,6 +1542,7 @@ function renderCalcRoot(){
   if(state.calcTab==='business') renderCalcBusiness();
   if(state.calcTab==='draft') renderCalcDraft();
   if(state.calcTab==='submission') renderCalcSubmission();
+  if(state.calcTab==='occupancy') renderCalcOccupancy();
 }
 
 function calcCard(){
@@ -2718,6 +2723,61 @@ function renderCalcExits(){
     - מספר דרכי המוצא הנדרש נקבע בנפרד, בטבלת התפוסה (סימן י"ג).</div>`);
   card.appendChild(notes);
   tableCard('טבלת מרחק מינימלי בין דלתות יציאה שנבנתה', EXITS_TABLE_HEADERS, state.calcTables.exits, 'exits');
+}
+
+const OCCUPANCY_APPROVALS = [{"n": 1, "t": "ת\"י 466 ות\"י 412", "d": "אישור מהנדס מתכנן שלד הבניין המעיד כי הרחבה להצבת מנוף גבהים/רכב כיבוי והצלה ונתיב דרך הגישה לרחבה תוכננו ובוצעו על פי הנדרש בת\"י 412 ות\"י 466 חלק 1 ובעלת יכולת נשיאה לרכב כיבוי של 31 טון למ\"ר לפחות (כנוסח הנוהל).", "by": "אישור מהנדס מתכנן שלד הבניין"}, {"n": 2, "t": "ת\"י 921", "d": "תגובות בשרפה של חומרי בנייה.", "by": "מעבדה מוכרת"}, {"n": 3, "t": "ת\"י 931", "d": "עמידות אש של אלמנטי בניין.", "by": "עורך הבקשה הראשי"}, {"n": 4, "t": "ת\"י 2174", "d": "אישור על בדיקת מחסומי אש באתר.", "by": "מעבדה מוסמכת"}, {"n": 5, "t": "ת\"י 1001 חלק 1.1", "d": "מערכת מיזוג אויר ואוורור.", "by": "מעבדה מוכרת"}, {"n": 6, "t": "ת\"י 1001 חלק 2.2", "d": "מערכות בקרת עשן בבניינים למעט בנייני מגורים עד 29 מטר (דיחוס חדרי מדרגות).", "by": "מעבדה מוכרת"}, {"n": 7, "t": "ת\"י 1001 חלק 2.4", "d": "מערכות פינוי עשן בבניינים חד קומתיים למעט בנייני מגורים.", "by": "מעבדה מוכרת"}, {"n": 8, "t": "ת\"י 1001 חלק 6", "d": "בקרת אוורור והגנה מפני אש במערכות בישול מסחריות (מנדפים).", "by": "מעבדה מוכרת"}, {"n": 9, "t": "ת\"י 1001 חלק 7", "d": "מערכות שליטה לחום ולעשן, מפוחים מונעים על ידי חשמל להוצאת עשן וחום.", "by": "מעבדה מוכרת"}, {"n": 10, "t": "ת\"י 1205 חלק 1", "d": "מתקני תברואה.", "by": "מעבדה מאושרת"}, {"n": 11, "t": "ת\"י 1212 חלק 4", "d": "דלתות אש.", "by": "מעבדה מוכרת"}, {"n": 12, "t": "ת\"י 1220 חלק 3", "d": "אישור כי טלפון כבאים תוכנן ובוצע בהתאם לת\"י 1220 חלק 3.", "by": "מעבדה מוכרת"}, {"n": 13, "t": "ת\"י 1220 חלק 3", "d": "אישור המעיד על ביצוע משטר הפעלות (אינטגרציה) כנדרש בהוראת נציב 536.", "by": "מעבדה מוכרת"}, {"n": 14, "t": "ת\"י 1220 חלק 3", "d": "אישור מערכת למסירת הודעות (כריזה).", "by": "מעבדה מוכרת"}, {"n": 15, "t": "ת\"י 1220 חלק 3", "d": "התקנת גילוי אש ועשן.", "by": "מעבדה מוכרת"}, {"n": 16, "t": "ת\"י 1220 חלק 5", "d": "התקנת גלאי עצמאי.", "by": "מעבדה מאושרת"}, {"n": 17, "t": "ת\"י 1267", "d": "צבעים תופחים מעכבי התפשטות אש.", "by": "מעבדה מאושרת"}, {"n": 18, "t": "ת\"י 1596", "d": "התקנת מתזים.", "by": "מעבדה מוכרת"}, {"n": 19, "t": "ת\"י 1597", "d": "מערכות כיבוי אש אוטומטיות בגז כיבוי.", "by": "מעבדה מוכרת"}, {"n": 20, "t": "ת\"י 1733", "d": "ציפוי רכיבי בניין מפלדה להגנה מפני שרפה; בחירת ציפוי מינרלי מותז והשמתו.", "by": "מעבדה מאושרת"}, {"n": 21, "t": "ת\"י 2206 חלק 2", "d": "גלגלון לכיבוי אש - התקנה ותחזוקה.", "by": "מעבדה מוכרת"}, {"n": 22, "t": "ת\"י 2217", "d": "מטפים אוטומטיים קבועים לכיבוי אש לדלקות ממין ב (נוזלים וגזים).", "by": "מעבדה מאושרת"}, {"n": 23, "t": "ת\"י 2733", "d": "טיפול בעץ - טיפול להגנה מפני שרפה.", "by": "מעבדה מאושרת"}, {"n": 24, "t": "ת\"י 5093", "d": "אישור המעיד שחומר יריעת קירוי/אוהל עומד בת\"י 5093 - דליקות של וילונות לשימוש ציבורי ומוסדי.", "by": "מעבדה מאושרת"}, {"n": 25, "t": "ת\"י 5210", "d": "מערכות לכיבוי אש באירוסול.", "by": "מעבדה מוכרת"}, {"n": 26, "t": "ת\"י 5356 חלק 1", "d": "כיבוי אש בכימיקלים יבשים.", "by": "מעבדה מוכרת"}, {"n": 27, "t": "ת\"י 5356 חלק 2", "d": "כיבוי בכימיקלים רטובים.", "by": "מעבדה מוכרת"}, {"n": 28, "t": "ת\"י 5512", "d": "מתקנים לתדלוק רכב בגז פחמימני מעובה.", "by": "מעבדה מאושרת"}, {"n": 29, "t": "ת\"י 6236", "d": "תחנות תדלוק לכלי רכב בגז טבעי דחוס.", "by": "מעבדה מאושרת"}, {"n": 30, "t": "מערכת כיבוי בקצף", "d": "אישור על התקנת מערכת הכיבוי בקצף לפי תקן NFPA 11.", "by": "מעבדה מוכרת"}, {"n": 31, "t": "מערכות קבועות להצפה במים", "d": "אישור על התקנת מערכת קבועה להצפה במים לפי תקן NFPA 15.", "by": "מעבדה מוכרת"}, {"n": 32, "t": "מערכות להצפה בקצף", "d": "אישור על התקנת מערכת להצפה בקצף לפי תקן NFPA 16.", "by": "מעבדה מוכרת"}, {"n": 33, "t": "מערכת CO2", "d": "אישור על התקנת CO2 לפי תקן NFPA 12.", "by": "מעבדה מאושרת"}, {"n": 34, "t": "NFPA 20, NFPA 22", "d": "התקנת מאגר מים ומשאבות על פי תקן NFPA 22 ו-NFPA 20.", "by": "מעבדה מוכרת"}, {"n": 35, "t": "אישור אדריכל / עורך התכנית", "d": "אישור כי הביצוע תואם את התכנית האדריכלית, לרבות ביצוע הפרדות אש ואטימות עשן.", "by": "אישור אדריכל / עורך התכנית"}, {"n": 36, "t": "אישור יועץ בטיחות", "d": "אישור כי הביצוע תואם את תכנית הבטיחות המאושרת.", "by": "יועץ הבטיחות"}, {"n": 37, "t": "אישור התחייבות של הקבלן/יזם על אספקת ציוד לכיבוי אש בעת אכלוס הבניין", "d": "התחייבות הקבלן/יזם כי לאחר קבלת טופס אכלוס, יספק את כלל ציוד הכיבוי והבטיחות כמתחייב בתקנות תכנון ובנייה.", "by": "התחייבות הקבלן/יזם"}, {"n": 38, "t": "אישור מודד", "d": "אישור מודד מוסמך למדידת גובה הבניין.", "by": "אישור מודד"}, {"n": 39, "t": "גנרטור", "d": "אישור על תקינות גנרטור.", "by": "אישור חשמלאי בודק"}];
+const OCCUPANCY_HIGH_RISK = [{"n": "5.1", "t": "ת\"י 5418", "d": "עמידות בהידלקות של מזרנים.", "by": "מעבדה מאושרת"}, {"n": "5.2", "t": "ת\"י 5419", "d": "עמידות בהידלקות של רהיטי ישיבה מרופדים שאינם לשימוש ביתי.", "by": "מעבדה מאושרת"}];
+function renderCalcOccupancy(){
+  if(!state.checklistOccupancy) state.checklistOccupancy = {};
+  const card = calcCard();
+  card.appendChild(el(`<div class="eyebrow">נוהל 19 (מהדורה 2) - אגף הגנה מאש</div>`));
+  card.appendChild(el(`<h3 class="qtitle" style="font-size:18px;">אישורים לקבלת אישור אכלוס (טופס 4)</h3>`));
+  card.appendChild(el(`<p class="qsub">הרשימה הכללית של האישורים שיש להציג לרשות הכבאות בבקשה לאישור אכלוס. לא נדרשים כל האישורים לכל מבנה: האישורים הנדרשים לכל מבנה לפי מאפייניו מפורטים במערכת השלהבת ובאתר רשות הכבאות. סמנו כאן רק את האישורים שנדרשו בפועל בפרויקט שלכם. הסימונים נשמרים אוטומטית.</p>`));
+  card.appendChild(el(`<div class="req-links no-print" style="margin-top:6px;"><a class="reg-link" href="https://beregulation.102.gov.il/9054_19_08_24_a6c0f0299b/9054_19_08_24_a6c0f0299b.pdf" target="_blank" rel="noopener">🔗 נוהל 19 - המסמך המלא (PDF, פורסם 19.08.2024, תחילת תוקף 1.2.2022)</a></div>`));
+  app.appendChild(card);
+
+  const allKeys = [];
+  OCCUPANCY_APPROVALS.forEach(a=>allKeys.push('o'+a.n));
+  OCCUPANCY_HIGH_RISK.forEach(a=>allKeys.push('h'+a.n));
+  const count = ()=>allKeys.filter(k=>state.checklistOccupancy[k]).length;
+
+  const progressCard = el(`<div class="card"></div>`);
+  progressCard.appendChild(el(`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <h3 style="margin:0;font-size:15px;">התקדמות (מתוך האישורים שסימנתם כרלוונטיים אין צורך להשלים את כולם)</h3>
+    <span class="chip">${count()} מתוך ${allKeys.length}</span>
+  </div>`));
+  progressCard.appendChild(el(`<div class="progress-seg" style="height:8px;"><i style="width:${Math.round(100*count()/allKeys.length)}%;"></i></div>`));
+  app.appendChild(progressCard);
+
+  function checkItem(key, a){
+    const item = el(`<label class="req-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;"></label>`);
+    const cb = el(`<input type="checkbox" style="margin-top:3px;flex:0 0 auto;width:17px;height:17px;accent-color:var(--accent);"/>`);
+    cb.checked = !!state.checklistOccupancy[key];
+    cb.addEventListener('change', ()=>{
+      state.checklistOccupancy[key] = cb.checked; persist();
+      progressCard.querySelector('.chip').textContent = count() + ' מתוך ' + allKeys.length;
+      progressCard.querySelector('.progress-seg i').style.width = Math.round(100*count()/allKeys.length)+'%';
+      item.style.opacity = cb.checked ? '0.55' : '1';
+    });
+    item.style.opacity = cb.checked ? '0.55' : '1';
+    const textWrap = el(`<div></div>`);
+    textWrap.appendChild(el(`<div class="req-text"><span class="mono" style="color:var(--ink-soft);margin-inline-end:6px;">${a.n}.</span><b>${a.t}</b> - ${a.d}</div>`));
+    textWrap.appendChild(el(`<div class="req-rem" style="border:none;padding:0;margin-top:4px;">גורם מאשר: ${a.by}</div>`));
+    item.appendChild(cb); item.appendChild(textWrap);
+    return item;
+  }
+
+  const c1 = el(`<div class="card"></div>`);
+  c1.appendChild(el(`<div class="source-title"><span>רשימת האישורים (סעיף 3 בנוהל)</span><span class="count">${OCCUPANCY_APPROVALS.length}</span></div>`));
+  OCCUPANCY_APPROVALS.forEach(a=>c1.appendChild(checkItem('o'+a.n, a)));
+  app.appendChild(c1);
+
+  const c2 = el(`<div class="card"></div>`);
+  c2.appendChild(el(`<div class="source-title"><span>אישורים הנדרשים רק למבנים ברמת סיכון 4 או 5 (סעיף 5)</span><span class="count">${OCCUPANCY_HIGH_RISK.length}</span></div>`));
+  OCCUPANCY_HIGH_RISK.forEach(a=>c2.appendChild(checkItem('h'+a.n, a)));
+  app.appendChild(c2);
+
+  app.appendChild(el(`<div class="disclaimer">מבוסס על נוהל 19 של אגף הגנה מאש ברשות הארצית לכבאות והצלה (מהדורה 2). "מעבדה מאושרת", "מעבדה מוכרת" ו"מעבדה מוסמכת" - כהגדרתן בנוהל 5002 של הרשות. לפי סעיף 6.2 לנוהל, העובדה שרשות הכבאות אינה דורשת אישור מסוים אינה פוטרת את עורך הבקשה ואת מבקש אישור האכלוס מחובותיהם על פי כל דין. הרשימה כאן היא רשימה כללית ואינה מחליפה את רשימת האישורים הפרטנית של המבנה בשלהבת.</div>`));
 }
 
 function renderCalcBusiness(){
